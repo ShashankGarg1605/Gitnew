@@ -60,7 +60,7 @@
     <f7-popover id="pz-popover">
       <div class="popover-inner">
         <div class="list-block">
-          <a @click="openPage('orderdetail')" class="list-button item-link close-popover">View Details</a>
+          <a @click="openPage('orderdetail')" class="list-button item-link close-popover">View Details {{status}}</a>
           <a @click="openPage('orderupdate')" class="list-button item-link close-popover" v-if="status=='105'">Update Order</a>
         </div>
       </div>
@@ -134,6 +134,7 @@ export default {
       window.Dom7('#pz-popover').data('pz-id', id);
     },
     statusChange() {
+      console.log('this.status: ', this.status);
       this.allOrders = [];
       this.limit = 20;
       this.offset = 0;

@@ -10,20 +10,16 @@ import Vue from 'vue';
 /* eslint-disable no-unused-vars */
 import Framework7 from 'framework7';
 
-// Import F7 Vue Plugin
 import Framework7Vue from 'framework7-vue';
-
-// Import Routes
 import Routes from './routes';
-
-// Import App
 import App from './App';
-
-// Import VeeValidate
 import VeeValidate from 'vee-validate';
-
-// Import VueResource
 import VueResource from 'vue-resource';
+import moment from 'moment';
+import 'vue-awesome/icons';
+import Icon from 'vue-awesome/components/Icon';
+
+import FilterDateRange from './components/FilterDateRange';
 
 // Set up some useful globals
 window.isMaterial = !window.Framework7.prototype.device.ios;
@@ -48,14 +44,16 @@ if (window.isiOS) {
     require('framework7/dist/css/framework7.material.colors.min.css');
 }
 
-// Init F7 Vue Plugin
+
 Vue.use(Framework7Vue);
-
-// Init VeeValidate
 Vue.use(VeeValidate);
-
-// Init VueResource
 Vue.use(VueResource);
+
+// add the moment library to the Vue prototype so we can use it from any template directly
+Vue.prototype.moment = moment;
+
+// register font-awesome as a global component
+Vue.component('icon', Icon);
 
 
 // Vue.config.errorHandler = function (err, vm, info) {
@@ -131,6 +129,8 @@ window.vm = new Vue({ // eslint-disable-line no-new
     app: App
   }
 });
+
+Vue.component('pz-filter-date-range', FilterDateRange);
 
 
 // hide the side menu on the login page

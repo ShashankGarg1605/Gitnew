@@ -35,7 +35,7 @@
         </div>
 
         <div class="pz-height100 pz-flex-c-e pz-margin-b30">
-          <a href="#" class="button button-raised close-panel" @click="signOut()">Sign Out</a>
+          <a href="#" class="button button-raised close-panel pz-padding-lr16" @click="signOut()">Sign Out</a>
         </div>
 
       </div>

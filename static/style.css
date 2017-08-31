@@ -138,6 +138,10 @@ body {
 .pz-margin-l0 {
     margin-left: 0px !important;
 }
+.pz-margin-tb0 {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
 /* margins */
 
 
@@ -155,8 +159,30 @@ body {
 .pz-padding-0 {
     padding: 0px !important;
 }
-
+.pz-padding-l16 {
+    padding-left: 16px !important;
+}
+.pz-padding-lr16 {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
 /* padding */
+
+
+
+
+/* floats */
+
+.pz-float-l {
+    float: left !important;
+}
+
+.pz-float-r {
+    float: right !important;
+}
+
+
+/* floats */
 
 
 
@@ -211,13 +237,13 @@ body {
 /* flex shorthands */
 /* pz-flex-x-y means x is justify-content and y is align-items */
 .pz-flex-c-c {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 .pz-flex-c-e {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
 }
 /* flex shorthands */

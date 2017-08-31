@@ -1,0 +1,154 @@
+<template>
+    <f7-page name="PurchaseInvoice" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
+
+        <f7-navbar sliding>
+            <f7-nav-left>
+                <f7-link icon="icon-bars" open-panel="left"></f7-link>
+            </f7-nav-left>
+            <f7-nav-center>
+                Purchase Invoice
+            </f7-nav-center>
+        </f7-navbar>
+
+        <div style="overflow: hidden; margin: 16px 16px 16px;">
+            <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r">
+                <icon name="filter"></icon>
+                <span class="pz-padding-l16" @click="openFilters()">Filter</span>
+            </a>
+        </div>
+
+        <f7-list class="pz-margin-0">
+            <div v-if="allInvoice.length">
+                <ul>
+                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id">
+                        <div class="item-inner" style="flex-direction: column;">
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin">No:</div>
+                                <div class="col-70">{{invoice.invoice_number}}</div>
+                            </div>
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin">Date:</div>
+                                <div class="col-70">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('dddd, Do MMM')}}</div>
+                            </div>
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin">Value:</div>
+                                <div class="col-70">Rs. {{invoice.value | moneyFormat}}</div>
+                            </div>
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin">Qty:</div>
+                                <div class="col-70">{{invoice.total_books}} book(s)</div>
+                            </div>
+                            <i class="f7-icons pz-popover" @click='openPopover(invoice.id, $event)'>more_horiz</i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allInvoice.length && hasReachedEnd && !pendingReq">Thats all folks!</div>
+            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allInvoice.length && !pendingReq">No results found</div>
+        </f7-list>
+
+        <f7-popover id="pz-popover">
+            <div class="popover-inner">
+                <div class="list-block">
+                    <a @click="openPage('orderdetail')" class="list-button item-link close-popover">View Details</a>
+                    <a @click="openPage('orderupdate')" class="list-button item-link close-popover">Update Order</a>
+                </div>
+            </div>
+        </f7-popover>
+
+    </f7-page>
+</template>
+
+<style scoped>
+.pz-popover {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+}
+</style>
+
+<script>
+export default {
+    name: 'PurchaseInvoice',
+    data() {
+        return {
+            allInvoice: [],
+            limit: 20,
+            offset: 0,
+            pendingReq: false,
+            hasReachedEnd: false
+        };
+    },
+    methods: {
+        getAllOrders() {
+            this.pendingReq = true;
+
+            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc`;
+            window.vm.$http.get(url)
+                .then(res => {
+                    this.allInvoice = this.allInvoice.concat(res.body);
+                    this.offset += res.body.length;
+                    this.pendingReq = false;
+
+                    if (this.offset % this.limit !== 0) {
+                        this.removeInfiniteScroll();
+                    }
+                })
+                .catch((err) => {
+                    if (err instanceof Error) throw new Error(err);
+
+                    this.pendingReq = false;
+                    this.removeInfiniteScroll();
+                });
+        },
+        onInfiniteScroll() {
+            console.log('onInfiniteScroll');
+            if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllOrders();
+        },
+        onPullToRefresh() {
+            window.vm.$f7.mainView.router.refreshPage();
+        },
+        openPage(pageName) {
+            var id = window.Dom7('#pz-popover').data('pz-id');
+            window.vm.$f7.mainView.router.load({
+                url: pageName,
+                context: { id: id }
+            });
+        },
+        openPopover(id, e) {
+            window.vm.$f7.popover(window.Dom7('#pz-popover'), e.target);
+            window.Dom7('#pz-popover').data('pz-id', id);
+        },
+        // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
+        addInfiniteScroll() {
+            window.vm.$f7.attachInfiniteScroll(window.Dom7('.infinite-scroll'));
+            window.Dom7('.infinite-scroll-preloader').show();
+            this.hasReachedEnd = false;
+        },
+        removeInfiniteScroll() {
+            window.vm.$f7.detachInfiniteScroll(window.Dom7('.infinite-scroll'));
+            window.Dom7('.infinite-scroll-preloader').hide();
+            this.hasReachedEnd = true;
+        },
+        openFilters() {
+            window.vm.$f7.mainView.router.loadPage('filters');
+        }
+    },
+    filters: {
+        moneyFormat(data) {
+            if (!data) return '';
+            data = parseInt(data);
+            data = data.toString();
+            var lastThree = data.substring(data.length - 3);
+            var otherNumbers = data.substring(0, data.length - 3);
+            if (otherNumbers !== '') lastThree = ',' + lastThree;
+            return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        }
+    },
+    created: function() {
+        console.log('Purchase Invoice created');
+        this.getAllOrders();
+    }
+};
+</script>

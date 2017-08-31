@@ -1,20 +1,28 @@
+/* globals */
 html {
     -webkit-user-select: none;
 }
 
+body {
+    font-family: 'Open Sans' !important;
+}
+/* globals */
+
+
+/* fonts icons */
 @font-face {
     font-family: 'Framework7 Icons';
     font-style: normal;
     font-weight: 400;
     src: url("./fonts/Framework7Icons-Regular.eot");
     src: local('Framework7 Icons'),
-       local('Framework7Icons-Regular'),
-       url("./fonts/Framework7Icons-Regular.woff2") format("woff2"),
-       url("./fonts/Framework7Icons-Regular.woff") format("woff"),
-       url("./fonts/Framework7Icons-Regular.ttf") format("truetype");
-  }
-  
-  .f7-icons, .framework7-icons {
+        local('Framework7Icons-Regular'),
+        url("./fonts/Framework7Icons-Regular.woff2") format("woff2"),
+        url("./fonts/Framework7Icons-Regular.woff") format("woff"),
+        url("./fonts/Framework7Icons-Regular.ttf") format("truetype");
+}
+
+.f7-icons, .framework7-icons {
     font-family: 'Framework7 Icons';
     font-weight: normal;
     font-style: normal;
@@ -33,14 +41,13 @@ html {
     -moz-font-feature-settings: "liga=1";
     -moz-font-feature-settings: "liga";
     font-feature-settings: "liga";
-  }
+}
 
 @font-face {
     font-family: 'Open Sans';
     src: url('./fonts/opensans-bold-webfont.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
-
 }
 
 @font-face {
@@ -56,35 +63,107 @@ html {
     font-weight: 300;
     font-style: normal;
 }
+/* fonts icons */
 
-body {
-    font-family: 'Open Sans' !important;
-}
 
+
+
+
+
+/* width  */
 .pz-width100 {
     width: 100%;
 }
+/* width  */
 
+
+
+
+
+
+/* height  */
+.pz-height100 {
+    height: 100%;
+}
+/* height  */
+
+
+
+
+
+/* weight */
 .pz-weight-thin {
     font-weight: 300;
 }
 
 .pz-weight-bold {
-font-weight: bold;
+    font-weight: bold;
 }
+/* weight */
 
+
+
+
+/* size */
 .pz-size-smaller {
     font-size: smaller;
 }
+/* size */
 
+
+
+
+
+/* custom */
 .popover {
     width: 200px !important;
 }
 
+/* custom */
+
+
+
+
+
+/* margins */
 .pz-margin-top0 {
     margin-top: 0px !important;
 }
+.pz-margin-b30 {
+    margin-bottom: 30px !important;
+}
+.pz-margin-0 {
+    margin: 0px !important;
+}
+.pz-margin-l0 {
+    margin-left: 0px !important;
+}
+/* margins */
 
+
+
+
+
+
+
+
+
+/* padding */
+.pz-padding-t44 {
+    padding-top: 44px !important;
+}
+.pz-padding-0 {
+    padding: 0px !important;
+}
+
+/* padding */
+
+
+
+
+
+
+/* backgrounds */
 .pz-bg-lightest {
     background: #9FD6CD !important;
 }
@@ -100,3 +179,45 @@ font-weight: bold;
 .pz-bg {
     background: #419688 !important;
 }
+/* backgrounds */
+
+
+
+
+
+/* text stuff */
+.pz-cap {
+    text-transform: capitalize !important;
+}
+/* text stuff */
+
+
+
+
+
+/* color stuff */
+.pz-colr-inherit {
+    color: inherit !important;
+}
+/* color stuff */
+
+
+
+
+
+
+
+
+/* flex shorthands */
+/* pz-flex-x-y means x is justify-content and y is align-items */
+.pz-flex-c-c {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pz-flex-c-e {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+/* flex shorthands */

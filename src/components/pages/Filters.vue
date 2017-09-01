@@ -17,7 +17,7 @@
         </div>
 
         <div class="bottom">
-            <a href="#" class="button color-green pz-margin-r16 pz-padding-lr32">Reset</a>
+            <a href="#" class="button color-green pz-margin-r16 pz-padding-lr32" @click="resetFilters()">Reset</a>
             <a href="#" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" @click="applyFilters()">Apply</a>
         </div>
 
@@ -52,14 +52,20 @@ export default {
     },
     methods: {
         applyFilters() {
-            console.log('this.comps: ', this.comps);
             var prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
-            console.log('prevPage: ', prevPage);
             window.vm.$f7.mainView.router.load({
                 url: prevPage,
                 reload: true,
                 context: { comps: this.comps }
             });
+        },
+        resetFilters() {
+            for (let filterType of Object.keys(this.comps)) {
+                for (let filter of this.comps[filterType]) { //eg first date type filter, then second date type filter
+                    filter.value = null;
+                }
+            }
+            this.applyFilters();
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

@@ -31,6 +31,13 @@
       </a>
     </div>
 
+    <div style="overflow: hidden; margin: 16px 16px 16px;">
+      <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
+        <icon name="filter"></icon>
+        <span class="pz-padding-l16">Filter</span>
+      </a>
+    </div>
+
     <f7-list>
       <div v-if="allOrders.length" class="list-block">
         <ul>
@@ -92,10 +99,10 @@ export default {
     };
   },
   methods: {
-    getAllOrders() {
+    getAllOrders(filterQuery) {
       this.pendingReq = true;
 
-      let url = `http://staging.prozo.com/api/v3/orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}`;
+      let url = `http://staging.prozo.com/api/v3/orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + filterQuery;
       if (this.status && this.status !== '000') url += `&status=${this.status}`;
       window.vm.$http.get(url)
         .then(res => {
@@ -152,6 +159,13 @@ export default {
       window.vm.$f7.detachInfiniteScroll(window.Dom7('.infinite-scroll'));
       window.Dom7('.infinite-scroll-preloader').hide();
       this.hasReachedEnd = true;
+    },
+    openFilters() {
+      window.vm.$f7.mainView.router.load({
+        url: 'filters',
+        // send over a clone of the filters object to avoid mutating it directly from the filters page
+        context: { comps: JSON.parse(JSON.stringify(this.filters)) }
+      });
     }
   },
   filters: {
@@ -166,10 +180,83 @@ export default {
     }
   },
 
-  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  beforeCreate() {
+    console.debug(this.$options.name + ' beforeCreate');
+    const defaultFilters = {
+      date: [
+        {
+          placeholder: 'Chose date range',
+          value: null
+        }
+      ],
+      singleselect: [
+        {
+          placeholder: 'Chose status',
+          value: null,
+          opts: [
+            {
+              label: 'All',
+              value: '000'
+            },
+            {
+              label: 'Received',
+              value: '101'
+            },
+            {
+              label: 'Confirmed',
+              value: '102'
+            },
+            {
+              label: 'Being Procured',
+              value: '103'
+            },
+            {
+              label: 'Being Packed',
+              value: '104'
+            },
+            {
+              label: 'Partially Dispatched',
+              value: '105'
+            },
+            {
+              label: 'Fully Dispatched',
+              value: '114'
+            },
+            {
+              label: 'Fulfilled',
+              value: '106'
+            },
+            {
+              label: 'Cancelled',
+              value: '107'
+            }
+          ]
+        }
+      ]
+    };
+
+
+    this.filters = JSON.parse(JSON.stringify(defaultFilters));
+  },
   created() {
     console.debug(this.$options.name + ' created');
-    this.getAllOrders();
+
+    // if we come here from the filters page, replace the default filters with the updated filters
+    let filters = this.$route.options.context && this.$route.options.context.comps;
+    if (filters) this.filters = filters;
+
+
+    // build the filter query
+    let filterQuery = '';
+
+    let { value: status = null } = this.filters.singleselect[0];
+    if (status !== null) filterQuery += `&status=${status}`;
+
+    let { value: dateRange = null } = this.filters.date[0];
+    if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
+    if (dateRange !== null && dateRange.length) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+
+    this.getAllOrders(filterQuery);
   },
   beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
   mounted() { console.debug(this.$options.name + ' mounted'); },

@@ -78,35 +78,7 @@ export default {
             limit: 20,
             offset: 0,
             pendingReq: false,
-            hasReachedEnd: false,
-            filters: {
-                date: [
-                    {
-                        placeholder: 'Chose date range',
-                        value: null
-                    }
-                ],
-                singleselect: [
-                    {
-                        placeholder: 'Chose status',
-                        value: null,
-                        opts: [
-                            {
-                                label: 'Open',
-                                value: 0
-                            },
-                            {
-                                label: 'Closed',
-                                value: 1
-                            },
-                            {
-                                label: 'Both',
-                                value: null
-                            }
-                        ]
-                    }
-                ]
-            }
+            hasReachedEnd: false
         };
     },
     methods: {
@@ -163,6 +135,7 @@ export default {
         openFilters() {
             window.vm.$f7.mainView.router.load({
                 url: 'filters',
+                // send over a clone of the filters object to avoid mutating it directly from the filters page
                 context: { comps: JSON.parse(JSON.stringify(this.filters)) }
             });
         }
@@ -178,7 +151,40 @@ export default {
             return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
-    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+    beforeCreate() {
+        console.debug(this.$options.name + ' beforeCreate');
+
+        const defaultFilters = {
+            date: [
+                {
+                    placeholder: 'Chose date range',
+                    value: null
+                }
+            ],
+            singleselect: [
+                {
+                    placeholder: 'Chose status',
+                    value: null,
+                    opts: [
+                        {
+                            label: 'Open',
+                            value: 0
+                        },
+                        {
+                            label: 'Closed',
+                            value: 1
+                        },
+                        {
+                            label: 'Both',
+                            value: null
+                        }
+                    ]
+                }
+            ]
+        };
+
+        this.filters = JSON.parse(JSON.stringify(defaultFilters));
+    },
     created() {
         console.debug(this.$options.name + ' created');
 
@@ -186,14 +192,19 @@ export default {
         let filters = this.$route.options.context && this.$route.options.context.comps;
         if (filters) this.filters = filters;
 
+
+        // build the filter query
         let filterQuery = '';
 
         let { value: status = null } = this.filters.singleselect[0];
         if (status !== null) filterQuery += `&status=${status}`;
 
+        let { value: dateRange = null } = this.filters.date[0];
+        if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
+        if (dateRange !== null && dateRange.length) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+
         this.getAllOrders(filterQuery);
 
-        // let dateRange = filters.date[0].value;
     },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
     mounted() { console.debug(this.$options.name + ' mounted'); },

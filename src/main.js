@@ -135,8 +135,7 @@ Vue.component('pz-filter-date-range', FilterDateRange);
 Vue.component('pz-filter-single-select', FilterSingleSelect);
 
 
-// empty Vue instance as a central event bus:
-// var bus = new Vue();
+// empty Vue instance as a central event bus, and some other common utils
 Vue.prototype.$pzBus = new Vue();
 
 window.vm.$f7.onPageInit('*', function (page) {

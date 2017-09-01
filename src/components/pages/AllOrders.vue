@@ -165,9 +165,17 @@ export default {
       return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
     }
   },
-  created: function() {
-    console.log('All Orders created');
+
+  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  created() {
+    console.debug(this.$options.name + ' created');
     this.getAllOrders();
-  }
+  },
+  beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+  mounted() { console.debug(this.$options.name + ' mounted'); },
+  beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+  updated() { console.debug(this.$options.name + ' updated'); },
+  beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+  destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
 </script>

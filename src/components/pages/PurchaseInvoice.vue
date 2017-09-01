@@ -11,13 +11,14 @@
         </f7-navbar>
 
         <div style="overflow: hidden; margin: 16px 16px 16px;">
-            <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r">
+            <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
                 <icon name="filter"></icon>
-                <span class="pz-padding-l16" @click="openFilters()">Filter</span>
+                <span class="pz-padding-l16">Filter</span>
             </a>
         </div>
+        {{filters}}
 
-        <f7-list class="pz-margin-0">
+        <f7-list class="pz-margin-top0">
             <div v-if="allInvoice.length">
                 <ul>
                     <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id">
@@ -77,14 +78,42 @@ export default {
             limit: 20,
             offset: 0,
             pendingReq: false,
-            hasReachedEnd: false
+            hasReachedEnd: false,
+            filters: {
+                date: [
+                    {
+                        placeholder: 'Chose date range',
+                        value: null
+                    }
+                ],
+                singleselect: [
+                    {
+                        placeholder: 'Chose status',
+                        value: null,
+                        opts: [
+                            {
+                                label: 'Open',
+                                value: 0
+                            },
+                            {
+                                label: 'Closed',
+                                value: 1
+                            },
+                            {
+                                label: 'Both',
+                                value: null
+                            }
+                        ]
+                    }
+                ]
+            }
         };
     },
     methods: {
-        getAllOrders() {
+        getAllOrders(filterQuery) {
             this.pendingReq = true;
 
-            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc`;
+            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + filterQuery;
             window.vm.$http.get(url)
                 .then(res => {
                     this.allInvoice = this.allInvoice.concat(res.body);
@@ -132,7 +161,10 @@ export default {
             this.hasReachedEnd = true;
         },
         openFilters() {
-            window.vm.$f7.mainView.router.loadPage('filters');
+            window.vm.$f7.mainView.router.load({
+                url: 'filters',
+                context: { comps: JSON.parse(JSON.stringify(this.filters)) }
+            });
         }
     },
     filters: {
@@ -146,9 +178,28 @@ export default {
             return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
-    created: function() {
-        console.log('Purchase Invoice created');
-        this.getAllOrders();
-    }
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+    created() {
+        console.debug(this.$options.name + ' created');
+
+        // if we come here from the filters page, replace the default filters with the updated filters
+        let filters = this.$route.options.context && this.$route.options.context.comps;
+        if (filters) this.filters = filters;
+
+        let filterQuery = '';
+
+        let { value: status = null } = this.filters.singleselect[0];
+        if (status !== null) filterQuery += `&status=${status}`;
+
+        this.getAllOrders(filterQuery);
+
+        // let dateRange = filters.date[0].value;
+    },
+    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+    mounted() { console.debug(this.$options.name + ' mounted'); },
+    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+    updated() { console.debug(this.$options.name + ' updated'); },
+    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+    destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
 </script>

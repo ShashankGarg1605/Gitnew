@@ -1,13 +1,13 @@
 <template>
   <f7-page name="login">
     <!-- <f7-navbar sliding>
-                                                                  <f7-nav-left>
-                                                                    <f7-link icon="icon-bars" open-panel="left"></f7-link>
-                                                                  </f7-nav-left>
-                                                                  <f7-nav-center>
-                                                                    home
-                                                                  </f7-nav-center>
-                                                                </f7-navbar> -->
+                                                                            <f7-nav-left>
+                                                                              <f7-link icon="icon-bars" open-panel="left"></f7-link>
+                                                                            </f7-nav-left>
+                                                                            <f7-nav-center>
+                                                                              home
+                                                                            </f7-nav-center>
+                                                                          </f7-navbar> -->
     <section class="pg-login">
       <form @submit.prevent="validateBeforeSubmit" class="form" name="login">
         <div class="list-block" style="width: 80%;">
@@ -174,30 +174,14 @@ export default {
         });
     }
   },
-  beforeCreate: function() {
-    console.log('Login before create');
-  },
-  created: function() {
-    console.log('Login created');
-  },
-  beforeMount: function() {
-    console.log('Login before mounted');
-  },
-  mounted: function() {
-    console.log('Login mounted');
-  },
-  beforeUpdate: function() {
-    console.log('Login befor updated');
-  },
-  updated: function() {
-    console.log('Login updated');
-  },
-  beforeDestroy: function() {
-    console.log('Login before destroyed');
-  },
-  destroyed: function() {
-    console.log('Login destroyed');
-  }
+  beforeCreate() { console.debug(this.$options.name + 'created'); },
+  created() { console.debug(this.$options.name + 'created'); },
+  beforeMount() { console.debug(this.$options.name + 'beforeMount'); },
+  mounted() { console.debug(this.$options.name + 'mounted'); },
+  beforeUpdate() { console.debug(this.$options.name + 'beforeUpdate'); },
+  updated() { console.debug(this.$options.name + 'updated'); },
+  beforeDestroy() { console.debug(this.$options.name + 'beforeDestroy'); },
+  destroyed() { console.debug(this.$options.name + 'destroyed'); }
 };
 
 function setGlobals(authToken, tenantData) {

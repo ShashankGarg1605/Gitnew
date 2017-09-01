@@ -20,6 +20,7 @@ import 'vue-awesome/icons';
 import Icon from 'vue-awesome/components/Icon';
 
 import FilterDateRange from './components/FilterDateRange';
+import FilterSingleSelect from './components/FilterSingleSelect';
 
 // Set up some useful globals
 window.isMaterial = !window.Framework7.prototype.device.ios;
@@ -131,10 +132,44 @@ window.vm = new Vue({ // eslint-disable-line no-new
 });
 
 Vue.component('pz-filter-date-range', FilterDateRange);
+Vue.component('pz-filter-single-select', FilterSingleSelect);
 
+
+// empty Vue instance as a central event bus:
+// var bus = new Vue();
+Vue.prototype.$pzBus = new Vue();
+
+window.vm.$f7.onPageInit('*', function (page) {
+  console.debug('onPageInit: ', page.name);
+});
+
+window.vm.$f7.onPageReinit('*', function (page) {
+  console.debug('onPageReinit: ', page.name);
+});
+
+window.vm.$f7.onPageBeforeAnimation('*', function (page) {
+  console.debug('onPageBeforeAnimation: ', page.name);
+});
+
+window.vm.$f7.onPageAfterAnimation('*', function (page) {
+  console.debug('onPageAfterAnimation: ', page.name);
+});
+
+window.vm.$f7.onPageBeforeRemove('*', function (page) {
+  console.debug('onPageBeforeRemove: ', page.name);
+});
+
+window.vm.$f7.onPageBack('*', function (page) {
+  console.debug('onPageBack: ', page.name);
+});
+
+window.vm.$f7.onPageAfterBack('*', function (page) {
+  console.debug('onPageAfterBack: ', page.name);
+});
 
 // hide the side menu on the login page
 window.vm.$f7.onPageBeforeInit('*', function (page) {
+  console.debug('onPageBeforeInit: ', page.name);
   // if we have created a cycle of pages, remove the pages in between
   // for eg. Q-A-X-Y-Z-A, then on opening this last A, it will become Q-A
   var his = window.vm.$f7.mainView.history;

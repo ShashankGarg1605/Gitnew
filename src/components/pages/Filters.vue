@@ -1,5 +1,5 @@
 <template>
-    <f7-page name="OrderUpdate">
+    <f7-page name="Filters">
 
         <f7-navbar back-link="Back" sliding>
             <f7-nav-center>
@@ -7,54 +7,18 @@
             </f7-nav-center>
         </f7-navbar>
         <div class="content-block-title">Select a filter</div>
+        <span style="font-size: xx-small;">{{comps}}</span>
         <div class="list-block">
             <ul>
-                <pz-filter-date-range v-model="item"></pz-filter-date-range>
-                <!-- <pz-filter-date-range v-bind:item="item" v-model="item"></pz-filter-date-range> -->
-
-                <!-- <li class="item-content button pz-colr-inherit pz-cap">
-                                                <div class="item-media">
-                                                    <icon name="pencil-square-o"></icon>
-                                                </div>
-                                                <div class="item-inner pz-margin-l0">
-                                                    <div class="item-title">Search supplier</div>
-                                                    <div class="item-after">
-                                                        <span>
-                                                            <icon name="chevron-right"></icon>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li class="item-content button pz-colr-inherit pz-cap">
-                                                <div class="item-media">
-                                                    <icon name="pencil-square-o"></icon>
-                                                </div>
-                                                <div class="item-inner pz-margin-l0">
-                                                    <div class="item-title">Search invoice number</div>
-                                                    <div class="item-after">
-                                                        <span>
-                                                            <icon name="chevron-right"></icon>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li class="item-content button pz-colr-inherit pz-cap">
-                                                <div class="item-media">
-                                                    <icon name="sliders"></icon>
-                                                </div>
-                                                <div class="item-inner pz-margin-l0">
-                                                    <div class="item-title">Set price range</div>
-                                                    <div class="item-after">
-                                                        <span>
-                                                            <icon name="chevron-right"></icon>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </li> -->
+                <pz-filter-date-range v-model="comp.value" v-for="(comp, index) in comps.date" :key="index" :placeholder="comp.placeholder"></pz-filter-date-range>
+                <pz-filter-single-select v-model="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts"></pz-filter-single-select>
 
             </ul>
+        </div>
+
+        <div class="bottom">
+            <a href="#" class="button color-green pz-margin-r16 pz-padding-lr32">Reset</a>
+            <a href="#" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" @click="applyFilters()">Apply</a>
         </div>
 
     </f7-page>
@@ -64,24 +28,50 @@
 #date::placeholder {
     color: inherit;
 }
+
+.bottom {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 65px;
+    align-items: center;
+    box-shadow: 0px 0px 1px 3px lightgrey;
+}
 </style>
 
 
 <script>
-window.pz_filters = {
+export default {
     name: 'Filters',
     data() {
         return {
             comps: null
         };
     },
+    methods: {
+        applyFilters() {
+            console.log('this.comps: ', this.comps);
+            var prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            console.log('prevPage: ', prevPage);
+            window.vm.$f7.mainView.router.load({
+                url: prevPage,
+                reload: true,
+                context: { comps: this.comps }
+            });
+        }
+    },
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
     created() {
-        console.log('Filters created');
+        console.debug(this.$options.name + ' created');
         this.comps = this.$route.options.context && this.$route.options.context.comps;
     },
-    mounted() {
-        window.cal = window.f7.calendar({ input: '#date', rangePicker: true, toolbarCloseText: 'apply' });
-    }
+    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+    mounted() { console.debug(this.$options.name + ' mounted'); },
+    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+    updated() { console.debug(this.$options.name + ' updated'); },
+    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+    destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
-export default window.pz_filters;
 </script>

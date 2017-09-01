@@ -36,6 +36,7 @@ module.exports = {
     'eol-last': 0,
     'indent': 0,
     'brace-style': 0,
-    'no-extend-native': 0
+    'no-extend-native': 0,
+    'spaced-comment': 0
   }
 }

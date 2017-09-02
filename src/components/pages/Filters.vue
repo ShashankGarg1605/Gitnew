@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         applyFilters() {
-            var prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
             window.vm.$f7.mainView.router.load({
                 url: prevPage,
                 reload: true,

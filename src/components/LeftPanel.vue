@@ -7,30 +7,9 @@
 
         <div class="list-block">
           <ul>
-            <a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" href="/dashboard">
-              <div class="item-media">
-                <icon name="line-chart"></icon>
-              </div>
-              <div class="item-inner pz-margin-l0">
-                <div class="item-title">Dashboard</div>
-              </div>
-            </a>
-            <a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" href="/allorders">
-              <div class="item-media">
-                <icon name="shopping-cart"></icon>
-              </div>
-              <div class="item-inner pz-margin-l0">
-                <div class="item-title">All Orders</div>
-              </div>
-            </a>
-            <a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" href="/purchaseinvoice">
-              <div class="item-media">
-                <icon name="table"></icon>
-              </div>
-              <div class="item-inner pz-margin-l0">
-                <div class="item-title">Purchase Invoice</div>
-              </div>
-            </a>
+            <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item>
+            <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
+            <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
           </ul>
         </div>
 
@@ -44,6 +23,18 @@
 </template>
 
 <script>
+var menuItem = {
+  template: `<a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" :href="url">
+              <div class="item-media"> <icon :name="icon"></icon> </div>
+              <div class="item-inner pz-margin-l0">
+                <div class="item-title">{{label}}</div>
+              </div>
+            </a>`,
+  props: ['icon', 'url', 'label'],
+  created() {
+    console.log('menuItem created');
+  }
+};
 export default {
   name: 'LeftPanel',
   data() {
@@ -60,8 +51,12 @@ export default {
       window.vm.$f7.mainView.history = [];
       window.f7.mainView.router.loadPage('/');
     }
+  },
+  components: {
+    'menu-item': menuItem
   }
 };
+
 </script>
 
 <style scoped>

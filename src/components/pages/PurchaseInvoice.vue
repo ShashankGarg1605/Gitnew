@@ -16,7 +16,8 @@
                 <span class="pz-padding-l16">Filter</span>
             </a>
         </div>
-        {{filters}}
+
+        <span style="font-size: xx-small;">{{filters}}</span>
 
         <f7-list class="pz-margin-top0">
             <div v-if="allInvoice.length">
@@ -78,7 +79,35 @@ export default {
             limit: 20,
             offset: 0,
             pendingReq: false,
-            hasReachedEnd: false
+            hasReachedEnd: false,
+            filters: {
+                date: [
+                    {
+                        placeholder: 'Chose date range',
+                        value: null
+                    }
+                ],
+                singleselect: [
+                    {
+                        placeholder: 'Chose status',
+                        value: null,
+                        opts: [
+                            {
+                                label: 'Open',
+                                value: 0
+                            },
+                            {
+                                label: 'Closed',
+                                value: 1
+                            },
+                            {
+                                label: 'Both',
+                                value: null
+                            }
+                        ]
+                    }
+                ]
+            }
         };
     },
     methods: {
@@ -111,7 +140,7 @@ export default {
             window.vm.$f7.mainView.router.refreshPage();
         },
         openPage(pageName) {
-            var id = window.Dom7('#pz-popover').data('pz-id');
+            let id = window.Dom7('#pz-popover').data('pz-id');
             window.vm.$f7.mainView.router.load({
                 url: pageName,
                 context: { id: id }
@@ -145,46 +174,13 @@ export default {
             if (!data) return '';
             data = parseInt(data);
             data = data.toString();
-            var lastThree = data.substring(data.length - 3);
-            var otherNumbers = data.substring(0, data.length - 3);
+            let lastThree = data.substring(data.length - 3);
+            let otherNumbers = data.substring(0, data.length - 3);
             if (otherNumbers !== '') lastThree = ',' + lastThree;
             return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
-    beforeCreate() {
-        console.debug(this.$options.name + ' beforeCreate');
-
-        const defaultFilters = {
-            date: [
-                {
-                    placeholder: 'Chose date range',
-                    value: null
-                }
-            ],
-            singleselect: [
-                {
-                    placeholder: 'Chose status',
-                    value: null,
-                    opts: [
-                        {
-                            label: 'Open',
-                            value: 0
-                        },
-                        {
-                            label: 'Closed',
-                            value: 1
-                        },
-                        {
-                            label: 'Both',
-                            value: null
-                        }
-                    ]
-                }
-            ]
-        };
-
-        this.filters = JSON.parse(JSON.stringify(defaultFilters));
-    },
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
     created() {
         console.debug(this.$options.name + ' created');
 

@@ -58,8 +58,6 @@ export default {
     props: ['placeholder', 'opts', 'value'],
     watch: {
         compvalue() {
-            // When the internal value changes, we $emit an event. Because this event is 
-            // named 'input', v-model will automatically update the parent value
             this.$emit('input', this.compvalue);
         }
     },

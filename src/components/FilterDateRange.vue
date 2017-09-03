@@ -72,9 +72,7 @@ window.FilterComponents = {
     },
     props: ['placeholder', 'value'],
     watch: {
-        'compvalue': function() {
-            // When the internal value changes, we $emit an event. Because this event is 
-            // named 'input', v-model will automatically update the parent value
+        compvalue() {
             this.$emit('input', this.compvalue);
         }
     },

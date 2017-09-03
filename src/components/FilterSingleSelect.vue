@@ -12,7 +12,7 @@
                     <div>
                         <span>{{placeholder}}</span>
                     </div>
-                    <span class="selected-values">{{selectedWord}}</span>
+                    <span class="selected-values">{{compvalueReadable}}</span>
                 </div>
             </a>
             <div class="item-after">
@@ -46,23 +46,21 @@ export default {
     name: 'FilterSingleSelect',
     data() {
         return {
-            compvalue: null,
-            compvalueActual: null   //the actual milliseconds date, separated by pipe
+            compvalue: this.value
         };
     },
     computed: {
-        selectedWord() {
+        compvalueReadable() {
             let selectedOption = this.opts.find(o => o.value === this.compvalue);
             return selectedOption && selectedOption.label;
         }
     },
     props: ['placeholder', 'opts', 'value'],
     watch: {
-        'compvalue': function() {
+        compvalue() {
             // When the internal value changes, we $emit an event. Because this event is 
             // named 'input', v-model will automatically update the parent value
-            this.compvalueActual = this.compvalue;
-            this.$emit('input', this.compvalueActual);
+            this.$emit('input', this.compvalue);
         }
     },
     methods: {
@@ -71,14 +69,7 @@ export default {
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
-    created() {
-        console.debug(this.$options.name + ' created');
-        this.compvalue = this.value;
-
-        window.Dom7('#singleselect').on('click', function() {
-            console.log('click detected');
-        });
-    },
+    created() { console.debug(this.$options.name + ' created'); },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
     mounted() { console.debug(this.$options.name + ' mounted'); },
     beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },

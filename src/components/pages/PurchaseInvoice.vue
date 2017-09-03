@@ -196,8 +196,9 @@ export default {
         if (status !== null) filterQuery += `&status=${status}`;
 
         let { value: dateRange = null } = this.filters.date[0];
+        console.log('dateRange: ', dateRange);
         if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
-        if (dateRange !== null && dateRange.length) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+        if (dateRange !== null && dateRange.length > 1) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
 
         this.getAllOrders(filterQuery);
 

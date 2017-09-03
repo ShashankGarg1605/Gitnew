@@ -4,10 +4,9 @@
             <icon name="calendar-o"></icon>
         </div>
         <div class="item-inner pz-margin-l0">
-            <!-- <input type="text" id="datepickx" :placeholder="label" name="datepickx" class="item-title" v-model="compvalue"> -->
             <div class="item-content pz-padding-l0 pz-size-normal text-container pz-width100">
                 <span>{{placeholder}}</span>
-                <input type="text" id="datepick" name="datepick" class="item-title selected-values" v-model="compvalue">
+                <input type="text" id="datepick" name="datepick" class="item-title selected-values" v-model="compvalueReadable">
             </div>
             <div class="item-after">
                 <span>
@@ -49,33 +48,21 @@ window.FilterComponents = {
     name: 'FilterDateRange',
     data() {
         return {
-            compvalue: null,
-            compvalueActual: null   //the actual milliseconds date, separated by pipe
+            compvalue: this.value   //the actual milliseconds date
         };
     },
-    props: ['placeholder', 'value'],
-    watch: {
-        'compvalue': function() {
-            // When the internal value changes, we $emit an event. Because this event is 
-            // named 'input', v-model will automatically update the parent value
-            this.$emit('input', this.compvalueActual);
-        }
-    },
-    methods: {
-        openManually() {
-            setTimeout(() => { window.calendarInstance.open(); });
-        },
-        getHumanReadableDate(dateArray) {
-            if (!dateArray || !dateArray.length) return null;
+    computed: {
+        compvalueReadable() {
+            if (!this.compvalue || !this.compvalue.length) return null;
 
-            // if we get an array of stringified date objects, then create a new date object from the,
-            let startDate = typeof dateArray[0] === 'string' ? new Date(dateArray[0]) : dateArray[0];
+            // if we get an array of stringified date objects (when we open date filter after having applied already), create new date objects from it
+            let startDate = typeof this.compvalue[0] === 'string' ? new Date(this.compvalue[0]) : this.compvalue[0];
             if (typeof startDate.valueOf() === 'number') startDate = window.vm.moment(startDate).format('Do MMM');
             else startDate = 'ERR';
 
-            if (dateArray.length === 1) return startDate; // if we only have a start date, no end date 
+            if (this.compvalue.length === 1) return startDate; // if we only have a start date, no end date 
             else {
-                let endDate = typeof dateArray[1] === 'string' ? new Date(dateArray[1]) : dateArray[1];
+                let endDate = typeof this.compvalue[1] === 'string' ? new Date(this.compvalue[1]) : this.compvalue[1];
                 if (typeof endDate.valueOf() === 'number') endDate = window.vm.moment(endDate).format('Do MMM');
                 else endDate = 'ERR';
 
@@ -83,12 +70,21 @@ window.FilterComponents = {
             }
         }
     },
-    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
-    created() {
-        console.debug(this.$options.name + ' created');
-        this.compvalueActual = this.value;
-        this.compvalue = this.getHumanReadableDate(this.value);
+    props: ['placeholder', 'value'],
+    watch: {
+        'compvalue': function() {
+            // When the internal value changes, we $emit an event. Because this event is 
+            // named 'input', v-model will automatically update the parent value
+            this.$emit('input', this.compvalue);
+        }
     },
+    methods: {
+        openManually() {
+            setTimeout(() => { window.calendarInstance.open(); });
+        }
+    },
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+    created() { console.debug(this.$options.name + ' created'); },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
     mounted() {
         console.debug(this.$options.name + ' mounted');
@@ -97,8 +93,7 @@ window.FilterComponents = {
             rangePicker: true,
             dateFormat: 'd-M-yy',
             onChange: function(p, values, displayValues) {
-                this.compvalueActual = values;
-                this.compvalue = this.getHumanReadableDate(values);
+                this.compvalue = values;
             }.bind(this)
         });
     },

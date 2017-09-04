@@ -6,6 +6,7 @@ import OrderDetail from './components/pages/OrderDetail';
 import OrderUpdate from './components/pages/OrderUpdate';
 import PurchaseInvoice from './components/pages/PurchaseInvoice';
 import Filters from './components/pages/Filters';
+import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
 
 export default [
   {
@@ -35,6 +36,10 @@ export default [
   {
     path: '/purchaseinvoice/',
     component: PurchaseInvoice
+  },
+  {
+    path: '/PurchaseInvoiceDetail/',
+    component: PurchaseInvoiceDetail
   },
   {
     path: '/filters/',

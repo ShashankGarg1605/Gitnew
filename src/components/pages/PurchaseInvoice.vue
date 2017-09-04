@@ -52,8 +52,7 @@
         <f7-popover id="pz-popover-2">
             <div class="popover-inner ">
                 <div class="list-block ">
-                    <a @click="openPage( 'orderdetail') " class="list-button item-link close-popover ">View Details</a>
-                    <a @click="openPage( 'orderupdate') " class="list-button item-link close-popover ">Update Order</a>
+                    <a @click="openPage( 'PurchaseInvoiceDetail')" class="list-button item-link close-popover">View Details</a>
                 </div>
             </div>
         </f7-popover>
@@ -148,11 +147,14 @@ export default {
             window.vm.$f7.mainView.router.refreshPage();
         },
         openPage(pageName) {
-            let id = window.Dom7('#pz-popover').data('pz-id');
-            window.vm.$f7.mainView.router.load({
-                url: pageName,
-                context: { id: id }
-            });
+            let id = window.Dom7('#pz-popover-2').data('pz-id');
+            // window.vm.$f7.mainView.router.load({
+            //     url: pageName,
+            //     context: { id: id }
+            // });
+            var url = `${pageName}?id=${id}`;
+            console.log('url: ', url);
+            window.vm.$f7.mainView.router.loadPage(url);
         },
         openPopover(id, e) {
             window.vm.$f7.popover(window.Dom7('#pz-popover-2'), e.target);

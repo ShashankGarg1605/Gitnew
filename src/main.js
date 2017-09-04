@@ -21,6 +21,7 @@ import Icon from 'vue-awesome/components/Icon';
 
 import FilterDateRange from './components/FilterDateRange';
 import FilterSingleSelect from './components/FilterSingleSelect';
+import FilterSearch from './components/FilterSearch';
 
 // Set up some useful globals
 window.isMaterial = !window.Framework7.prototype.device.ios;
@@ -133,6 +134,7 @@ window.vm = new Vue({ // eslint-disable-line no-new
 
 Vue.component('pz-filter-date-range', FilterDateRange);
 Vue.component('pz-filter-single-select', FilterSingleSelect);
+Vue.component('pz-filter-search', FilterSearch);
 
 
 // empty Vue instance as a central event bus, and some other common utils

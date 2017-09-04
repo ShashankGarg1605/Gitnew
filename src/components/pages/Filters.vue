@@ -6,12 +6,13 @@
                 Filters
             </f7-nav-center>
         </f7-navbar>
-        <div class="content-block-title">Select a filter</div>
-        <span style="font-size: xx-small;">{{comps}}</span>
+        <div class="content-block-title">You can apply multiple filters at once</div>
+        <!-- <span style="font-size: xx-small;">{{comps}}</span> -->
         <div class="list-block">
             <ul>
                 <pz-filter-date-range v-model="comp.value" v-for="(comp, index) in comps.date" :key="index" :placeholder="comp.placeholder"></pz-filter-date-range>
-                <pz-filter-single-select v-model="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts"></pz-filter-single-select>
+                <pz-filter-single-select :value.sync="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts"></pz-filter-single-select>
+                <pz-filter-search :value.sync="comp.value" v-for="(comp, index) in comps.search" :key="index" :placeholder="comp.placeholder"></pz-filter-search>
 
             </ul>
         </div>
@@ -38,6 +39,8 @@
     height: 65px;
     align-items: center;
     box-shadow: 0px 0px 1px 3px lightgrey;
+    background: white;
+    z-index: 15;
 }
 </style>
 

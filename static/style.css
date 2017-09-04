@@ -245,6 +245,12 @@ body {
 
 /* flex shorthands */
 /* pz-flex-x-y means x is justify-content and y is align-items */
+.pz-flex {
+    display: flex !important;
+}
+.pz-flex-j-start {
+    justify-content: flex-start !important;
+}
 .pz-flex-c-c {
     display: flex !important;
     justify-content: center !important;

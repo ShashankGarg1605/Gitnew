@@ -58,7 +58,7 @@ export default {
     props: ['placeholder', 'opts', 'value'],
     watch: {
         compvalue() {
-            this.$emit('input', this.compvalue);
+            this.$emit('update:value', this.compvalue);
         }
     },
     methods: {

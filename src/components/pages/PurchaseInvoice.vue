@@ -17,7 +17,7 @@
             </a>
         </div>
 
-        <span style="font-size: xx-small;">{{filters}}</span>
+        <!-- <span style="font-size: xx-small;">{{filters}}</span> -->
 
         <f7-list class="pz-margin-top0">
             <div v-if="allInvoice.length">
@@ -25,35 +25,35 @@
                     <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">No:</div>
-                                <div class="col-70">{{invoice.invoice_number}}</div>
+                                <div class="col-25 color-gray">#{{invoice.invoice_number}}</div>
+                                <div class="col-75 ">Rs. {{invoice.value | moneyFormat}} </div>
                             </div>
                             <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Date:</div>
-                                <div class="col-70">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('dddd, Do MMM')}}</div>
+                                <div class="col-25 color-gray pz-weight-thin ">Supplier:</div>
+                                <div class="col-75 ">{{invoice.publisher ? invoice.publisher.name : invoice.distributors.distributor_name}}</div>
                             </div>
-                            <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Value:</div>
-                                <div class="col-70">Rs. {{invoice.value | moneyFormat}}</div>
+                            <div class=" row pz-width100 ">
+                                <div class="col-25 color-gray pz-weight-thin ">Date:</div>
+                                <div class="col-75 ">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('ddd, Do MMM YYYY')}}</div>
                             </div>
-                            <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Qty:</div>
-                                <div class="col-70">{{invoice.total_books}} book(s)</div>
+                            <div class="row pz-width100 ">
+                                <div class="col-25 color-gray pz-weight-thin ">Qty:</div>
+                                <div class="col-75 ">{{invoice.total_books}} book(s)</div>
                             </div>
-                            <i class="f7-icons pz-popover" @click='openPopover(invoice.id, $event)'>more_horiz</i>
+                            <i class="f7-icons pz-popover " @click='openPopover(invoice.id, $event)'>more_horiz</i>
                         </div>
                     </li>
                 </ul>
             </div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allInvoice.length && hasReachedEnd && !pendingReq">Thats all folks!</div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allInvoice.length && !pendingReq">No results found</div>
+            <div class="color-gray list-block pz-size-smaller " style="text-align: center; font-style: italic; " v-if="allInvoice.length && hasReachedEnd && !pendingReq ">Thats all folks!</div>
+            <div class="color-gray list-block pz-size-smaller " style="text-align: center; font-style: italic; " v-if="!allInvoice.length && !pendingReq ">No results found</div>
         </f7-list>
 
-        <f7-popover id="pz-popover">
-            <div class="popover-inner">
-                <div class="list-block">
-                    <a @click="openPage('orderdetail')" class="list-button item-link close-popover">View Details</a>
-                    <a @click="openPage('orderupdate')" class="list-button item-link close-popover">Update Order</a>
+        <f7-popover id="pz-popover-2">
+            <div class="popover-inner ">
+                <div class="list-block ">
+                    <a @click="openPage( 'orderdetail') " class="list-button item-link close-popover ">View Details</a>
+                    <a @click="openPage( 'orderupdate') " class="list-button item-link close-popover ">Update Order</a>
                 </div>
             </div>
         </f7-popover>
@@ -106,6 +106,14 @@ export default {
                             }
                         ]
                     }
+                ],
+                search: [
+                    {
+                        placeholder: 'Supplier: '
+                    },
+                    {
+                        placeholder: 'Invoice no:'
+                    }
                 ]
             }
         };
@@ -147,8 +155,8 @@ export default {
             });
         },
         openPopover(id, e) {
-            window.vm.$f7.popover(window.Dom7('#pz-popover'), e.target);
-            window.Dom7('#pz-popover').data('pz-id', id);
+            window.vm.$f7.popover(window.Dom7('#pz-popover-2'), e.target);
+            window.Dom7('#pz-popover-2').data('pz-id', id);
         },
         // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
         addInfiniteScroll() {
@@ -184,21 +192,30 @@ export default {
     created() {
         console.debug(this.$options.name + ' created');
 
-        // if we come here from the filters page, replace the default filters with the updated filters
+        // 1. if we come here from the filters page, replace the default filters with the updated filters
         let filters = this.$route.options.context && this.$route.options.context.comps;
         if (filters) this.filters = filters;
 
 
-        // build the filter query
+        // 2. build the filter query
         let filterQuery = '';
 
+        // a. single select
         let { value: status = null } = this.filters.singleselect[0];
         if (status !== null) filterQuery += `&status=${status}`;
 
+        // b. date range
         let { value: dateRange = null } = this.filters.date[0];
-        console.log('dateRange: ', dateRange);
         if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
         if (dateRange !== null && dateRange.length > 1) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+
+        // c. supplier search
+        let { value: supplier = null } = this.filters.search[0];
+        if (supplier !== null) filterQuery += `&supplier=${supplier}`;
+
+        // d. invoice number search
+        let { value: invoiceNumber = null } = this.filters.search[1];
+        if (invoiceNumber !== null) filterQuery += `&invoice_number=${invoiceNumber}`;
 
         this.getAllOrders(filterQuery);
 

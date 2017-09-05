@@ -8,27 +8,27 @@
         </f7-navbar>
 
         <!-- <div class="lorem">
-                                                                                                                                                <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
-                                                                                                                                                <p class="content-block-title">Upload now using:</p>
-                                                                                                                                                <div class="buttons-row content-block">
-                                                                                                                                                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
-                                                                                                                                                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
-                                                                                                                                                </div>
+                <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
+                <p class="content-block-title">Upload now using:</p>
+                <div class="buttons-row content-block">
+                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
+                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
+                </div>
 
-                                                                                                                                                <div class="card demo-card-header-pic" v-if="imgData">
-                                                                                                                                                    <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
-                                                                                                                                                    <div class="card-content">
-                                                                                                                                                        <div class="card-content-inner">
-                                                                                                                                                            <p>Upload this image?</p>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="card-footer" style="justify-content: flex-end;">
-                                                                                                                                                        <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                                                                                                                                                        <a href="#" class="button color-blue">Upload</a>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-                                                                                                                                            </div> 
-                                                                                                                                            <hr> -->
+                <div class="card demo-card-header-pic" v-if="imgData">
+                    <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
+                    <div class="card-content">
+                        <div class="card-content-inner">
+                            <p>Upload this image?</p>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="justify-content: flex-end;">
+                        <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
+                        <a href="#" class="button color-blue">Upload</a>
+                    </div>
+                </div>
+            </div> 
+            <hr> -->
 
         <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
             <div class="row pz-padding-tb-4 pz-padding-lr16">
@@ -73,7 +73,7 @@
                         <img :src="imgData" class="pz-width100">
                         <div class="card-footer" style="justify-content: flex-end;">
                             <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                            <a href="#" class="button">Upload</a>
+                            <a href="#" class="button" @click="uploadImage()">Upload</a>
                         </div>
                     </div>
                 </div>
@@ -230,6 +230,9 @@ export default {
                     'quality': 30,
                     'encodingType': window.Camera.EncodingType.JPEG
                 });
+        },
+        uploadImage() {
+
         }
     },
     filters: {

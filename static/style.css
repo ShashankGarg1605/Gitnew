@@ -213,10 +213,13 @@ body {
 
 
 /* backgrounds */
+.pz-bg-gray-white {
+    background: white !important;   
+}
 .pz-bg-lightest {
     background: #9FD6CD !important;
 }
-.pz-bg-light {
+.pz-bg-light {  
     background: #68B4A7 !important;
 }
 .pz-bg-dark {
@@ -282,5 +285,10 @@ body {
     display: flex !important;
     justify-content: center !important;
     align-items: flex-end !important;
+}
+.pz-flex-se-c {
+    display: flex !important;
+    justify-content: space-evenly !important;
+    align-items: center !important;
 }
 /* flex shorthands */

@@ -10,6 +10,10 @@
             </f7-nav-center>
         </f7-navbar>
 
+        <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
+            Found {{totalCount}} results
+        </div>
+
         <div style="overflow: hidden; margin: 16px 16px 16px;">
             <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
                 <icon name="filter"></icon>
@@ -20,9 +24,10 @@
         <!-- <span style="font-size: xx-small;">{{filters}}</span> -->
 
         <f7-list class="pz-margin-top0">
+            <!-- <li class="item-divider">Open invoices</li> -->
             <div v-if="allInvoice.length">
                 <ul>
-                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id">
+                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: invoice.status == 0 }">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
                                 <div class="col-25 color-gray">#{{invoice.invoice_number}}</div>
@@ -40,7 +45,10 @@
                                 <div class="col-25 color-gray pz-weight-thin ">Qty:</div>
                                 <div class="col-75 ">{{invoice.total_books}} book(s)</div>
                             </div>
-                            <i class="f7-icons pz-popover " @click='openPopover(invoice.id, $event)'>more_horiz</i>
+                            <i v-if="invoice.image" class="f7-icons pz-popover " @click='openPopover(invoice.id, $event)'>more_horiz</i>
+                            <span v-if="!invoice.image" @click="openPage( 'PurchaseInvoiceDetail', invoice.id)">
+                                <icon class="pz-popover" name="cloud-upload" scale="1.5"></icon>
+                            </span>
                         </div>
                     </li>
                 </ul>
@@ -67,6 +75,10 @@
     top: 0px;
     padding: 10px;
 }
+
+.redBg {
+    background: #FFEBEE !important;
+}
 </style>
 
 <script>
@@ -79,6 +91,7 @@ export default {
             offset: 0,
             pendingReq: false,
             hasReachedEnd: false,
+            totalCount: null,
             filters: {
                 date: [
                     {
@@ -96,11 +109,29 @@ export default {
                                 value: 0
                             },
                             {
-                                label: 'Closed',
+                                label: 'Complete',
                                 value: 1
                             },
                             {
-                                label: 'Both',
+                                label: 'Show both',
+                                value: null
+                            }
+                        ]
+                    },
+                    {
+                        placeholder: 'Whether invoice is uploaded',
+                        value: null,
+                        opts: [
+                            {
+                                label: 'Invoice uploaded',
+                                value: true
+                            },
+                            {
+                                label: 'Invoice not uploaded',
+                                value: false
+                            },
+                            {
+                                label: 'Show both',
                                 value: null
                             }
                         ]
@@ -117,13 +148,38 @@ export default {
             }
         };
     },
+    computed: {
+        filterQuery() {
+            let filterQuery = '';
+
+            // a. single select
+            let { value: status = null } = this.filters.singleselect[0];
+            if (status !== null) filterQuery += `&status=${status}`;
+
+            // b. date range
+            let { value: dateRange = null } = this.filters.date[0];
+            if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
+            if (dateRange !== null && dateRange.length > 1) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+
+            // c. supplier search
+            let { value: supplier = null } = this.filters.search[0];
+            if (supplier !== null) filterQuery += `&supplier=${supplier}`;
+
+            // d. invoice number search
+            let { value: invoiceNumber = null } = this.filters.search[1];
+            if (invoiceNumber !== null) filterQuery += `&invoice_number=${invoiceNumber}`;
+
+            return filterQuery;
+        }
+    },
     methods: {
-        getAllOrders(filterQuery) {
+        getAllInvoices() {
             this.pendingReq = true;
 
-            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + filterQuery;
+            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + this.filterQuery;
             window.vm.$http.get(url)
                 .then(res => {
+                    this.totalCount = res.headers.map.count && res.headers.map.count[0];
                     this.allInvoice = this.allInvoice.concat(res.body);
                     this.offset += res.body.length;
                     this.pendingReq = false;
@@ -141,19 +197,18 @@ export default {
         },
         onInfiniteScroll() {
             console.log('onInfiniteScroll');
-            if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllOrders();
+            if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllInvoices();
         },
         onPullToRefresh() {
             window.vm.$f7.mainView.router.refreshPage();
         },
-        openPage(pageName) {
-            let id = window.Dom7('#pz-popover-2').data('pz-id');
+        openPage(pageName, id) {
+            id = id || window.Dom7('#pz-popover-2').data('pz-id');
             // window.vm.$f7.mainView.router.load({
             //     url: pageName,
             //     context: { id: id }
             // });
-            var url = `${pageName}?id=${id}`;
-            console.log('url: ', url);
+            let url = `${pageName}?id=${id}`;
             window.vm.$f7.mainView.router.loadPage(url);
         },
         openPopover(id, e) {
@@ -198,29 +253,7 @@ export default {
         let filters = this.$route.options.context && this.$route.options.context.comps;
         if (filters) this.filters = filters;
 
-
-        // 2. build the filter query
-        let filterQuery = '';
-
-        // a. single select
-        let { value: status = null } = this.filters.singleselect[0];
-        if (status !== null) filterQuery += `&status=${status}`;
-
-        // b. date range
-        let { value: dateRange = null } = this.filters.date[0];
-        if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
-        if (dateRange !== null && dateRange.length > 1) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
-
-        // c. supplier search
-        let { value: supplier = null } = this.filters.search[0];
-        if (supplier !== null) filterQuery += `&supplier=${supplier}`;
-
-        // d. invoice number search
-        let { value: invoiceNumber = null } = this.filters.search[1];
-        if (invoiceNumber !== null) filterQuery += `&invoice_number=${invoiceNumber}`;
-
-        this.getAllOrders(filterQuery);
-
+        this.getAllInvoices();
     },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
     mounted() { console.debug(this.$options.name + ' mounted'); },

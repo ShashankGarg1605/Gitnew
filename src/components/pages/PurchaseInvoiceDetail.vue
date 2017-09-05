@@ -7,35 +7,72 @@
             </f7-nav-center>
         </f7-navbar>
 
+        <!-- <div class="lorem">
+                        <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
+                        <p class="content-block-title">Upload now using:</p>
+                        <div class="buttons-row content-block">
+                            <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
+                            <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
+                        </div>
+
+                        <div class="card demo-card-header-pic" v-if="imgData">
+                            <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <p>Upload this image?</p>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="justify-content: flex-end;">
+                                <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
+                                <a href="#" class="button color-blue">Upload</a>
+                            </div>
+                        </div>
+                    </div> 
+                    <hr> -->
+
         <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 color-gray pz-weight-thin ">ID:</span>
-                <span class="col-65 ">{{data.id}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 color-gray pz-weight-thin ">Invoice No.:</span>
-                <span class="col-65 ">{{data.invoice_number}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 color-gray pz-weight-thin ">Value:</span>
-                <span class="col-65 ">Rs. {{data.value | moneyFormat}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 color-gray pz-weight-thin ">Books:</span>
-                <span class="col-65 ">{{data.total_books}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 color-gray pz-weight-thin ">Supplier:</span>
-                <span class="col-65 ">{{data.publisher ? data.publisher.name : data.distributors.distributor_name}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 color-gray pz-weight-thin ">Invoice:</span>
-                <span class="col-65 ">{{data.invoice_date}}</span>
-            </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 color-gray pz-weight-thin ">Status:</span>
                 <div class="col-65">
                     <span class="status pz-padding-lr16 ">{{data.status == 0 ? 'Open': 'complete'}}</span>
+                </div>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                <span class="col-35 color-gray pz-weight-thin ">ID:</span>
+                <span class="col-65 ">{{data.id}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16">
+                <span class="col-35 color-gray pz-weight-thin ">Invoice No:</span>
+                <span class="col-65 ">{{data.invoice_number}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                <span class="col-35 color-gray pz-weight-thin ">Value:</span>
+                <span class="col-65 ">Rs. {{data.value | moneyFormat}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16">
+                <span class="col-35 color-gray pz-weight-thin ">Books:</span>
+                <span class="col-65 ">{{data.total_books}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                <span class="col-35 color-gray pz-weight-thin ">Supplier:</span>
+                <span class="col-65 ">{{data.publisher ? data.publisher.name : data.distributors.distributor_name}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16">
+                <span class="col-35 color-gray pz-weight-thin ">Invoice:</span>
+                <span class="col-65 ">{{data.invoice_date}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                <span class="col-35 color-gray pz-weight-thin ">Image:</span>
+                <div class="col-65" v-if="!data.image">
+
+                    <a href="#" class="button button-raised pz-flex-se-c pz-width100 pz-bg-gray-white">
+                        Upload image
+                        <icon name="cloud-upload"></icon>
+                    </a>
+                </div>
+
+                <div class="col-65" v-if="data.image">
+                    <img src="http://via.placeholder.com/1500x1000" class="pz-width100">
                 </div>
             </div>
         </section>
@@ -101,11 +138,12 @@
 }
 
 
-
-/* .equalDivide tr td,
-.equalDivide tr th {
-    width: 10%;
-} */
+.alert {
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 3px;
+}
 </style>
 
 <script>
@@ -133,6 +171,31 @@ export default {
 
                     this.pendingReq = false;
                     this.errMsg = window._pz.errFunc(err);
+                });
+        },
+        uploadChoices(id) {
+            console.log('id: ', id);
+            let buttons = [{
+                text: 'Upload invoice using',
+                label: true
+            },
+            { text: 'Camera', onclick: this.getImage('PHOTOLIBRARY', id) },
+            { text: 'Gallery', onclick: this.getImage('CAMERA', id) }
+            ];
+            window.vm.$f7.actions(buttons);
+        },
+        getImage(source, id) {
+            if (!navigator.camera) return;
+            navigator.camera.getPicture(
+                res => {
+                    this.imgData = 'data:image/jpeg;base64,' + res;
+                },
+                err => { throw new Error(err); },
+                {
+                    'destinationType': window.Camera.DestinationType.DATA_URL,
+                    'sourceType': window.Camera.PictureSourceType[source],
+                    'quality': 30,
+                    'encodingType': window.Camera.EncodingType.JPEG
                 });
         }
     },

@@ -4,7 +4,7 @@
             <icon name="dot-circle-o"></icon>
         </div>
         <div class="item-inner pz-margin-l0">
-            <a href="#" class="item-link smart-select pz-width100" data-back-on-select="true" id="singleselect">
+            <a href="#" class="item-link smart-select pz-width100" data-back-on-select="true" :id="randomID">
                 <select v-model="compvalue">
                     <option v-for="(option, index) in opts" :key="index" :value="option.value" :selected="option.selected">{{option.label}}</option>
                 </select>
@@ -46,7 +46,8 @@ export default {
     name: 'FilterSingleSelect',
     data() {
         return {
-            compvalue: this.value
+            compvalue: this.value,
+            randomID: Math.random().toString(36).substr(2, 10)
         };
     },
     computed: {
@@ -63,7 +64,7 @@ export default {
     },
     methods: {
         openManually(e) {
-            window.vm.$f7.smartSelectOpen('#singleselect');
+            window.vm.$f7.smartSelectOpen('#randomID');
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

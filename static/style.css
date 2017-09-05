@@ -117,6 +117,9 @@ body {
 .popover {
     width: 200px !important;
 }
+.pz-wht-spc-norm {
+    white-space: nowrap !important;
+}
 
 /* custom */
 
@@ -286,9 +289,9 @@ body {
     justify-content: center !important;
     align-items: flex-end !important;
 }
-.pz-flex-se-c {
+.pz-flex-sa-c {
     display: flex !important;
-    justify-content: space-evenly !important;
+    justify-content: space-around !important;
     align-items: center !important;
 }
 /* flex shorthands */

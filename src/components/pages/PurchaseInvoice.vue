@@ -27,7 +27,7 @@
             <!-- <li class="item-divider">Open invoices</li> -->
             <div v-if="allInvoice.length">
                 <ul>
-                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: invoice.status == 0 }">
+                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: !invoice.image }">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
                                 <div class="col-25 color-gray">#{{invoice.invoice_number}}</div>
@@ -120,7 +120,7 @@ export default {
                     },
                     {
                         placeholder: 'Whether invoice is uploaded',
-                        value: null,
+                        value: true,
                         opts: [
                             {
                                 label: 'Invoice uploaded',

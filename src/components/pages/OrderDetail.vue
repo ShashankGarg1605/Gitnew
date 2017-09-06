@@ -1,5 +1,5 @@
 <template>
-    <f7-page name="OrderDetail" pull-to-refresh @ptr:refresh="onPullToRefresh">
+    <f7-page name="OrderDetail">
 
         <f7-navbar back-link="Back" sliding>
             <f7-nav-center>
@@ -51,11 +51,11 @@
                             <td class="numeric-cell">{{index+1}}</td>
                             <td class="label-cell">{{p.product.title}}</td>
                             <td class="label-cell">{{p.product.publisher.name}}</td>
-                            <td class="numeric-cell">{{p.product.mrp}}</td>
+                            <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
                             <td class="numeric-cell">{{p.quantity}}</td>
                             <td class="numeric-cell">{{p.procurement_discount}}%</td>
                             <td class="numeric-cell">{{p.discount_percent}}</td>
-                            <td class="numeric-cell">{{p.selling_price}}</td>
+                            <td class="numeric-cell">{{p.selling_price | moneyFormat}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -115,9 +115,6 @@ export default {
                     this.pendingReq = false;
                     this.errMsg = window._pz.errFunc(err);
                 });
-        },
-        onPullToRefresh() {
-            window.vm.$f7.mainView.router.refreshPage();
         }
     },
     filters: {
@@ -131,10 +128,17 @@ export default {
             return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
-    created: function() {
-        console.log('Order Detail created');
-        this.id = this.$route.options.context && this.$route.options.context.id;
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+    created() {
+        console.debug(this.$options.name + ' created');
+        this.id = this.$route.query && this.$route.query.id;
         this.getDetails();
-    }
+    },
+    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+    mounted() { console.debug(this.$options.name + ' mounted'); },
+    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+    updated() { console.debug(this.$options.name + ' updated'); },
+    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+    destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
 </script>

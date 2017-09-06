@@ -250,7 +250,7 @@ export default {
         console.debug(this.$options.name + ' created');
 
         // 1. if we come here from the filters page, replace the default filters with the updated filters
-        let filters = this.$route.options.context && this.$route.options.context.comps;
+        let filters = this.$route && this.$route.options && this.$route.options.context && this.$route.options.context.comps;
         if (filters) this.filters = filters;
 
         this.getAllInvoices();

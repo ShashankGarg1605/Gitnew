@@ -8,27 +8,27 @@
         </f7-navbar>
 
         <!-- <div class="lorem">
-                <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
-                <p class="content-block-title">Upload now using:</p>
-                <div class="buttons-row content-block">
-                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
-                    <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
-                </div>
-
-                <div class="card demo-card-header-pic" v-if="imgData">
-                    <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
-                    <div class="card-content">
-                        <div class="card-content-inner">
-                            <p>Upload this image?</p>
+                        <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
+                        <p class="content-block-title">Upload now using:</p>
+                        <div class="buttons-row content-block">
+                            <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
+                            <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
                         </div>
-                    </div>
-                    <div class="card-footer" style="justify-content: flex-end;">
-                        <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                        <a href="#" class="button color-blue">Upload</a>
-                    </div>
-                </div>
-            </div> 
-            <hr> -->
+
+                        <div class="card demo-card-header-pic" v-if="imgData">
+                            <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <p>Upload this image?</p>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="justify-content: flex-end;">
+                                <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
+                                <a href="#" class="button color-blue">Upload</a>
+                            </div>
+                        </div>
+                    </div> 
+                    <hr> -->
 
         <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
             <div class="row pz-padding-tb-4 pz-padding-lr16">
@@ -105,7 +105,7 @@
                             <td class="label-cell">{{prod.product.isbn}}</td>
                             <td class="label-cell">{{prod.product.title}}</td>
                             <td class="label-cell">{{prod.product.publisher.name}}</td>
-                            <td class="numeric-cell">{{prod.product.mrp}}</td>
+                            <td class="numeric-cell">{{prod.product.mrp | moneyFormat}}</td>
                             <td class="numeric-cell">{{prod.original_quantity}}</td>
                             <td class="numeric-cell">{{prod.quantity}}</td>
                             <td class="numeric-cell">{{prod.procurement_discount}}%</td>
@@ -246,11 +246,18 @@ export default {
             return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
-    created: function() {
-        console.log('Purchase Invoice Detail created');
-        console.log('this.$route: ', this.$route);
+
+    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+    created() {
+        console.debug(this.$options.name + ' created');
         this.id = this.$route.query && this.$route.query.id;
         this.getDetails();
-    }
+    },
+    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+    mounted() { console.debug(this.$options.name + ' mounted'); },
+    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+    updated() { console.debug(this.$options.name + ' updated'); },
+    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+    destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
 </script>

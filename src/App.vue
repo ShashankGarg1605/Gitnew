@@ -12,7 +12,7 @@
     <f7-views>
       <!-- Right view, it is main view-->
       <!-- Defaults to "/" route -->
-      <f7-view :url="hard()" :init="true" id="main-view" :dynamic-navbar="true" navbar-through main>
+      <f7-view :url="defaultPage()" :init="true" id="main-view" :dynamic-navbar="true" navbar-through main>
         <!-- Pages-->
         <f7-pages>
           <!-- Page, data-page contains page name-->
@@ -31,8 +31,8 @@ export default {
     'left-panel-view': LeftPanel
   },
   methods: {
-    hard() {
-      return window.localStorage.authToken ? 'allorders' : '/';
+    defaultPage() {
+      return window.localStorage.authToken ? 'purchaseinvoice' : '/';
     }
   },
   computed: {

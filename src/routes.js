@@ -7,6 +7,7 @@ import OrderUpdate from './components/pages/OrderUpdate';
 import PurchaseInvoice from './components/pages/PurchaseInvoice';
 import Filters from './components/pages/Filters';
 import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
+import PlaceImageOrder from './components/pages/PlaceImageOrder';
 
 export default [
   {
@@ -38,11 +39,15 @@ export default [
     component: PurchaseInvoice
   },
   {
+    path: '/filters/',
+    component: Filters
+  },
+  {
     path: '/PurchaseInvoiceDetail/',
     component: PurchaseInvoiceDetail
   },
   {
-    path: '/filters/',
-    component: Filters
+    path: '/PlaceImageOrder/',
+    component: PlaceImageOrder
   }
 ];

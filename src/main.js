@@ -85,11 +85,13 @@ window.onunhandledrejection = function (e) {
 };
 
 window.onerror = function (msg, url, lineNo, columnNo, error) {
+  console.log('-------------------ERROR-------------------');
   console.log('columnNo: ', columnNo);
   console.log('lineNo: ', lineNo);
   console.log('url: ', url);
   console.log('msg: ', msg);
   console.log('error: ', error);
+  console.log('-------------------ERROR-------------------');
   // window.vm.$http.post('fakeurl', {
   //   msg: msg,
   //   error: JSON.stringify(error)
@@ -140,36 +142,44 @@ Vue.component('pz-filter-search', FilterSearch);
 // empty Vue instance as a central event bus, and some other common utils
 Vue.prototype.$pzBus = new Vue();
 
-window.vm.$f7.onPageInit('*', function (page) {
+window.vm.$f7.onPageInit('*', page => {
   console.debug('onPageInit: ', page.name);
 });
 
-window.vm.$f7.onPageReinit('*', function (page) {
+window.vm.$f7.onPageReinit('*', page => {
   console.debug('onPageReinit: ', page.name);
 });
 
-window.vm.$f7.onPageBeforeAnimation('*', function (page) {
+window.vm.$f7.onPageBeforeAnimation('*', page => {
   console.debug('onPageBeforeAnimation: ', page.name);
 });
 
-window.vm.$f7.onPageAfterAnimation('*', function (page) {
+window.vm.$f7.onPageAfterAnimation('*', page => {
   console.debug('onPageAfterAnimation: ', page.name);
+  // if we are opening a page that needs a refresh
+  // eg. on detail page we changed something, so going back to the list page needs a refresh to reflect that change
+  if (window._pz.refreshOnBack) {
+    setTimeout(() => {
+      window.vm.$f7.mainView.router.refreshPage();
+      window._pz.refreshOnBack = false;
+    });
+  }
 });
 
-window.vm.$f7.onPageBeforeRemove('*', function (page) {
+window.vm.$f7.onPageBeforeRemove('*', page => {
   console.debug('onPageBeforeRemove: ', page.name);
 });
 
-window.vm.$f7.onPageBack('*', function (page) {
+window.vm.$f7.onPageBack('*', page => {
   console.debug('onPageBack: ', page.name);
 });
 
-window.vm.$f7.onPageAfterBack('*', function (page) {
+window.vm.$f7.onPageAfterBack('*', page => {
   console.debug('onPageAfterBack: ', page.name);
 });
 
 // hide the side menu on the login page
-window.vm.$f7.onPageBeforeInit('*', function (page) {
+window.vm.$f7.onPageBeforeInit('*', page => {
   console.debug('onPageBeforeInit: ', page.name);
   // if we have created a cycle of pages, remove the pages in between
   // for eg. Q-A-X-Y-Z-A, then on opening this last A, it will become Q-A
@@ -217,12 +227,26 @@ window._pz.err = {
   'ERR_404': 'No results found'
 };
 
+window._pz.domain = 'http://staging.prozo.com';
+window._pz.apiEndPt = window._pz.domain + '/api/v3/';
+if (localStorage.tenantData) {
+  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;
+}
+
 window._pz.errFunc = function (err) {
   var errMsg;
   if (err.status === 404) errMsg = window._pz.err.ERR_404;
   else if (err.status === 0) errMsg = window._pz.err.ERR_NET;
   else errMsg = `Uh oh! Something went wrong (Error ${err.status})`;
   return errMsg;
+};
+
+window._pz.checkNested = function (obj, ...args) {
+  for (let i = 0; i < args.length; i++) {
+    if (!obj || !obj.hasOwnProperty(args[i])) return false;
+    obj = obj[args[i]];
+  }
+  return true;
 };
 
 

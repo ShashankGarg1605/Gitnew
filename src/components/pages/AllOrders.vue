@@ -11,25 +11,25 @@
     </f7-navbar>
 
     <!-- <div class="list-block pz-margin-top0">
-                                                    <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
-                                                      <select name="fruits" @change="statusChange(this)" v-model="status">
-                                                        <option value="000" selected>All</option>
-                                                        <option value="101">Received</option>
-                                                        <option value="102">Confirmed</option>
-                                                        <option value="103">Being Procured</option>
-                                                        <option value="104">Being Packed</option>
-                                                        <option value="105">Partially Dispatched</option>
-                                                        <option value="114">Fully Dispatched</option>
-                                                        <option value="106">Fulfilled</option>
-                                                        <option value="107">Cancelled</option>
-                                                      </select>
-                                                      <div class="item-content">
-                                                        <div class="item-inner">
-                                                          <div class="item-title">Chose status</div>
-                                                        </div>
-                                                      </div>
-                                                    </a>
-                                                  </div> -->
+                                                                                        <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
+                                                                                          <select name="fruits" @change="statusChange(this)" v-model="status">
+                                                                                            <option value="000" selected>All</option>
+                                                                                            <option value="101">Received</option>
+                                                                                            <option value="102">Confirmed</option>
+                                                                                            <option value="103">Being Procured</option>
+                                                                                            <option value="104">Being Packed</option>
+                                                                                            <option value="105">Partially Dispatched</option>
+                                                                                            <option value="114">Fully Dispatched</option>
+                                                                                            <option value="106">Fulfilled</option>
+                                                                                            <option value="107">Cancelled</option>
+                                                                                          </select>
+                                                                                          <div class="item-content">
+                                                                                            <div class="item-inner">
+                                                                                              <div class="item-title">Chose status</div>
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </a>
+                                                                                      </div> -->
 
     <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
       Found {{totalCount}} results
@@ -45,7 +45,7 @@
     <f7-list>
       <div v-if="allOrders.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="order in allOrders" :key="order.id">
+          <li class="item-content" v-for="order in allOrders" :key="order.id" :class="{ redBg: order.needBiltyUpload}">
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Order ID:</div>
@@ -59,7 +59,11 @@
                 <div class="col-30 color-gray pz-weight-thin">Value:</div>
                 <div class="col-70">Rs. {{order.finalOrderValue | moneyFormat}}</div>
               </div>
-              <i class="f7-icons pz-popover" @click='openPopover(order.id, order.order_status, $event)'>more_horiz</i>
+              <i v-if="!order.needBiltyUpload" class="f7-icons pz-popover" @click='openPopover(order.id, $event)'>more_horiz</i>
+
+              <span v-if="order.needBiltyUpload" @click="openPage( 'orderdetail', order.id)">
+                <icon class="pz-popover" name="cloud-upload" scale="1.5"></icon>
+              </span>
             </div>
           </li>
         </ul>
@@ -84,6 +88,10 @@
   right: 0px;
   top: 0px;
   padding: 10px;
+}
+
+.redBg {
+  background: #FFEBEE !important;
 }
 </style>
 
@@ -141,14 +149,20 @@ export default {
   },
   methods: {
     getAllOrders() {
+
       this.pendingReq = true;
 
-      let url = `http://staging.prozo.com/api/v3/orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
+      let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
       // if (this.status && this.status !== '000') url += `&status=${this.status}`;
       window.vm.$http.get(url)
         .then(res => {
           this.totalCount = res.headers.map.count && res.headers.map.count[0];
-          this.allOrders = this.allOrders.concat(res.body);
+
+          var data = res.body.map(order => {
+            order.needBiltyUpload = order.order_status === 5 && !order.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name);
+            return order;
+          });
+          this.allOrders = this.allOrders.concat(data);
           this.offset += res.body.length;
           this.pendingReq = false;
 
@@ -169,8 +183,8 @@ export default {
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
     },
-    openPage(pageName) {
-      let id = window.Dom7('#pz-popover-allorder').data('pz-id');
+    openPage(pageName, id) {
+      id = id || window.Dom7('#pz-popover-allorder').data('pz-id');
       // window.vm.$f7.mainView.router.load({
       //   url: pageName,
       //   context: { id: id }
@@ -178,7 +192,7 @@ export default {
       let url = `${pageName}?id=${id}`;
       window.vm.$f7.mainView.router.loadPage(url);
     },
-    openPopover(id, status, e) {
+    openPopover(id, e) {
       window.vm.$f7.popover(window.Dom7('#pz-popover-allorder'), e.target);
       window.Dom7('#pz-popover-allorder').data('pz-id', id);
     },
@@ -226,10 +240,7 @@ export default {
   created() {
     console.debug(this.$options.name + ' created');
 
-    // if we come here from the filters page, replace the default filters with the updated filters
-    let filters = this.$route.options.context && this.$route.options.context.comps;
-    if (filters) this.filters = filters;
-
+    if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
     this.getAllOrders();
   },
   beforeMount() { console.debug(this.$options.name + ' beforeMount'); },

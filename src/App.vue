@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     defaultPage() {
-      return window.localStorage.authToken ? 'purchaseinvoice' : '/';
+      return window.localStorage.authToken ? 'allorders' : '/';
     }
   },
   computed: {

@@ -10,9 +10,9 @@
         <!-- <span style="font-size: xx-small;">{{comps}}</span> -->
         <div class="list-block">
             <ul>
-                <pz-filter-date-range v-model="comp.value" v-for="(comp, index) in comps.date" :key="index" :placeholder="comp.placeholder"></pz-filter-date-range>
-                <pz-filter-single-select :value.sync="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts"></pz-filter-single-select>
-                <pz-filter-search :value.sync="comp.value" v-for="(comp, index) in comps.search" :key="index" :placeholder="comp.placeholder"></pz-filter-search>
+                <pz-filter-date-range v-model="comp.value" v-for="(comp, index) in comps.date" :key="index" :placeholder="comp.placeholder" />
+                <pz-filter-single-select :value.sync="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts" />
+                <pz-filter-search :value.sync="comp.value" v-for="(comp, index) in comps.search" :key="index" :placeholder="comp.placeholder" />
 
             </ul>
         </div>

@@ -176,7 +176,7 @@ export default {
         getAllInvoices() {
             this.pendingReq = true;
 
-            let url = `http://staging.prozo.com/api/v3/purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + this.filterQuery;
+            let url = `${window._pz.apiEndPt}purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + this.filterQuery;
             window.vm.$http.get(url)
                 .then(res => {
                     this.totalCount = res.headers.map.count && res.headers.map.count[0];
@@ -249,10 +249,7 @@ export default {
     created() {
         console.debug(this.$options.name + ' created');
 
-        // 1. if we come here from the filters page, replace the default filters with the updated filters
-        let filters = this.$route && this.$route.options && this.$route.options.context && this.$route.options.context.comps;
-        if (filters) this.filters = filters;
-
+        if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
         this.getAllInvoices();
     },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },

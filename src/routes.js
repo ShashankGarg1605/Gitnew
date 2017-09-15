@@ -8,6 +8,7 @@ import PurchaseInvoice from './components/pages/PurchaseInvoice';
 import Filters from './components/pages/Filters';
 import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
 import PlaceImageOrder from './components/pages/PlaceImageOrder';
+import AllImageOrders from './components/pages/AllImageOrders';
 
 export default [
   {
@@ -49,5 +50,9 @@ export default [
   {
     path: '/PlaceImageOrder/',
     component: PlaceImageOrder
+  },
+  {
+    path: '/AllImageOrders/',
+    component: AllImageOrders
   }
 ];

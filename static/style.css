@@ -137,12 +137,19 @@ body {
 .pz-margin-0 {
     margin: 0px !important;
 }
+.pz-margin-8 {
+    margin: 8px !important;
+}
 .pz-margin-l0 {
     margin-left: 0px !important;
 }
 .pz-margin-tb0 {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
+}
+.pz-margin-tb16 {
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
 }
 .pz-margin-r16 {
     margin-right: 16px !important;
@@ -263,6 +270,16 @@ body {
     color: inherit !important;
 }
 /* color stuff */
+
+
+
+
+
+/* others stuff */
+.pz-border-0 {
+    border: 0px !important;
+}
+/* others stuff */
 
 
 

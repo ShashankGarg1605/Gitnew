@@ -32,7 +32,6 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 || data.order_status === 6">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
-                {{biltyImage}}
                 <div class="col-65" v-if="!biltyImage && data.order_status === 5">
                     <a href="#" class="button button-raised pz-flex-sa-c pz-width100 pz-bg-gray-white" @click="uploadChoices()" id="uploadImgBtn" v-if="!imgData">
                         Upload image

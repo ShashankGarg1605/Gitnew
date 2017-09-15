@@ -11,25 +11,25 @@
     </f7-navbar>
 
     <!-- <div class="list-block pz-margin-top0">
-                                                                                        <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
-                                                                                          <select name="fruits" @change="statusChange(this)" v-model="status">
-                                                                                            <option value="000" selected>All</option>
-                                                                                            <option value="101">Received</option>
-                                                                                            <option value="102">Confirmed</option>
-                                                                                            <option value="103">Being Procured</option>
-                                                                                            <option value="104">Being Packed</option>
-                                                                                            <option value="105">Partially Dispatched</option>
-                                                                                            <option value="114">Fully Dispatched</option>
-                                                                                            <option value="106">Fulfilled</option>
-                                                                                            <option value="107">Cancelled</option>
-                                                                                          </select>
-                                                                                          <div class="item-content">
-                                                                                            <div class="item-inner">
-                                                                                              <div class="item-title">Chose status</div>
+                                                                                          <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
+                                                                                            <select name="fruits" @change="statusChange(this)" v-model="status">
+                                                                                              <option value="000" selected>All</option>
+                                                                                              <option value="101">Received</option>
+                                                                                              <option value="102">Confirmed</option>
+                                                                                              <option value="103">Being Procured</option>
+                                                                                              <option value="104">Being Packed</option>
+                                                                                              <option value="105">Partially Dispatched</option>
+                                                                                              <option value="114">Fully Dispatched</option>
+                                                                                              <option value="106">Fulfilled</option>
+                                                                                              <option value="107">Cancelled</option>
+                                                                                            </select>
+                                                                                            <div class="item-content">
+                                                                                              <div class="item-inner">
+                                                                                                <div class="item-title">Chose status</div>
+                                                                                              </div>
                                                                                             </div>
-                                                                                          </div>
-                                                                                        </a>
-                                                                                      </div> -->
+                                                                                          </a>
+                                                                                        </div> -->
 
     <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
       Found {{totalCount}} results

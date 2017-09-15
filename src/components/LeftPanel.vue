@@ -9,8 +9,9 @@
           <ul>
             <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item>
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
+            <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
-            <menu-item :icon="'image'" :url="'/PlaceImageOrder'" :label="'Place Image Order'"></menu-item>
+            <!-- <menu-item :icon="'image'" :url="'/PlaceImageOrder'" :label="'Place Image Order'"></menu-item> -->
           </ul>
         </div>
 

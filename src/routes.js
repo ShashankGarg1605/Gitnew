@@ -9,6 +9,7 @@ import Filters from './components/pages/Filters';
 import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
 import PlaceImageOrder from './components/pages/PlaceImageOrder';
 import AllImageOrders from './components/pages/AllImageOrders';
+import CommunicationPanel from './components/pages/CommunicationPanel';
 
 export default [
   {
@@ -54,5 +55,9 @@ export default [
   {
     path: '/AllImageOrders/',
     component: AllImageOrders
+  },
+  {
+    path: '/CommunicationPanel/',
+    component: CommunicationPanel
   }
 ];

@@ -11,6 +11,7 @@
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
             <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
+            <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
           </ul>
         </div>
 
@@ -36,7 +37,10 @@ var menuItem = {
     openPage(name) {
       // a left menu click means a new navigational stack, hence delete all history
       window.vm.$f7.mainView.history = [];
-      window.vm.$f7.mainView.router.loadPage(name);
+      window.vm.$f7.mainView.router.loadPage({
+        url: name,
+        reload: true
+      });
     }
   },
   created() {
@@ -57,7 +61,10 @@ export default {
       delete window.vm.$options.http.headers.tenant;
       window.localStorage.clear();
       window.vm.$f7.mainView.history = [];
-      window.f7.mainView.router.loadPage('/');
+      window.vm.$f7.mainView.router.loadPage({
+        url: '/',
+        reload: true
+      });
     }
   },
   components: {

@@ -161,6 +161,7 @@ export default {
                 autoFocus: true,
                 valueProperty: 'id',
                 source(autocomplete, query, render) {
+                    if (query.length < 3) return;
                     let results = [];
                     if (query.length === 0) {
                         render(results);

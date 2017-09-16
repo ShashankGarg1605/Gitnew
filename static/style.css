@@ -279,6 +279,9 @@ body {
 .pz-border-0 {
     border: 0px !important;
 }
+.pz-shadow {
+    box-shadow: 0px 1px 1px 1px lightgrey;
+}
 /* others stuff */
 
 

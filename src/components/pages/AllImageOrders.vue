@@ -43,9 +43,9 @@
                                 <div class="col-70">{{order.user.buyer_name}} ({{order.user.userAddress[0].city.name}})</div>
                             </div>
                             <div v-if="order.listOfImages && order.listOfImages.length" style="display: flex; width: 100%; justify-content: flex-start;">
-                                <!-- <span v-for="image in order.listOfImages"> -->
-                                <img v-for="image in order.listOfImages" :src="uploadsEndPt + image.name" class="pz-margin-r16 image">
-                                <!-- </span> -->
+                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages)">
+                                    <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image">
+                                </span>
                             </div>
                         </div>
                     </li>
@@ -101,15 +101,6 @@ export default {
     },
     methods: {
         getAllOrders() {
-            //             1. list + NO detail
-            // buyer name
-            // placed bu
-            // is converted
-            // images tyhumbnails
-
-
-            // 2. panel
-
             this.pendingReq = true;
 
             let url = `${window._pz.apiEndPt}orders/images?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
@@ -155,6 +146,20 @@ export default {
                 // send over a clone of the filters object to avoid mutating it directly from the filters page
                 context: { comps: JSON.parse(JSON.stringify(this.filters)) }
             });
+        },
+        openPhotoBrowser(images) {
+            if (!images || images.length < 1) return;
+            var o = images.map((i, idx) => ({
+                url: this.uploadsEndPt + i.name,
+                caption: i.title || ''
+            }));
+            var a = window.vm.$f7.photoBrowser({
+                type: 'popup',
+                theme: 'dark',
+                toolbar: images.length > 1,
+                photos: o
+            }); a.open();
+
         }
     },
 

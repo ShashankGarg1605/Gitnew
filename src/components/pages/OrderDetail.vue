@@ -52,7 +52,7 @@
             </div>
         </section>
         <section v-if="data && data.orderProduct && data.orderProduct.length">
-            <div class="data-table card">
+            <div class="data-table pz-margin-8 pz-shadow">
                 <table class="equalDivide">
                     <thead class="pz-bg-gray-lightest">
                         <tr>

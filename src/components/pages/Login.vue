@@ -1,13 +1,13 @@
 <template>
   <f7-page name="login">
-    <!-- <f7-navbar sliding>
-                                                                                    <f7-nav-left>
-                                                                                      <f7-link icon="icon-bars" open-panel="left"></f7-link>
-                                                                                    </f7-nav-left>
-                                                                                    <f7-nav-center>
-                                                                                      home
-                                                                                    </f7-nav-center>
-                                                                                  </f7-navbar> -->
+    <!-- <f7-navbar>
+                                                                                      <f7-nav-left>
+                                                                                        <f7-link icon="icon-bars" open-panel="left"></f7-link>
+                                                                                      </f7-nav-left>
+                                                                                      <f7-nav-center>
+                                                                                        home
+                                                                                      </f7-nav-center>
+                                                                                    </f7-navbar> -->
     <section class="pg-login">
       <form @submit.prevent="validateBeforeSubmit" class="form" name="login">
         <div class="list-block" style="width: 80%;">

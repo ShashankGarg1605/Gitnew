@@ -1,7 +1,7 @@
 <template>
     <f7-page name="PurchaseInvoice" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
 
-        <f7-navbar sliding>
+        <f7-navbar>
             <f7-nav-left>
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>

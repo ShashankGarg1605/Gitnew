@@ -19,9 +19,8 @@ import moment from 'moment';
 import 'vue-awesome/icons';
 import Icon from 'vue-awesome/components/Icon';
 
-import FilterDateRange from './components/FilterDateRange';
-import FilterSingleSelect from './components/FilterSingleSelect';
-import FilterSearch from './components/FilterSearch';
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // Set up some useful globals
 window.isMaterial = !window.Framework7.prototype.device.ios;
@@ -34,28 +33,35 @@ window.isiOS = false;
 // Import F7 iOS Theme Styles
 /* eslint-disable global-require */
 if (window.isiOS) {
-  const Framework7Theme =
-    require('framework7/dist/css/framework7.ios.min.css');
-  const Framework7ThemeColors =
-    require('framework7/dist/css/framework7.ios.colors.min.css');
+  const Framework7Theme = require('framework7/dist/css/framework7.ios.min.css');
+  const Framework7ThemeColors = require('framework7/dist/css/framework7.ios.colors.min.css');
 } else {
   /* OR for Material Theme: */
-  const Framework7ThemeMaterial =
-    require('framework7/dist/css/framework7.material.min.css');
-  const Framework7ThemeColorsMaterial =
-    require('framework7/dist/css/framework7.material.colors.min.css');
+  const Framework7ThemeMaterial = require('framework7/dist/css/framework7.material.min.css');
+  const Framework7ThemeColorsMaterial = require('framework7/dist/css/framework7.material.colors.min.css');
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+window._pz = {};
 
+Vue.use(VueResource);
 Vue.use(Framework7Vue);
 Vue.use(VeeValidate);
-Vue.use(VueResource);
+
 
 // add the moment library to the Vue prototype so we can use it from any template directly
 Vue.prototype.moment = moment;
 
 // register font-awesome as a global component
 Vue.component('icon', Icon);
+
+
+// empty Vue instance as a central event bus, and some other common utils
+// Vue.prototype.$pzBus = new Vue();
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 // Vue.config.errorHandler = function (err, vm, info) {
@@ -100,6 +106,10 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 };
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 // Init App
 window.vm = new Vue({ // eslint-disable-line no-new
   el: '#app',
@@ -117,7 +127,7 @@ window.vm = new Vue({ // eslint-disable-line no-new
     swipePanelActiveArea: 20,
     swipePanelNoFollow: true,
     cache: false,
-    // hideNavbarOnPageScroll: true,
+    hideNavbarOnPageScroll: true,
     cacheDuration: 0
   },
   http: {
@@ -134,25 +144,35 @@ window.vm = new Vue({ // eslint-disable-line no-new
   }
 });
 
-Vue.component('pz-filter-date-range', FilterDateRange);
-Vue.component('pz-filter-single-select', FilterSingleSelect);
-Vue.component('pz-filter-search', FilterSearch);
 
-
-// empty Vue instance as a central event bus, and some other common utils
-Vue.prototype.$pzBus = new Vue();
-
-window.vm.$f7.onPageInit('*', page => {
-  console.debug('onPageInit: ', page.name);
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Vue.http.interceptors.push(function (request, next) {
+  Vue.prototype.$pendingReq = true;
+  next(function (response) {
+    Vue.prototype.$pendingReq = false;
+  });
 });
 
-window.vm.$f7.onPageReinit('*', page => {
-  console.debug('onPageReinit: ', page.name);
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// hide the side menu on the login page
+window.vm.$f7.onPageBeforeInit('*', page => {
+  console.debug('onPageBeforeInit: ', page.name);
+  // if we have created a cycle of pages, remove the pages in between
+  // for eg. Q-A-X-Y-Z-A, then on opening this last A, it will become Q-A
+  var his = window.vm.$f7.mainView.history;
+  var idx = his.findIndex(page => page === his[his.length - 1]);
+  if (idx >= 0) his.splice(idx, his.length - idx - 1);
+  window.vm.$f7.params.swipePanel = page.name === 'login' ? false : 'left';
 });
 
-window.vm.$f7.onPageBeforeAnimation('*', page => {
-  console.debug('onPageBeforeAnimation: ', page.name);
-});
+window.vm.$f7.onPageInit('*', page => { console.debug('onPageInit: ', page.name); });
+
+window.vm.$f7.onPageReinit('*', page => { console.debug('onPageReinit: ', page.name); });
+
+window.vm.$f7.onPageBeforeAnimation('*', page => { console.debug('onPageBeforeAnimation: ', page.name); });
 
 window.vm.$f7.onPageAfterAnimation('*', page => {
   console.debug('onPageAfterAnimation: ', page.name);
@@ -166,31 +186,17 @@ window.vm.$f7.onPageAfterAnimation('*', page => {
   }
 });
 
-window.vm.$f7.onPageBeforeRemove('*', page => {
-  console.debug('onPageBeforeRemove: ', page.name);
-});
+window.vm.$f7.onPageBeforeRemove('*', page => { console.debug('onPageBeforeRemove: ', page.name); });
 
-window.vm.$f7.onPageBack('*', page => {
-  console.debug('onPageBack: ', page.name);
-});
+window.vm.$f7.onPageBack('*', page => { console.debug('onPageBack: ', page.name); });
 
-window.vm.$f7.onPageAfterBack('*', page => {
-  console.debug('onPageAfterBack: ', page.name);
-});
-
-// hide the side menu on the login page
-window.vm.$f7.onPageBeforeInit('*', page => {
-  console.debug('onPageBeforeInit: ', page.name);
-  // if we have created a cycle of pages, remove the pages in between
-  // for eg. Q-A-X-Y-Z-A, then on opening this last A, it will become Q-A
-  var his = window.vm.$f7.mainView.history;
-  var idx = his.findIndex(page => page === his[his.length - 1]);
-  if (idx >= 0) his.splice(idx, his.length - idx - 1);
-  window.vm.$f7.params.swipePanel = page.name === 'login' ? false : 'left';
-});
+window.vm.$f7.onPageAfterBack('*', page => { console.debug('onPageAfterBack: ', page.name); });
 
 
-var BackButton = 0;
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+let BackButton = 0;
 function handleBackButton() {
   // NOTE: The back button will behave differently depending on circumstance
   // If the side panel is open, close it
@@ -213,14 +219,15 @@ function handleBackButton() {
   } else return window.navigator.app.exitApp();
 }
 
-
 // Ye olde Device Ready
 document.addEventListener('deviceready', () => {
   // Bind to the back button for Android
   document.addEventListener('backbutton', handleBackButton);
 });
 
-window._pz = {};
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 window._pz.err = {
   'ERR_NET': 'Please check your internet connection and try again.',
   'ERR_CREDS': 'You have entered an incorrect username and/or password',
@@ -234,7 +241,7 @@ if (localStorage.tenantData) {
 }
 
 window._pz.errFunc = function (err) {
-  var errMsg;
+  let errMsg;
   if (err.status === 404) errMsg = window._pz.err.ERR_404;
   else if (err.status === 0) errMsg = window._pz.err.ERR_NET;
   else errMsg = `Uh oh! Something went wrong (Error ${err.status})`;
@@ -254,7 +261,8 @@ window._pz.utils = {};
 
 
 
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 

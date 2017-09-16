@@ -36,15 +36,12 @@ var menuItem = {
   methods: {
     openPage(name) {
       // a left menu click means a new navigational stack, hence delete all history
-      window.vm.$f7.mainView.history = [];
+      // window.vm.$f7.mainView.history = [];
       window.vm.$f7.mainView.router.loadPage({
         url: name,
         reload: true
       });
     }
-  },
-  created() {
-    console.log('menuItem created');
   }
 };
 export default {

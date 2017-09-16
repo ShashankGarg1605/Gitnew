@@ -1,6 +1,6 @@
 <template>
   <f7-page name="Dashboard">
-    <f7-navbar sliding>
+    <f7-navbar>
       <f7-nav-left>
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>

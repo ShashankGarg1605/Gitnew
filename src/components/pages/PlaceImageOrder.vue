@@ -163,7 +163,7 @@ export default {
                 source(autocomplete, query, render) {
                     if (query.length < 3) return;
                     let results = [];
-                    if (query.length === 0) {
+                    if (query && query.length === 0) {
                         render(results);
                         return;
                     }
@@ -179,10 +179,14 @@ export default {
                     window.vm.Dom7('#autocomplete-standalone-popup').find('.item-after').text(value[0].name);
                     // Add item value to input value
                     that.userID = value[0].id;
+                },
+                onClose() {
+                    window.f7.params.hideNavbarOnPageScroll = true;
                 }
             });
         },
         openUserSelection() {
+            window.f7.params.hideNavbarOnPageScroll = false;
             this.autocompleteRef.open();
         },
         imageAdded(obj) {

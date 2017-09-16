@@ -46,12 +46,21 @@
 
 
 <script>
+import FilterDateRange from '../FilterDateRange';
+import FilterSingleSelect from '../FilterSingleSelect';
+import FilterSearch from '../FilterSearch';
+
 export default {
     name: 'Filters',
     data() {
         return {
             comps: null
         };
+    },
+    components: {
+        'pz-filter-date-range': FilterDateRange,
+        'pz-filter-single-select': FilterSingleSelect,
+        'pz-filter-search': FilterSearch
     },
     methods: {
         applyFilters() {

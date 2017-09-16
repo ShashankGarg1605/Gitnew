@@ -1,7 +1,7 @@
 <template>
-    <f7-page name="CommunicationPanel">
+    <f7-page tabs no-page-content toolbar-fixed>
 
-        <f7-navbar sliding>
+        <f7-navbar>
             <f7-nav-left>
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>
@@ -9,20 +9,26 @@
                 Communication Panel
             </f7-nav-center>
         </f7-navbar>
-
-        <section v-if="users">
-            <div class="list-block pz-margin-top0">
-                <a href="#" id="autocomplete-standalone-popup" class="item-link item-content autocomplete-opener" @click="openUserSelection()">
-                    <input type="hidden" id="usersearch" v-model="userID">
-                    <div class="item-inner">
-                        <div class="item-title">Select User</div>
-                        <div class="item-after"></div>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <div class="color-gray pz-page-err" v-if="!users && !pendingReq">{{errMsg}}</div>
+        <f7-toolbar tabbar>
+            <a href="#" data-tab="#tab-1" class="tab-link active" :disabled="!userID">Buyer Details</a>
+            <a href="#" data-tab="#tab-2" class="tab-link" :disabled="!userID">Comms Panel</a>
+            <a href="#" data-tab="#tab-3" class="tab-link" :disabled="!userID">Last 20 orders</a>
+        </f7-toolbar>
+        <f7-tabs swipeable>
+            <f7-page-content tab active id="tab-1">
+                <div class="list-block pz-margin-top0">
+                    <a href="#" id="autocomplete-standalone-popup" class="item-link item-content autocomplete-opener" @click="openUserSelection()">
+                        <input type="hidden" id="usersearch" v-model="userID">
+                        <div class="item-inner">
+                            <div class="item-title">Select User</div>
+                            <div class="item-after"></div>
+                        </div>
+                    </a>
+                </div>
+            </f7-page-content>
+            <f7-page-content tab id="tab-2">Tab 2 Content ...</f7-page-content>
+            <f7-page-content tab id="tab-3">Tab 3 Content ...</f7-page-content>
+        </f7-tabs>
 
     </f7-page>
 </template>
@@ -45,9 +51,9 @@ export default {
         return {
             users: null,
             userID: null,
-            pendingReq: false,
             errMsg: null,
-            autocompleteRef: null
+            autocompleteRef: null,
+            userDetails: null
         };
     },
     methods: {
@@ -61,8 +67,8 @@ export default {
                     }
                 })
                 .catch(err => {
-                    console.log('err: ', err);
-
+                    if (err instanceof Error) throw new Error(err);
+                    this.errMsg = window._pz.errFunc(err);
                 });
         },
         setUserSelection() {
@@ -93,11 +99,32 @@ export default {
                     window.vm.Dom7('#autocomplete-standalone-popup').find('.item-after').text(value[0].name);
                     // Add item value to input value
                     that.userID = value[0].id;
+                    window.Dom7('.swiper-container')[0].swiper.unlockSwipes();
+                },
+                onClose() {
+                    window.f7.params.hideNavbarOnPageScroll = true;
                 }
             });
         },
         openUserSelection() {
+            window.f7.params.hideNavbarOnPageScroll = false;
             this.autocompleteRef.open();
+        },
+        getAllData() {
+
+        },
+        getUserDetails() {
+            window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
+                .then(res => {
+                    console.log('res: ', res);
+                    if (res.ok) {
+                        this.userDetails = res.body;
+                    } else window._pz.errFunc(res);
+                })
+                .catch(err => {
+                    if (err instanceof Error) throw new Error(err);
+                    this.errMsg = window._pz.errFunc(err);
+                });
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
@@ -106,7 +133,12 @@ export default {
         this.getAllUsers();
     },
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
-    mounted() { console.debug(this.$options.name + ' mounted'); },
+    mounted() {
+        console.debug(this.$options.name + ' mounted');
+        setTimeout(function() {
+            window.Dom7('.swiper-container')[0].swiper.lockSwipes();
+        });
+    },
     beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
     updated() { console.debug(this.$options.name + ' updated'); },
     beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },

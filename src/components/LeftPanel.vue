@@ -11,7 +11,6 @@
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
             <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
-            <!-- <menu-item :icon="'image'" :url="'/PlaceImageOrder'" :label="'Place Image Order'"></menu-item> -->
           </ul>
         </div>
 
@@ -26,13 +25,20 @@
 
 <script>
 var menuItem = {
-  template: `<a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" :href="url">
+  template: `<a class="item-content close-panel button pz-colr-inherit pz-cap" data-reload="true" @click="openPage(url)">
               <div class="item-media"> <icon :name="icon"></icon> </div>
               <div class="item-inner pz-margin-l0">
                 <div class="item-title">{{label}}</div>
               </div>
             </a>`,
   props: ['icon', 'url', 'label'],
+  methods: {
+    openPage(name) {
+      // a left menu click means a new navigational stack, hence delete all history
+      window.vm.$f7.mainView.history = [];
+      window.vm.$f7.mainView.router.loadPage(name);
+    }
+  },
   created() {
     console.log('menuItem created');
   }

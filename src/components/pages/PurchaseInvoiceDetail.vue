@@ -8,27 +8,27 @@
         </f7-navbar>
 
         <!-- <div class="lorem">
-                                    <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
-                                    <p class="content-block-title">Upload now using:</p>
-                                    <div class="buttons-row content-block">
-                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
-                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
-                                    </div>
+                                                    <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
+                                                    <p class="content-block-title">Upload now using:</p>
+                                                    <div class="buttons-row content-block">
+                                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
+                                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
+                                                    </div>
 
-                                    <div class="card demo-card-header-pic" v-if="imgData">
-                                        <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
-                                        <div class="card-content">
-                                            <div class="card-content-inner">
-                                                <p>Upload this image?</p>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer" style="justify-content: flex-end;">
-                                            <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                                            <a href="#" class="button color-blue">Upload</a>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <hr> -->
+                                                    <div class="card demo-card-header-pic" v-if="imgData">
+                                                        <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
+                                                        <div class="card-content">
+                                                            <div class="card-content-inner">
+                                                                <p>Upload this image?</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-footer" style="justify-content: flex-end;">
+                                                            <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
+                                                            <a href="#" class="button color-blue">Upload</a>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <hr> -->
 
         <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
             <div class="row pz-padding-tb-4 pz-padding-lr16">
@@ -63,7 +63,7 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Image:</span>
-                <div class="col-65" v-if="!data.image">
+                <div class="col-65" v-if="!invoiceImage">
                     <a href="#" class="button button-raised pz-flex-sa-c pz-width100 pz-bg-gray-white" @click="uploadChoices()" id="uploadImgBtn" v-if="!imgData">
                         Upload image
                         <icon name="cloud-upload"></icon>
@@ -77,8 +77,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-65" v-if="data.image">
-                    <img src="http://via.placeholder.com/1500x1000" class="pz-width100">
+                <div class="col-65" v-if="invoiceImage">
+                    <img :src="invoiceImage" class="pz-width100">
                 </div>
             </div>
         </section>
@@ -168,19 +168,12 @@ export default {
             imgWidth: null
         };
     },
-    // computed: {
-    //     styleObject: function() {
-    //         const width = window.Dom7('#uploadImgBtn').width();
-    //         console.log('width: ', width);
-    //         let height = parseInt(width * this.imgHeight / this.imgWidth) + 'px';
-    //         console.log('height: ', height);
-    //         let obj = {
-    //             'background-image': `url( ${this.imgData} )`,
-    //             'height': height
-    //         };
-    //         return obj;
-    //     }
-    // },
+    computed: {
+        invoiceImage() {
+            if (!this.data || !this.data.image) return null;
+            return window._pz.uploadsEndPt + 'purchase-invoice/' + this.data.image;
+        }
+    },
     methods: {
         getDetails() {
             this.pendingReq = true;
@@ -220,7 +213,6 @@ export default {
             }
             navigator.camera.getPicture(
                 res => {
-                    // let res = window._pz.imgData;
                     this.imgData = 'data:image/jpeg;base64,' + res;
                 },
                 err => { throw new Error(err); },

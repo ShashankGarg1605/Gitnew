@@ -10,25 +10,25 @@
       </f7-nav-center>
     </f7-navbar>
     <!-- <div class="list-block pz-margin-top0">
-            <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
-              <select name="fruits" @change="statusChange(this)" v-model="status">
-                <option value="000" selected>All</option>
-                <option value="101">Received</option>
-                <option value="102">Confirmed</option>
-                <option value="103">Being Procured</option>
-                <option value="104">Being Packed</option>
-                <option value="105">Partially Dispatched</option>
-                <option value="114">Fully Dispatched</option>
-                <option value="106">Fulfilled</option>
-                <option value="107">Cancelled</option>
-              </select>
-              <div class="item-content">
-                <div class="item-inner">
-                  <div class="item-title">Chose status</div>
-                </div>
-              </div>
-            </a>
-          </div> -->
+                                                                                            <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-height="400px" data-back-on-select="true">
+                                                                                              <select name="fruits" @change="statusChange(this)" v-model="status">
+                                                                                                <option value="000" selected>All</option>
+                                                                                                <option value="101">Received</option>
+                                                                                                <option value="102">Confirmed</option>
+                                                                                                <option value="103">Being Procured</option>
+                                                                                                <option value="104">Being Packed</option>
+                                                                                                <option value="105">Partially Dispatched</option>
+                                                                                                <option value="114">Fully Dispatched</option>
+                                                                                                <option value="106">Fulfilled</option>
+                                                                                                <option value="107">Cancelled</option>
+                                                                                              </select>
+                                                                                              <div class="item-content">
+                                                                                                <div class="item-inner">
+                                                                                                  <div class="item-title">Chose status</div>
+                                                                                                </div>
+                                                                                              </div>
+                                                                                            </a>
+                                                                                          </div> -->
 
     <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
       Found {{totalCount}} results
@@ -44,7 +44,7 @@
     <f7-list>
       <div v-if="allOrders.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="order in allOrders" :key="order.id" :class="{ redBg: order.needBiltyUpload}">
+          <li class="item-content" v-for="order in allOrders" :key="order.id">
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Order ID:</div>
@@ -58,11 +58,11 @@
                 <div class="col-30 color-gray pz-weight-thin">Value:</div>
                 <div class="col-70">Rs. {{order.finalOrderValue | moneyFormat}}</div>
               </div>
-              <i v-if="!order.needBiltyUpload" class="f7-icons pz-popover" @click='openPopover(order.id, $event)'>more_horiz</i>
-
-              <span v-if="order.needBiltyUpload" @click="openPage( 'orderdetail', order.id)">
-                <icon class="pz-popover" name="cloud-upload" scale="1.5"></icon>
-              </span>
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Status:</div>
+                <div class="col-70">{{order.statusText}}</div>
+              </div>
+              <i class="f7-icons pz-popover" @click='openPopover(order, $event)'>more_horiz</i>
             </div>
           </li>
         </ul>
@@ -71,13 +71,15 @@
       <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !pendingReq">No results found</div>
     </f7-list>
 
-    <f7-popover id="pz-popover-allorder">
+    <f7-popover :id="randomID">
       <div class="popover-inner">
         <div class="list-block">
-          <a @click="openPage('orderdetail')" class="list-button item-link close-popover">View Details</a>
+          <a @click="openPage('orderdetail')" class="list-button item-link close-popover">Details</a>
+          <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderdetail')" class="list-button item-link close-popover">Update</a>
         </div>
       </div>
     </f7-popover>
+
   </f7-page>
 </template>
 
@@ -87,10 +89,6 @@
   right: 0px;
   top: 0px;
   padding: 10px;
-}
-
-.redBg {
-  background: #FFEBEE !important;
 }
 </style>
 
@@ -105,6 +103,8 @@ export default {
       pendingReq: false,
       hasReachedEnd: false,
       totalCount: null,
+      clickedOrder: null,
+      randomID: Math.random().toString(36).substr(2, 10),
       filters: {
         date: [
           {
@@ -152,13 +152,19 @@ export default {
       this.pendingReq = true;
 
       let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
-      // if (this.status && this.status !== '000') url += `&status=${this.status}`;
       window.vm.$http.get(url)
         .then(res => {
           this.totalCount = res.headers.map.count && res.headers.map.count[0];
 
           var data = res.body.map(order => {
-            order.needBiltyUpload = order.order_status === 5 && !order.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name);
+
+            order.isPartiallyDispatched = order.order_status === 5 &&
+              !order.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name) &&
+              !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
+
+            if (order.isPartiallyDispatched) order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
+            else order.statusText = statusMapping[order.order_status];
+
             return order;
           });
           this.allOrders = this.allOrders.concat(data);
@@ -182,28 +188,16 @@ export default {
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
     },
-    openPage(pageName, id) {
-      id = id || window.Dom7('#pz-popover-allorder').data('pz-id');
-      // window.vm.$f7.mainView.router.load({
-      //   url: pageName,
-      //   context: { id: id }
-      // });
-      let url = `${pageName}?id=${id}`;
+    openPage(pageName) {
+      const id = this.clickedOrder.id;
+      const url = `${pageName}?id=${id}`;
       window.vm.$f7.mainView.router.loadPage(url);
     },
-    openPopover(id, e) {
-      window.vm.$f7.popover(window.Dom7('#pz-popover-allorder'), e.target);
-      window.Dom7('#pz-popover-allorder').data('pz-id', id);
+    openPopover(order, e) {
+      this.clickedOrder = order;
+      const popupID = '#' + this.randomID;
+      window.vm.$f7.popover(window.Dom7(popupID), e.target);
     },
-    // statusChange() {
-    //   console.log('this.status: ', this.status);
-    //   this.allOrders = [];
-    //   this.limit = 20;
-    //   this.offset = 0;
-    //   this.pendingReq = false;
-
-    //   this.getAllOrders(this.status);
-    // },
     // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
     addInfiniteScroll() {
       window.vm.$f7.attachInfiniteScroll(window.Dom7('.infinite-scroll'));
@@ -248,5 +242,14 @@ export default {
   updated() { console.debug(this.$options.name + ' updated'); },
   beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
   destroyed() { console.debug(this.$options.name + ' destroyed'); }
+};
+
+const statusMapping = {
+  1: 'Received',
+  2: 'Received',
+  3: 'Being procured',
+  4: 'Ready to dispatch',
+  5: 'Dispatched',
+  6: 'Fulfilled'
 };
 </script>

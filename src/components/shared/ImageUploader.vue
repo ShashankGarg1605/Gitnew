@@ -5,7 +5,7 @@
             <icon name="plus"></icon>
         </a>
         <div class="pz-padding-t16" v-show="images.length">
-            <span class="color-gray pz-size-small" v-if="tooltip">Tap an image for options</span>
+            <span class="color-gray pz-size-small" v-if="tooltip">Tap image for options</span>
             <div v-if="inputTitles">
                 <span v-for="(image, index) in images" :key="index" class="pz-flex pz-margin-b8">
                     <img :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
@@ -69,7 +69,6 @@ export default {
                 // xxx
                 let res = window._pz.imgData;
                 this.images.push({
-                    // data: 'data:image/jpeg;base64,' + res,
                     data: res,
                     title: ''
                 });
@@ -79,7 +78,6 @@ export default {
             navigator.camera.getPicture(
                 res => {
                     this.images.push({
-                        // data: 'data:image/jpeg;base64,' + res,
                         data: res,
                         title: ''
                     });
@@ -123,7 +121,7 @@ export default {
                                         </div>
                                     </div>
                                 </div>`,
-                photos: [this.images[index].data]
+                photos: ['data:image/jpeg;base64,' + this.images[index].data]
             }); a.open();
         },
         uploadImages() {

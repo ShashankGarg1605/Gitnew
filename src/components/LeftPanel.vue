@@ -7,11 +7,11 @@
 
         <div class="list-block">
           <ul>
-            <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item>
+            <!-- <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item> -->
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
             <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
-            <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
+            <!-- <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item> -->
           </ul>
         </div>
 

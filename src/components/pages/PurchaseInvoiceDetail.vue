@@ -40,11 +40,11 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice:</span>
-                <div class="col-65" v-if="!invoiceImage">
+                <div class="col-65" v-if="!invoiceImages">
                     <image-uploader :maxCount="4" :submitLabel="'Upload Invoice'" :tooltip="true" @upload="uploadImage($event)" />
                 </div>
-                <div class="col-65" v-if="invoiceImage">
-                    <img :src="invoiceImage" class="pz-width100">
+                <div class="col-65" v-if="invoiceImages">
+                    <img v-for="(image, index) in invoiceImages" :key="index" :src="image" class="pz-width100">
                 </div>
             </div>
         </section>
@@ -83,7 +83,7 @@
             </div>
         </section>
 
-        <div class="color-gray pz-page-err" v-if="!data && !pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!data && !$pendingReq">{{errMsg}}</div>
     </f7-page>
 </template>
 
@@ -120,7 +120,6 @@ export default {
         return {
             data: null,
             id: null,
-            pendingReq: false,
             errMsg: null
         };
     },
@@ -128,38 +127,41 @@ export default {
         'image-uploader': ImageUploader
     },
     computed: {
-        invoiceImage() {
+        invoiceImages() {
             if (!this.data || !this.data.image) return null;
-            return window._pz.uploadsEndPt + 'purchase-invoice/' + this.data.image;
+            const images = this.data.image.split(';');
+            return images.map(i => window._pz.uploadsEndPt + 'purchase-invoice/' + i);
         }
     },
     methods: {
         getDetails() {
-            this.pendingReq = true;
             window.vm.$http.get(`${window._pz.apiEndPt}purchase_invoice/${this.id}`)
                 .then(res => {
-                    this.pendingReq = false;
                     if (res.ok) this.data = res.body;
                 })
                 .catch(err => {
                     if (err instanceof Error) throw new Error(err);
 
-                    this.pendingReq = false;
                     this.errMsg = window._pz.errFunc(err);
                 });
         },
-        uploadImage(imagesArr) {
+        uploadImage(images) {
             window.vm.$f7.showPreloader();
+
+            let params = images.map(image => ({
+                stringValue: image.data,
+                name: image.title
+            }));
+
             window.vm.$http.patch(`${window._pz.apiEndPt}purchase_invoice?updateType=general`, {
-                image: Math.random().toString(36).substr(2, 10),
                 id: this.data.id,
-                imageData: imagesArr
+                images: params
             })
                 .then(res => {
                     window.vm.$f7.hidePreloader();
                     window.vm.$f7.mainView.router.refreshPage();
                     window._pz.refreshOnBack = true;
-                    window.vm.$f7.addNotification({ message: 'Image uploaded successfully', hold: 2000 });
+                    window.vm.$f7.addNotification({ message: 'Invoice uploaded successfully', hold: 2000 });
                 })
                 .catch(error => {
                     window.vm.$f7.hidePreloader();

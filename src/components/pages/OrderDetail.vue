@@ -20,7 +20,9 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Mobile No:</span>
-                <span class="col-65 ">{{data.user.mobile}}</span>
+                <span class="col-65 ">
+                    <a :href="'tel:'+data.user.mobile">{{data.user.mobile}}</a>
+                </span>
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Buyer Name:</span>
@@ -30,10 +32,34 @@
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice Amt:</span>
                 <span class="col-65 ">Rs. {{data.finalOrderValue | moneyFormat}}</span>
             </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 || data.order_status === 6">
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Created Date:</span>
+                <span class="col-65 ">{{data.created_date}}</span>
+            </div>
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 && carriers && !biltyImage">
+                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Select Carrier</span>
+                <span class="col-65 ">
+                    <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
+                        <select name="carrier" v-model="selectedCarrier">
+                            <option v-for="c in carriers" :key="c.id" :value="c.id">{{c.carrier.name}}</option>
+                        </select>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-after">{{selectedCarrier || 'Tap here'}}</div>
+                            </div>
+                        </div>
+                        <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImage()" v-if="selCrrName && selCrrName.toLowerCase() === 'local transport'">
+                            Fully Dispatch
+                            <icon name="rocket"></icon>
+                        </a>
+                    </a>
+                </span>
+            </div>
+            <!-- upload images only when selected carrier is not local transport -->
+            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 && (!selCrrName || selCrrName.toLowerCase() !== 'local transport')">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
                 <div class="col-65" v-if="!biltyImage && data.order_status === 5">
-                    <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" />
+                    <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" :disabled="!selectedCarrier" />
                 </div>
                 <div class="col-65" v-if="biltyImage">
                     <img :src="biltyImage" class="pz-width100">
@@ -72,7 +98,7 @@
             </div>
         </section>
 
-        <div class="color-gray pz-page-err" v-if="!data && !pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!data && !$pendingReq">{{errMsg}}</div>
 
     </f7-page>
 </template>
@@ -104,7 +130,7 @@
 import ImageUploader from '../shared/ImageUploader';
 
 export default {
-    name: 'AllOrders',
+    name: 'OrderDetail',
     components: {
         'image-uploader': ImageUploader
     },
@@ -112,8 +138,9 @@ export default {
         return {
             data: null,
             id: null,
-            pendingReq: false,
-            errMsg: null
+            errMsg: null,
+            carriers: null,
+            selectedCarrier: null
         };
     },
     computed: {
@@ -131,6 +158,10 @@ export default {
                 default: return 'ERR';
             }
         },
+        selCrrName() {
+            if (!this.selectedCarrier) return null;
+            else return this.carriers.find(x => x.id === this.selectedCarrier).carrier.name;
+        },
         biltyImage() {
             if (!this.data || !this.data.orderStatus) return null;
             let dispatchData = this.data.orderStatus.find(x => x.status_id === 5);
@@ -140,26 +171,42 @@ export default {
     },
     methods: {
         getDetails() {
-            this.pendingReq = true;
             window.vm.$http.get(`${window._pz.apiEndPt}orders/${this.id}`)
                 .then(res => {
-                    this.pendingReq = false;
-                    if (res.ok) this.data = res.body;
+                    if (res.ok) {
+                        this.data = res.body;
+
+                        const adr = res.body.user.userAddress;
+                        let shippingCityID = adr.length === 1 ? adr[0].city.id : adr.find(x => x.address_type === 1).city.id;
+                        this.getCarriers(shippingCityID);
+                    }
                 })
                 .catch(err => {
                     if (err instanceof Error) throw new Error(err);
 
-                    this.pendingReq = false;
+                    this.errMsg = window._pz.errFunc(err);
+                });
+        },
+        getCarriers(cityID) {
+            window.vm.$http.get(window._pz.apiEndPt + 'city/carriers?city=' + cityID)
+                .then(res => {
+                    if (res.ok) this.carriers = res.body;
+                })
+                .catch(err => {
+                    if (err instanceof Error) throw new Error(err);
+
                     this.errMsg = window._pz.errFunc(err);
                 });
         },
         uploadImage(image) {
             window.vm.$f7.showPreloader();
-            window.vm.$http.patch(`${window._pz.apiEndPt}orders?id=${this.data.id}updateType=general`, {
-                image: Math.random().toString(36).substr(2, 10),
-                id: this.data.id,
-                imageData: image
-            })
+
+            const params = image ? {
+                stringValue: image[0].data,
+                name: image[0].title
+            } : null;
+
+            window.vm.$http.patch(`${window._pz.apiEndPt}orders?id=${this.data.id}&modified_by=${localStorage.userID}&updateType=status&carrierId=${this.selectedCarrier}`, params)
                 .then(res => {
                     window.vm.$f7.hidePreloader();
                     window.vm.$f7.mainView.router.refreshPage();

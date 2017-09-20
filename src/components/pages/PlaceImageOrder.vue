@@ -23,7 +23,7 @@
             <image-uploader :maxCount="5" :submitLabel="'Place Image Order'" :inputTitles="true" :tooltip="true" @upload="uploadImage($event)" />
         </section>
 
-        <div class="color-gray pz-page-err" v-if="!users && !pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!users && !$pendingReq">{{errMsg}}</div>
 
     </f7-page>
 </template>
@@ -48,7 +48,6 @@ export default {
         return {
             users: null,
             userID: null,
-            pendingReq: false,
             errMsg: null,
             autocompleteRef: null,
             images: []
@@ -110,15 +109,16 @@ export default {
             this.autocompleteRef.open();
         },
         uploadImage(images) {
-            let arr = images.map(image => ({
+            window.vm.$f7.showPreloader();
+
+            let params = images.map(image => ({
                 stringValue: image.data,
                 name: image.title
             }));
 
-            console.log('arr: ', arr);
-
-            window.vm.$http.post(window._pz.apiEndPt + 'orders/image?user=' + this.userID, arr)
+            window.vm.$http.post(window._pz.apiEndPt + 'orders/image?user=' + this.userID, params)
                 .then(res => {
+                    window.vm.$f7.hidePreloader();
                     if (res.ok) {
                         window.vm.$f7.addNotification({ message: `Image order ID ${res.body.id} placed!`, hold: 3000 });
                         let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
@@ -129,6 +129,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    window.vm.$f7.hidePreloader();
                     if (err instanceof Error) throw new Error(err);
                     this.errMsg = window._pz.errFunc(err);
                 });

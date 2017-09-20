@@ -235,8 +235,8 @@ window._pz.err = {
   'ERR_404': 'No results found'
 };
 
-// window._pz.domain = 'http://staging.prozo.com';
-window._pz.domain = 'http://192.168.1.12:8091';
+window._pz.domain = 'http://staging.prozo.com';
+// window._pz.domain = 'http://192.168.1.12:8091';
 window._pz.apiEndPt = window._pz.domain + '/api/v3/';
 if (localStorage.tenantData) {
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;

@@ -20,7 +20,7 @@
         </section>
 
         <section v-if="users && userID" style="width: 80%;margin: 0px auto;">
-            <image-uploader :maxCount="5" :submitLabel="'Place Image Order'" :inputTitles="true" @upload="uploadImage($event)" />
+            <image-uploader :maxCount="5" :submitLabel="'Place Image Order'" :inputTitles="true" :tooltip="true" @upload="uploadImage($event)" />
         </section>
 
         <div class="color-gray pz-page-err" v-if="!users && !pendingReq">{{errMsg}}</div>
@@ -69,7 +69,6 @@ export default {
                 })
                 .catch(err => {
                     console.log('err: ', err);
-
                 });
         },
         setUserSelection() {
@@ -111,7 +110,28 @@ export default {
             this.autocompleteRef.open();
         },
         uploadImage(images) {
-            console.log('images: ', images);
+            let arr = images.map(image => ({
+                stringValue: image.data,
+                name: image.title
+            }));
+
+            console.log('arr: ', arr);
+
+            window.vm.$http.post(window._pz.apiEndPt + 'orders/image?user=' + this.userID, arr)
+                .then(res => {
+                    if (res.ok) {
+                        window.vm.$f7.addNotification({ message: `Image order ID ${res.body.id} placed!`, hold: 3000 });
+                        let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+                        window.vm.$f7.mainView.router.load({
+                            url: prevPage,
+                            reload: true
+                        });
+                    }
+                })
+                .catch(err => {
+                    if (err instanceof Error) throw new Error(err);
+                    this.errMsg = window._pz.errFunc(err);
+                });
 
         }
     },

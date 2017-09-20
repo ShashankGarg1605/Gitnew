@@ -135,6 +135,7 @@ window.vm = new Vue({ // eslint-disable-line no-new
       'Content-type': 'application/json;charset=UTF-8; charset=UTF-8',
       'source': '3',
       'Authorization': (() => window.localStorage.authToken)(),
+      'ID': (() => window.localStorage.userID)(),
       'tenant': (() => window.localStorage.tenantData && ('tenant_' + JSON.parse(window.localStorage.tenantData).id))()
     }
   },
@@ -234,7 +235,8 @@ window._pz.err = {
   'ERR_404': 'No results found'
 };
 
-window._pz.domain = 'http://staging.prozo.com';
+// window._pz.domain = 'http://staging.prozo.com';
+window._pz.domain = 'http://192.168.1.12:8091';
 window._pz.apiEndPt = window._pz.domain + '/api/v3/';
 if (localStorage.tenantData) {
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;

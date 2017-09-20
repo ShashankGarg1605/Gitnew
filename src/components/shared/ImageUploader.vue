@@ -4,16 +4,17 @@
             Add {{images.length? 'another': ''}} image
             <icon name="plus"></icon>
         </a>
-        <div class="pz-padding-t16">
+        <div class="pz-padding-t16" v-show="images.length">
+            <span class="color-gray pz-size-small" v-if="tooltip">Tap an image for options</span>
             <div v-if="inputTitles">
                 <span v-for="(image, index) in images" :key="index" class="pz-flex pz-margin-b8">
-                    <img :src="images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+                    <img :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
                     <input type="text" placeholder="Title (optional)" v-model="images[index].title">
                 </span>
             </div>
 
             <div v-else>
-                <img v-for="(image, index) in images" :key="index" :src="images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+                <img v-for="(image, index) in images" :key="index" :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
             </div>
         </div>
         <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="images.length>0">
@@ -42,7 +43,7 @@ input {
 <script>
 export default {
 
-    props: ['maxCount', 'submitLabel', 'inputTitles'],
+    props: ['maxCount', 'submitLabel', 'inputTitles', 'tooltip'],
     data() {
         return {
             images: []
@@ -68,7 +69,8 @@ export default {
                 // xxx
                 let res = window._pz.imgData;
                 this.images.push({
-                    data: 'data:image/jpeg;base64,' + res,
+                    // data: 'data:image/jpeg;base64,' + res,
+                    data: res,
                     title: ''
                 });
                 // xxx
@@ -77,7 +79,8 @@ export default {
             navigator.camera.getPicture(
                 res => {
                     this.images.push({
-                        data: 'data:image/jpeg;base64,' + res,
+                        // data: 'data:image/jpeg;base64,' + res,
+                        data: res,
                         title: ''
                     });
                 },

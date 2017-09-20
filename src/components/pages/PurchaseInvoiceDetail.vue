@@ -41,7 +41,7 @@
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice:</span>
                 <div class="col-65" v-if="!invoiceImage">
-                    <image-uploader :maxCount="4" :submitLabel="'Upload Invoice'" @upload="uploadImage($event)" />
+                    <image-uploader :maxCount="4" :submitLabel="'Upload Invoice'" :tooltip="true" @upload="uploadImage($event)" />
                 </div>
                 <div class="col-65" v-if="invoiceImage">
                     <img :src="invoiceImage" class="pz-width100">

@@ -98,15 +98,15 @@ body {
 .pz-weight-thin {
     font-weight: 300 !important;
 }
-
 .pz-weight-bold {
     font-weight: bold !important;
 }
-
 .pz-size-smaller {
     font-size: smaller !important;
 }
-
+.pz-size-small {
+    font-size: small !important;
+}
 .pz-size-normal {
     font-size: initial !important;
 }

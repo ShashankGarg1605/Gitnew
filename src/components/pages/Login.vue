@@ -1,13 +1,13 @@
 <template>
   <f7-page name="login">
     <!-- <f7-navbar>
-                                                                                      <f7-nav-left>
-                                                                                        <f7-link icon="icon-bars" open-panel="left"></f7-link>
-                                                                                      </f7-nav-left>
-                                                                                      <f7-nav-center>
-                                                                                        home
-                                                                                      </f7-nav-center>
-                                                                                    </f7-navbar> -->
+                                                                                                                <f7-nav-left>
+                                                                                                                  <f7-link icon="icon-bars" open-panel="left"></f7-link>
+                                                                                                                </f7-nav-left>
+                                                                                                                <f7-nav-center>
+                                                                                                                  home
+                                                                                                                </f7-nav-center>
+                                                                                                              </f7-navbar> -->
     <section class="pg-login">
       <form @submit.prevent="validateBeforeSubmit" class="form" name="login">
         <div class="list-block" style="width: 80%;">
@@ -161,7 +161,7 @@ export default {
         // GO GO GO !
         .then(res => {
           if (res.ok) {
-            setGlobals(res.body.token, tempTenant);
+            setGlobals(res.body.token, tempTenant, res.body.id);
             clearAllHistory();
             window.vm.$f7.mainView.router.loadPage('allorders');
           }
@@ -188,10 +188,13 @@ export default {
   destroyed() { console.debug(this.$options.name + 'destroyed'); }
 };
 
-function setGlobals(authToken, tenantData) {
+function setGlobals(authToken, tenantData, userID) {
   window.vm.$options.http.headers.Authorization = authToken;
+  window.vm.$options.http.headers.ID = '' + userID;
   window.vm.$options.http.headers.tenant = 'tenant_' + tenantData.id;
+
   window.localStorage.authToken = authToken;
+  window.localStorage.userID = userID;
   window.localStorage.tenantData = JSON.stringify(tenantData);
 }
 

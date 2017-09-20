@@ -72,7 +72,10 @@ body {
 
 /* width  */
 .pz-width100 {
-    width: 100%;
+    width: 100% !important;
+}
+.pz-max-width100 {
+    max-width: 100% !important;
 }
 /* width  */
 
@@ -133,6 +136,9 @@ body {
 }
 .pz-margin-b30 {
     margin-bottom: 30px !important;
+}
+.pz-margin-b8 {
+    margin-bottom: 8px !important;
 }
 .pz-margin-0 {
     margin: 0px !important;

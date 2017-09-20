@@ -33,18 +33,7 @@
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 || data.order_status === 6">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
                 <div class="col-65" v-if="!biltyImage && data.order_status === 5">
-                    <a href="#" class="button button-raised pz-flex-sa-c pz-width100 pz-bg-gray-white" @click="uploadChoices()" id="uploadImgBtn" v-if="!imgData">
-                        Upload image
-                        <icon name="cloud-upload"></icon>
-                    </a>
-                    <div v-if="imgData">
-                        <!-- <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div> -->
-                        <img :src="imgData" class="pz-width100">
-                        <div class="card-footer" style="justify-content: flex-end;">
-                            <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                            <a href="#" class="button" @click="uploadImage()">Upload</a>
-                        </div>
-                    </div>
+                    <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" />
                 </div>
                 <div class="col-65" v-if="biltyImage">
                     <img :src="biltyImage" class="pz-width100">
@@ -112,17 +101,19 @@
 }
 </style>
 <script>
+import ImageUploader from '../shared/ImageUploader';
+
 export default {
     name: 'AllOrders',
+    components: {
+        'image-uploader': ImageUploader
+    },
     data() {
         return {
             data: null,
             id: null,
             pendingReq: false,
-            errMsg: null,
-            imgData: null,
-            imgHeight: null,
-            imgWidth: null
+            errMsg: null
         };
     },
     computed: {
@@ -162,47 +153,12 @@ export default {
                     this.errMsg = window._pz.errFunc(err);
                 });
         },
-        uploadChoices() {
-            let buttons = [
-                { text: 'Upload invoice using', label: true },
-                {
-                    text: 'Camera',
-                    onClick: function() { this.getImage('CAMERA'); }.bind(this)
-                },
-                {
-                    text: 'Gallery',
-                    onClick: function() { this.getImage('PHOTOLIBRARY'); }.bind(this)
-                }
-            ];
-            window.vm.$f7.actions(buttons);
-        },
-        getImage(source) {
-            if (!navigator.camera) {
-                // xxx
-                let res = window._pz.imgData;
-                this.imgData = 'data:image/jpeg;base64,' + res;
-                // xxx
-                return;
-            }
-            navigator.camera.getPicture(
-                res => {
-                    // let res = window._pz.imgData;
-                    this.imgData = 'data:image/jpeg;base64,' + res;
-                },
-                err => { throw new Error(err); },
-                {
-                    'destinationType': window.Camera.DestinationType.DATA_URL,
-                    'sourceType': window.Camera.PictureSourceType[source],
-                    'quality': 30,
-                    'encodingType': window.Camera.EncodingType.JPEG
-                });
-        },
-        uploadImage() {
+        uploadImage(image) {
             window.vm.$f7.showPreloader();
             window.vm.$http.patch(`${window._pz.apiEndPt}orders?id=${this.data.id}updateType=general`, {
-                image: 'randomfilename',
+                image: Math.random().toString(36).substr(2, 10),
                 id: this.data.id,
-                imageData: this.imgData
+                imageData: image
             })
                 .then(res => {
                     window.vm.$f7.hidePreloader();

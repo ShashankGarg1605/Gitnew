@@ -112,8 +112,8 @@
 </style>
 
 <script>
-
 import ImageUploader from '../shared/ImageUploader';
+
 export default {
     name: 'PurchaseInvoiceDetail',
     data() {

@@ -1,11 +1,20 @@
 <template>
-    <section>
+    <section class="pz-width100">
         <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white color-gray" @click="uploadChoices()" :disabled="images.length==maxCount">
             Add {{images.length? 'another': ''}} image
             <icon name="plus"></icon>
         </a>
         <div class="pz-padding-t16">
-            <img v-for="(image, index) in images" :key="index" :src="images[index]" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+            <div v-if="inputTitles">
+                <span v-for="(image, index) in images" :key="index" class="pz-flex pz-margin-b8">
+                    <img :src="images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+                    <input type="text" placeholder="Title (optional)" v-model="images[index].title">
+                </span>
+            </div>
+
+            <div v-else>
+                <img v-for="(image, index) in images" :key="index" :src="images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+            </div>
         </div>
         <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="images.length>0">
             {{submitLabel}}
@@ -21,12 +30,19 @@
     border-radius: 3px;
     box-shadow: 0px 1px 1px 0px lightgrey;
 }
+
+input {
+    flex-grow: 1;
+    border: 1px dashed lightgrey;
+    border-radius: 3px;
+    font-size: 1em;
+}
 </style>
 
 <script>
 export default {
 
-    props: ['maxCount', 'submitLabel'],
+    props: ['maxCount', 'submitLabel', 'inputTitles'],
     data() {
         return {
             images: []
@@ -51,13 +67,19 @@ export default {
             if (!navigator.camera) {
                 // xxx
                 let res = window._pz.imgData;
-                this.images.push('data:image/jpeg;base64,' + res);
+                this.images.push({
+                    data: 'data:image/jpeg;base64,' + res,
+                    title: ''
+                });
                 // xxx
                 return;
             }
             navigator.camera.getPicture(
                 res => {
-                    this.images.push('data:image/jpeg;base64,' + res);
+                    this.images.push({
+                        data: 'data:image/jpeg;base64,' + res,
+                        title: ''
+                    });
                 },
                 err => { throw new Error(err); },
                 {
@@ -98,7 +120,7 @@ export default {
                                         </div>
                                     </div>
                                 </div>`,
-                photos: [this.images[index]]
+                photos: [this.images[index].data]
             }); a.open();
         },
         uploadImages() {

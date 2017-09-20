@@ -7,29 +7,6 @@
             </f7-nav-center>
         </f7-navbar>
 
-        <!-- <div class="lorem">
-                                                    <p class="alert pz-bg-gray-lighter pz-padding-16 content-block-title">Invoice image not uploaded!</p>
-                                                    <p class="content-block-title">Upload now using:</p>
-                                                    <div class="buttons-row content-block">
-                                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('CAMERA')">Camera</a>
-                                                        <a href="#" class="button button-fill button-raised color-blue" @click="getImage('PHOTOLIBRARY')">Gallery</a>
-                                                    </div>
-
-                                                    <div class="card demo-card-header-pic" v-if="imgData">
-                                                        <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div>
-                                                        <div class="card-content">
-                                                            <div class="card-content-inner">
-                                                                <p>Upload this image?</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-footer" style="justify-content: flex-end;">
-                                                            <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                                                            <a href="#" class="button color-blue">Upload</a>
-                                                        </div>
-                                                    </div>
-                                                </div> 
-                                                <hr> -->
-
         <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Status:</span>
@@ -64,18 +41,17 @@
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Image:</span>
                 <div class="col-65" v-if="!invoiceImage">
-                    <a href="#" class="button button-raised pz-flex-sa-c pz-width100 pz-bg-gray-white" @click="uploadChoices()" id="uploadImgBtn" v-if="!imgData">
-                        Upload image
+                    <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white color-gray" @click="uploadChoices()" :disabled="images.length==4">
+                        Add {{images.length? 'another': ''}} image
+                        <icon name="plus"></icon>
+                    </a>
+                    <div class="pz-padding-t16">
+                        <img v-for="(image, index) in images" :key="index" :src="images[index]" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+                    </div>
+                    <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="images.length>0">
+                        Upload invoice
                         <icon name="cloud-upload"></icon>
                     </a>
-                    <div v-if="imgData">
-                        <!-- <div :style="styleObject" valign="bottom" class="card-header color-white no-border pz-card-head"></div> -->
-                        <img :src="imgData" class="pz-width100">
-                        <div class="card-footer" style="justify-content: flex-end;">
-                            <a href="#" class="button color-red" @click="imgData=null">Cancel</a>
-                            <a href="#" class="button" @click="uploadImage()">Upload</a>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-65" v-if="invoiceImage">
                     <img :src="invoiceImage" class="pz-width100">
@@ -144,12 +120,11 @@
     width: 1000px;
 }
 
-
-.alert {
-    text-transform: uppercase;
-    text-align: center;
-    font-weight: bold;
+.image {
+    height: 40px;
+    width: 40px;
     border-radius: 3px;
+    box-shadow: 0px 1px 1px 0px lightgrey;
 }
 </style>
 
@@ -163,9 +138,8 @@ export default {
             id: null,
             pendingReq: false,
             errMsg: null,
-            imgData: null,
-            imgHeight: null,
-            imgWidth: null
+            images: [],
+            imgData: null
         };
     },
     computed: {
@@ -207,13 +181,13 @@ export default {
             if (!navigator.camera) {
                 // xxx
                 let res = window._pz.imgData;
-                this.imgData = 'data:image/jpeg;base64,' + res;
+                this.images.push('data:image/jpeg;base64,' + res);
                 // xxx
                 return;
             }
             navigator.camera.getPicture(
                 res => {
-                    this.imgData = 'data:image/jpeg;base64,' + res;
+                    this.images.push('data:image/jpeg;base64,' + res);
                 },
                 err => { throw new Error(err); },
                 {
@@ -222,6 +196,40 @@ export default {
                     'quality': 30,
                     'encodingType': window.Camera.EncodingType.JPEG
                 });
+        },
+        thumbnailClick(index) {
+            let buttons = [
+                {
+                    text: 'View',
+                    onClick: function() {
+                        this.openZoomView(index);
+                    }.bind(this)
+                },
+                {
+                    text: 'Remove',
+                    onClick: function() {
+                        this.images.splice(index, 1);
+                    }.bind(this)
+                }
+            ];
+            window.vm.$f7.actions(buttons);
+        },
+        openZoomView(index) {
+            var a = window.vm.$f7.photoBrowser({
+                type: 'popup',
+                theme: 'dark',
+                toolbar: false,
+                navbarTemplate: `<div class="navbar">
+                                    <div class="navbar-inner">
+                                        <div class="left sliding">
+                                            <a href="#" class="link close-popup photo-browser-close-link icon-only">
+                                                <i class="icon icon-back"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`,
+                photos: [this.images[index]]
+            }); a.open();
         },
         uploadImage() {
             window.vm.$f7.showPreloader();

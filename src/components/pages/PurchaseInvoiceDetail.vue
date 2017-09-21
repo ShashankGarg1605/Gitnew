@@ -129,7 +129,7 @@ export default {
     computed: {
         invoiceImages() {
             if (!this.data || !this.data.image) return null;
-            const images = this.data.image.split(';');
+            const images = this.data.image.split(',');
             images.pop();
             return images.map(i => window._pz.uploadsEndPt + 'purchase-invoice/' + i);
         }
@@ -169,7 +169,7 @@ export default {
             var a = window.vm.$f7.photoBrowser({
                 type: 'popup',
                 theme: 'dark',
-                toolbar: false,
+                toolbar: true,
                 initialSlide: index,
                 photos: this.invoiceImages
             }); a.open();

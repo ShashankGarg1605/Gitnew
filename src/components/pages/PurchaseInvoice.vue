@@ -21,11 +21,8 @@
             </a>
         </div>
 
-        <!-- <span style="font-size: xx-small;">{{filters}}</span> -->
-
-        <f7-list class="pz-margin-top0">
-            <!-- <li class="item-divider">Open invoices</li> -->
-            <div v-if="allInvoice.length">
+        <f7-list>
+            <div v-if="allInvoice.length" class="list-block">
                 <ul>
                     <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: !invoice.image }">
                         <div class="item-inner" style="flex-direction: column;">
@@ -53,8 +50,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="color-gray list-block pz-size-smaller " style="text-align: center; font-style: italic; " v-if="allInvoice.length && hasReachedEnd && !pendingReq ">Thats all folks!</div>
-            <div class="color-gray list-block pz-size-smaller " style="text-align: center; font-style: italic; " v-if="!allInvoice.length && !pendingReq ">No results found</div>
+            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="allInvoice.length && hasReachedEnd && !pendingReq ">Thats all folks!</div>
+            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="!allInvoice.length && !pendingReq ">No results found</div>
         </f7-list>
 
         <f7-popover id="pz-popover-2">
@@ -120,15 +117,15 @@ export default {
                     },
                     {
                         placeholder: 'Whether invoice is uploaded',
-                        value: true,
+                        value: null,
                         opts: [
                             {
                                 label: 'Invoice uploaded',
-                                value: true
+                                value: 1
                             },
                             {
                                 label: 'Invoice not uploaded',
-                                value: false
+                                value: 0
                             },
                             {
                                 label: 'Show both',
@@ -155,6 +152,9 @@ export default {
             // a. single select
             let { value: status = null } = this.filters.singleselect[0];
             if (status !== null) filterQuery += `&status=${status}`;
+
+            let { value: imageUploaded = null } = this.filters.singleselect[1];
+            if (imageUploaded !== null) filterQuery += `&image_uploaded=${imageUploaded}`;
 
             // b. date range
             let { value: dateRange = null } = this.filters.date[0];
@@ -196,7 +196,6 @@ export default {
                 });
         },
         onInfiniteScroll() {
-            console.log('onInfiniteScroll');
             if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllInvoices();
         },
         onPullToRefresh() {

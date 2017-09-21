@@ -30,20 +30,20 @@
                     <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: !invoice.image }">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
-                                <div class="col-25 color-gray">#{{invoice.invoice_number}}</div>
-                                <div class="col-75 ">Rs. {{invoice.value | moneyFormat}} </div>
+                                <div class="col-30 color-gray">#{{invoice.invoice_number}}</div>
+                                <div class="col-70 ">Rs. {{invoice.value | moneyFormat}} </div>
                             </div>
                             <div class="row pz-width100">
-                                <div class="col-25 color-gray pz-weight-thin ">Supplier:</div>
-                                <div class="col-75 ">{{invoice.publisher ? invoice.publisher.name : invoice.distributors.distributor_name}}</div>
+                                <div class="col-30 color-gray pz-weight-thin ">Supplier:</div>
+                                <div class="col-70 ">{{invoice.publisher ? invoice.publisher.name : invoice.distributors.distributor_name}}</div>
                             </div>
                             <div class=" row pz-width100 ">
-                                <div class="col-25 color-gray pz-weight-thin ">Date:</div>
-                                <div class="col-75 ">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('ddd, Do MMM YYYY')}}</div>
+                                <div class="col-30 color-gray pz-weight-thin ">Date:</div>
+                                <div class="col-70 ">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('ddd, Do MMM YYYY')}}</div>
                             </div>
                             <div class="row pz-width100 ">
-                                <div class="col-25 color-gray pz-weight-thin ">Qty:</div>
-                                <div class="col-75 ">{{invoice.total_books}} book(s)</div>
+                                <div class="col-30 color-gray pz-weight-thin ">Qty:</div>
+                                <div class="col-70 ">{{invoice.total_books}} book(s)</div>
                             </div>
                             <i v-if="invoice.image" class="f7-icons pz-popover " @click='openPopover(invoice.id, $event)'>more_horiz</i>
                             <span v-if="!invoice.image" @click="openPage( 'PurchaseInvoiceDetail', invoice.id)">

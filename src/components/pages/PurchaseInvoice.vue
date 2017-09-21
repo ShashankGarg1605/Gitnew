@@ -50,8 +50,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="allInvoice.length && hasReachedEnd && !pendingReq ">Thats all folks!</div>
-            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="!allInvoice.length && !pendingReq ">No results found</div>
+            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="allInvoice.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq ">Thats all folks!</div>
+            <div class="color-gray" style="text-align: center; font-style: italic; " v-if="!allInvoice.length && !$pzGlobalReactiveData.pendingReq ">No results found</div>
         </f7-list>
 
         <f7-popover id="pz-popover-2">
@@ -86,7 +86,6 @@ export default {
             allInvoice: [],
             limit: 20,
             offset: 0,
-            pendingReq: false,
             hasReachedEnd: false,
             totalCount: null,
             filters: {
@@ -174,7 +173,6 @@ export default {
     },
     methods: {
         getAllInvoices() {
-            this.pendingReq = true;
 
             let url = `${window._pz.apiEndPt}purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + this.filterQuery;
             window.vm.$http.get(url)
@@ -182,21 +180,18 @@ export default {
                     this.totalCount = res.headers.map.count && res.headers.map.count[0];
                     this.allInvoice = this.allInvoice.concat(res.body);
                     this.offset += res.body.length;
-                    this.pendingReq = false;
 
                     if (this.offset % this.limit !== 0) {
                         this.removeInfiniteScroll();
                     }
                 })
                 .catch((err) => {
-                    if (err instanceof Error) throw new Error(err);
-
-                    this.pendingReq = false;
                     this.removeInfiniteScroll();
+                    window._pz.errFunc2.call(this, err);
                 });
         },
         onInfiniteScroll() {
-            if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllInvoices();
+            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllInvoices();
         },
         onPullToRefresh() {
             window.vm.$f7.mainView.router.refreshPage();

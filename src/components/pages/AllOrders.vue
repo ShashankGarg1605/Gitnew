@@ -47,8 +47,8 @@
           </li>
         </ul>
       </div>
-      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !pendingReq">Thats all folks!</div>
-      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !pendingReq">No results found</div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
     </f7-list>
 
     <f7-popover :id="randomID">
@@ -80,7 +80,6 @@ export default {
       allOrders: [],
       limit: 20,
       offset: 0,
-      pendingReq: false,
       hasReachedEnd: false,
       totalCount: null,
       clickedOrder: null,
@@ -129,7 +128,6 @@ export default {
   methods: {
     getAllOrders() {
 
-      this.pendingReq = true;
 
       let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
       window.vm.$http.get(url)
@@ -149,21 +147,18 @@ export default {
           });
           this.allOrders = this.allOrders.concat(data);
           this.offset += res.body.length;
-          this.pendingReq = false;
 
           if (this.offset % this.limit !== 0) {
             this.removeInfiniteScroll();
           }
         })
         .catch((err) => {
-          if (err instanceof Error) throw new Error(err);
-
-          this.pendingReq = false;
           this.removeInfiniteScroll();
+          window._pz.errFunc2.call(this, err);
         });
     },
     onInfiniteScroll() {
-      if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllOrders();
+      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
     },
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();

@@ -47,28 +47,20 @@
                                 <div class="col-70">{{order.created_date}}</div>
                             </div>
                             <div v-if="order.listOfImages && order.listOfImages.length" style="display: flex; width: 100%; justify-content: flex-start;">
-                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages, index)">
-                                    <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image">
+                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages, index)" class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16">
+                                    <icon name="image"></icon>#{{index+1}}
+                                    <!-- <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image"> -->
                                 </span>
                             </div>
                         </div>
                     </li>
                 </ul>
             </div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !pendingReq">Thats all folks!</div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !pendingReq">No results found</div>
+            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
+            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
         </f7-list>
     </f7-page>
 </template>
-
-<style scoped>
-.image {
-    height: 40px;
-    width: 40px;
-    border-radius: 3px;
-    box-shadow: 0px 1px 1px 0px lightgrey;
-}
-</style>
 
 <script>
 export default {
@@ -78,7 +70,6 @@ export default {
             allOrders: [],
             limit: 20,
             offset: 0,
-            pendingReq: false,
             hasReachedEnd: false,
             totalCount: null,
             uploadsEndPt: window._pz.uploadsEndPt + 'imageorders/',
@@ -105,7 +96,6 @@ export default {
     },
     methods: {
         getAllOrders() {
-            this.pendingReq = true;
 
             let url = `${window._pz.apiEndPt}orders/images?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
             window.vm.$http.get(url)
@@ -114,21 +104,18 @@ export default {
 
                     this.allOrders = this.allOrders.concat(res.body);
                     this.offset += res.body.length;
-                    this.pendingReq = false;
 
                     if (this.offset % this.limit !== 0) {
                         this.removeInfiniteScroll();
                     }
                 })
                 .catch((err) => {
-                    if (err instanceof Error) throw new Error(err);
-
-                    this.pendingReq = false;
                     this.removeInfiniteScroll();
+                    window._pz.errFunc2.call(this, err);
                 });
         },
         onInfiniteScroll() {
-            if (this.offset % this.limit === 0 && !this.pendingReq) this.getAllOrders();
+            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
         },
         onPullToRefresh() {
             window.vm.$f7.mainView.router.refreshPage();

@@ -66,9 +66,7 @@ export default {
                         this.setUserSelection();
                     }
                 })
-                .catch(err => {
-                    console.log('err: ', err);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         setUserSelection() {
             let that = this; // save a ref to this to use inside callbacks
@@ -130,8 +128,7 @@ export default {
                 })
                 .catch(err => {
                     window.vm.$f7.hidePreloader();
-                    if (err instanceof Error) throw new Error(err);
-                    this.errMsg = window._pz.errFunc(err);
+                    window._pz.errFunc2.call(this, err);
                 });
 
         }

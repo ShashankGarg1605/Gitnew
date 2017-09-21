@@ -11,8 +11,8 @@
         <div class="list-block">
             <ul>
                 <pz-filter-date-range v-model="comp.value" v-for="(comp, index) in comps.date" :key="index" :placeholder="comp.placeholder" />
-                <pz-filter-single-select :value.sync="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts" />
                 <pz-filter-search :value.sync="comp.value" v-for="(comp, index) in comps.search" :key="index" :placeholder="comp.placeholder" />
+                <pz-filter-single-select :value.sync="comp.value" v-for="(comp, index) in comps.singleselect" :key="index" :placeholder="comp.placeholder" :opts="comp.opts" />
 
             </ul>
         </div>

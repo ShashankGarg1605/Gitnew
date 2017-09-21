@@ -42,8 +42,12 @@
                                 <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
                                 <div class="col-70">{{order.user.buyer_name}} ({{order.user.userAddress[0].city.name}})</div>
                             </div>
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin">Created:</div>
+                                <div class="col-70">{{order.created_date}}</div>
+                            </div>
                             <div v-if="order.listOfImages && order.listOfImages.length" style="display: flex; width: 100%; justify-content: flex-start;">
-                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages)">
+                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages, index)">
                                     <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image">
                                 </span>
                             </div>
@@ -147,7 +151,7 @@ export default {
                 context: { comps: JSON.parse(JSON.stringify(this.filters)) }
             });
         },
-        openPhotoBrowser(images) {
+        openPhotoBrowser(images, index) {
             if (!images || images.length < 1) return;
             var o = images.map((i, idx) => ({
                 url: this.uploadsEndPt + i.name,
@@ -157,6 +161,7 @@ export default {
                 type: 'popup',
                 theme: 'dark',
                 toolbar: images.length > 1,
+                initialSlide: index,
                 photos: o
             }); a.open();
 

@@ -62,7 +62,7 @@
                     <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" :disabled="!selectedCarrier" />
                 </div>
                 <div class="col-65" v-if="biltyImage">
-                    <img :src="biltyImage" class="pz-width100">
+                    <img :src="biltyImage" class="pz-margin-r8 image" @click="openZoomView()">
                 </div>
             </div>
         </section>
@@ -224,6 +224,14 @@ export default {
                         if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
                     }
                 });
+        },
+        openZoomView() {
+            var a = window.vm.$f7.photoBrowser({
+                type: 'popup',
+                theme: 'dark',
+                toolbar: false,
+                photos: [this.biltyImage]
+            }); a.open();
         }
     },
     filters: {

@@ -123,6 +123,12 @@ body {
 .pz-wht-spc-norm {
     white-space: nowrap !important;
 }
+.image {
+    height: 40px;
+    width: 40px;
+    border-radius: 3px;
+    box-shadow: 0px 1px 1px 0px lightgrey;
+}
 
 /* custom */
 

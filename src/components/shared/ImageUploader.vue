@@ -25,13 +25,6 @@
 </template>
 
 <style scoped>
-.image {
-    height: 40px;
-    width: 40px;
-    border-radius: 3px;
-    box-shadow: 0px 1px 1px 0px lightgrey;
-}
-
 input {
     flex-grow: 1;
     border: 1px dashed lightgrey;

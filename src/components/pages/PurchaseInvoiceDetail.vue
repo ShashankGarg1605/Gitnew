@@ -44,7 +44,7 @@
                     <image-uploader :maxCount="4" :submitLabel="'Upload Invoice'" :tooltip="true" @upload="uploadImage($event)" />
                 </div>
                 <div class="col-65" v-if="invoiceImages">
-                    <img v-for="(image, index) in invoiceImages" :key="index" :src="image" class="pz-width100">
+                    <img v-for="(image, index) in invoiceImages" :key="index" :src="image" class="pz-margin-r8 image" @click="openZoomView(index)">
                 </div>
             </div>
         </section>
@@ -130,6 +130,7 @@ export default {
         invoiceImages() {
             if (!this.data || !this.data.image) return null;
             const images = this.data.image.split(';');
+            images.pop();
             return images.map(i => window._pz.uploadsEndPt + 'purchase-invoice/' + i);
         }
     },
@@ -174,6 +175,15 @@ export default {
                         if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
                     }
                 });
+        },
+        openZoomView(index) {
+            var a = window.vm.$f7.photoBrowser({
+                type: 'popup',
+                theme: 'dark',
+                toolbar: false,
+                initialSlide: index,
+                photos: this.invoiceImages
+            }); a.open();
         }
     },
     filters: {

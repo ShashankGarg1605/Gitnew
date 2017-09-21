@@ -234,17 +234,6 @@ export default {
             });
         }
     },
-    filters: {
-        moneyFormat(data) {
-            if (!data) return '';
-            data = parseInt(data);
-            data = data.toString();
-            let lastThree = data.substring(data.length - 3);
-            let otherNumbers = data.substring(0, data.length - 3);
-            if (otherNumbers !== '') lastThree = ',' + lastThree;
-            return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
-        }
-    },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
     created() {
         console.debug(this.$options.name + ' created');

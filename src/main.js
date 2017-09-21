@@ -148,10 +148,26 @@ window.vm = new Vue({ // eslint-disable-line no-new
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Vue.prototype.$pzGlobalReactiveData = new Vue({
+  data: {
+    pendingReq: false
+  }
+});
+
+Vue.filter('moneyFormat', function (data) {
+  if (!data) return '';
+  data = parseInt(data);
+  data = data.toString();
+  var lastThree = data.substring(data.length - 3);
+  var otherNumbers = data.substring(0, data.length - 3);
+  if (otherNumbers !== '') lastThree = ',' + lastThree;
+  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+});
+
 Vue.http.interceptors.push(function (request, next) {
-  Vue.prototype.$pendingReq = true;
+  window.vm.$pzGlobalReactiveData.pendingReq = true;
   next(function (response) {
-    Vue.prototype.$pendingReq = false;
+    window.vm.$pzGlobalReactiveData.pendingReq = false;
   });
 });
 
@@ -250,6 +266,17 @@ window._pz.errFunc = function (err) {
   return errMsg;
 };
 
+window._pz.errFunc2 = function (err) {
+  if (err instanceof Error) throw new Error(err);
+
+  if (err.status === 404) this.errMsg = window._pz.err.ERR_404;
+  else if (err.status === 0) this.errMsg = window._pz.err.ERR_NET;
+  else this.errMsg = `Uh oh! Something went wrong (Error ${err.status})`;
+
+  window.vm.$f7.addNotification({ message: this.errMsg, hold: 2000 });
+  return this.errMsg;
+};
+
 window._pz.checkNested = function (obj, ...args) {
   for (let i = 0; i < args.length; i++) {
     if (!obj || !obj.hasOwnProperty(args[i])) return false;
@@ -282,14 +309,14 @@ window._pz.utils = {};
 // solutn for i18n by exposing a new Vue instance containing global translation data. Best part is that its reactive.
 // changing message1 in the console will update the view!
 // https://stackoverflow.com/questions/43193409/global-data-with-vuejs-2/43193455?noredirect=1#comment78773970_43193455
-// var pzTranslation = new Vue({ data: { message1: 'my global message' } });
-// pzTranslation.install = function () {
-//   Object.defineProperty(Vue.prototype, '$pzTranslation', {
-//     get: function () { return pzTranslation; },
-//     set: function (newValue) { pzTranslation = newValue; }
+// var pzGlobalReactiveData = new Vue({ data: { pendingReq: false } });
+// pzGlobalReactiveData.install = function () {
+//   Object.defineProperty(Vue.prototype, '$pzGlobalReactiveData', {
+//     get: function () { return pzGlobalReactiveData; },
+//     set: function (newValue) { pzGlobalReactiveData = newValue; }
 //   });
 // };
-// Vue.use(pzTranslation);
+// Vue.use(pzGlobalReactiveData);
 // -----------------------
 
 

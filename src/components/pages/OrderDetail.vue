@@ -97,8 +97,7 @@
                 </table>
             </div>
         </section>
-
-        <div class="color-gray pz-page-err" v-if="!data && !$pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
 
     </f7-page>
 </template>
@@ -181,22 +180,14 @@ export default {
                         this.getCarriers(shippingCityID);
                     }
                 })
-                .catch(err => {
-                    if (err instanceof Error) throw new Error(err);
-
-                    this.errMsg = window._pz.errFunc(err);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         getCarriers(cityID) {
             window.vm.$http.get(window._pz.apiEndPt + 'city/carriers?city=' + cityID)
                 .then(res => {
                     if (res.ok) this.carriers = res.body;
                 })
-                .catch(err => {
-                    if (err instanceof Error) throw new Error(err);
-
-                    this.errMsg = window._pz.errFunc(err);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         uploadImage(image) {
             window.vm.$f7.showPreloader();
@@ -215,14 +206,7 @@ export default {
                 })
                 .catch(error => {
                     window.vm.$f7.hidePreloader();
-                    if (error instanceof Error) throw new Error(error);
-                    else {
-                        let msg;
-                        if (typeof error === 'object' && error.status) msg = `Something went wrong. (Error ${error.status})`;
-                        else if (error && !error.ok) msg = window._pz.err['ERR_NET'];
-
-                        if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
-                    }
+                    window._pz.errFunc2.call(this, error);
                 });
         },
         openZoomView() {
@@ -232,17 +216,6 @@ export default {
                 toolbar: false,
                 photos: [this.biltyImage]
             }); a.open();
-        }
-    },
-    filters: {
-        moneyFormat(data) {
-            if (!data) return '';
-            data = parseInt(data);
-            data = data.toString();
-            var lastThree = data.substring(data.length - 3);
-            var otherNumbers = data.substring(0, data.length - 3);
-            if (otherNumbers !== '') lastThree = ',' + lastThree;
-            return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

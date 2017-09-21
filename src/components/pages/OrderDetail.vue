@@ -21,7 +21,7 @@
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Mobile No:</span>
                 <span class="col-65 ">
-                    <a :href="'tel:'+data.user.mobile">{{data.user.mobile}}</a>
+                    <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
                 </span>
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
@@ -91,7 +91,7 @@
                             <td class="numeric-cell">{{p.quantity}}</td>
                             <td class="numeric-cell">{{p.procurement_discount}}%</td>
                             <td class="numeric-cell">{{p.discount_percent}}</td>
-                            <td class="numeric-cell">{{p.selling_price | moneyFormat}}</td>
+                            <td class="numeric-cell">{{p.amount | moneyFormat}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -216,6 +216,9 @@ export default {
                 toolbar: false,
                 photos: [this.biltyImage]
             }); a.open();
+        },
+        call(mob) {
+            window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

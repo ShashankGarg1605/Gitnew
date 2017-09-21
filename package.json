@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "babel-polyfill": "^6.23.0",
+        "call-number": "git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
         "cordova-android": "^5.1.1",
         "cordova-ios": "~4.1.1",
         "cordova-plugin-camera": "^2.4.1",
@@ -126,7 +127,8 @@
             "cordova-plugin-camera": {
                 "CAMERA_USAGE_DESCRIPTION": "upload an order bill using camera",
                 "PHOTOLIBRARY_USAGE_DESCRIPTION": "upload an order bill using photo library"
-            }
+            },
+            "call-number": {}
         }
     }
 }

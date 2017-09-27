@@ -129,7 +129,7 @@ export default {
     computed: {
         invoiceImages() {
             if (!this.data || !this.data.image) return null;
-            const images = this.data.image.split(',');
+            const images = this.data.image.split(', ');
             images.pop();
             return images.map(i => window._pz.uploadsEndPt + 'purchase-invoice/' + i);
         }

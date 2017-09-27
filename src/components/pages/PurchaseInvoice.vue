@@ -89,12 +89,6 @@ export default {
             hasReachedEnd: false,
             totalCount: null,
             filters: {
-                date: [
-                    {
-                        placeholder: 'Chose date range',
-                        value: null
-                    }
-                ],
                 singleselect: [
                     {
                         placeholder: 'Chose status',
@@ -154,11 +148,6 @@ export default {
 
             let { value: imageUploaded = null } = this.filters.singleselect[1];
             if (imageUploaded !== null) filterQuery += `&image_uploaded=${imageUploaded}`;
-
-            // b. date range
-            let { value: dateRange = null } = this.filters.date[0];
-            if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
-            if (dateRange !== null && dateRange.length > 1) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
 
             // c. supplier search
             let { value: supplier = null } = this.filters.search[0];

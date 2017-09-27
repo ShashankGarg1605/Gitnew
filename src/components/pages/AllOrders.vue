@@ -107,6 +107,11 @@ export default {
               { label: 'Cancelled', value: '107' }
             ]
           }
+        ],
+        search: [
+          {
+            placeholder: 'Order ID:'
+          }
         ]
       }
     };
@@ -121,6 +126,9 @@ export default {
       let { value: dateRange = null } = this.filters.date[0];
       if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
       if (dateRange !== null && dateRange.length) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+
+      let { value: orderID = null } = this.filters.search[0];
+      if (orderID !== null) filterQuery += `&order_id=${orderID}`;
 
       return filterQuery;
     }
@@ -140,8 +148,10 @@ export default {
               !order.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name) &&
               !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
 
-            if (order.isPartiallyDispatched) order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
-            else order.statusText = statusMapping[order.order_status];
+            // if (typeof order.isPartiallyDispatched !== 'undefined') order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
+            // else order.statusText = statusMapping[order.order_status];
+
+            order.statusText = statusMapping[order.order_status];
 
             return order;
           });

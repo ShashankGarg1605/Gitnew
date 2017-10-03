@@ -136,17 +136,6 @@
     </f7-page>
 </template>
 
-<style scoped>
-.pz-page-err {
-    font-style: italic;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0px 10%;
-}
-</style>
-
 <script>
 var listItem = {
     template: `<div class="row pz-padding-tb-4" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">

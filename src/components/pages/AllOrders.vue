@@ -176,7 +176,10 @@ export default {
     openPage(pageName) {
       const id = this.clickedOrder.id;
       const url = `${pageName}?id=${id}`;
-      window.vm.$f7.mainView.router.loadPage(url);
+      window.vm.$f7.mainView.router.load({
+        url: url,
+        context: { allOrdersFilters: this.filters } // send currently applied filters to the next page
+      });
     },
     openPopover(order, e) {
       this.clickedOrder = order;

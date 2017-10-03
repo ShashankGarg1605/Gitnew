@@ -1,117 +1,124 @@
 <template>
-    <f7-page name="OrderDetail">
+    <section>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left" id="backBtn">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="center">Order Detail</div>
+            </div>
+        </div>
+        <f7-page name="OrderDetail">
 
-        <f7-navbar back-link="Back" sliding>
+            <!-- <f7-navbar back-link="Back">
             <f7-nav-center>
                 Order Detail
             </f7-nav-center>
-        </f7-navbar>
+        </f7-navbar> -->
 
-        <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Status:</span>
-                <div class="col-65">
-                    <span class="status pz-padding-lr16 ">{{statusText}}</span>
+            <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
+                <div class="row pz-padding-tb-4 pz-padding-lr16">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Status:</span>
+                    <div class="col-65">
+                        <span class="status pz-padding-lr16 ">{{statusText}}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Order ID:</span>
-                <span class="col-65 ">{{data.order_id}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Mobile No:</span>
-                <span class="col-65 ">
-                    <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
-                </span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Buyer Name:</span>
-                <span class="col-65 ">{{data.user.buyer_name}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice Amt:</span>
-                <span class="col-65 ">Rs. {{data.finalOrderValue | moneyFormat}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Created Date:</span>
-                <span class="col-65 ">{{data.created_date}}</span>
-            </div>
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 && carriers && !biltyImage">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Select Carrier</span>
-                <span class="col-65 ">
-                    <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
-                        <select name="carrier" v-model="selectedCarrier">
-                            <option v-for="c in carriers" :key="c.id" :value="c.id">{{c.carrier.name}}</option>
-                        </select>
-                        <div class="item-content">
-                            <div class="item-inner">
-                                <div class="item-after">{{selectedCarrier || 'Tap here'}}</div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Order ID:</span>
+                    <span class="col-65 ">{{data.order_id}}</span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Mobile No:</span>
+                    <span class="col-65 ">
+                        <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
+                    </span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Buyer Name:</span>
+                    <span class="col-65 ">{{data.user.buyer_name}}</span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice Amt:</span>
+                    <span class="col-65 ">Rs. {{data.finalOrderValue | moneyFormat}}</span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Created Date:</span>
+                    <span class="col-65 ">{{data.created_date}}</span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="carrierName">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Carrier:</span>
+                    <span class="col-65 ">{{carrierName}}</span>
+                </div>
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="isPartiallyDispatched && carriers && !biltyImage">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Select Carrier</span>
+                    <span class="col-65 ">
+                        <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
+                            <select name="carrier" v-model="selectedCarrier">
+                                <option v-for="c in carriers" :key="c.id" :value="c.id">{{c.carrier.name}}</option>
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-after">{{selectedCarrier || 'Tap here'}}</div>
+                                </div>
                             </div>
-                        </div>
-                        <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImage()" v-if="selCrrName && selCrrName.toLowerCase() === 'local transport'">
-                            Fully Dispatch
-                            <icon name="rocket"></icon>
+                            <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImage()" v-if="selCrrName && selCrrName.toLowerCase() === 'local transport'">
+                                Fully Dispatch
+                                <icon name="rocket"></icon>
+                            </a>
                         </a>
-                    </a>
-                </span>
-            </div>
-            <!-- upload images only when selected carrier is not local transport -->
-            <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status === 5 && (!selCrrName || selCrrName.toLowerCase() !== 'local transport')">
-                <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
-                <div class="col-65" v-if="!biltyImage && data.order_status === 5">
-                    <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" :disabled="!selectedCarrier" />
+                    </span>
                 </div>
-                <div class="col-65" v-if="biltyImage">
-                    <img :src="biltyImage" class="pz-margin-r8 image" @click="openZoomView()">
+                <!-- upload images only when selected carrier is not local transport -->
+                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="data.order_status>=5 && (!selCrrName || selCrrName.toLowerCase() !== 'local transport')">
+                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
+                    <div class="col-65" v-if="!biltyImage && isPartiallyDispatched">
+                        <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" :disabled="!selectedCarrier" />
+                    </div>
+                    <div class="col-65" v-if="biltyImage">
+                        <img :src="biltyImage" class="pz-margin-r8 image" @click="openZoomView()">
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section v-if="data && data.orderProduct && data.orderProduct.length">
-            <f7-block-title>Books' details:</f7-block-title>
-            <div class="data-table pz-margin-8 pz-shadow">
-                <table class="equalDivide">
-                    <thead class="pz-bg-gray-lightest">
-                        <tr>
-                            <th style="width:1px;" class="numeric-cell">#</th>
-                            <th style="width:200px;" class="label-cell">Title</th>
-                            <th style="width:100px;" class="label-cell">Publisher</th>
-                            <th class="numeric-cell">MRP</th>
-                            <th class="numeric-cell pz-padding-0">QTY</th>
-                            <th class="numeric-cell pz-padding-0">Buy %</th>
-                            <th class="numeric-cell">Discount</th>
-                            <th class="numeric-cell pz-padding-0">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(p, index) in data.orderProduct" :key="p.id">
-                            <td class="numeric-cell">{{index+1}}</td>
-                            <td class="label-cell">{{p.product.title}}</td>
-                            <td class="label-cell">{{p.product.publisher.name}}</td>
-                            <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
-                            <td class="numeric-cell">{{p.quantity}}</td>
-                            <td class="numeric-cell">{{p.procurement_discount}}%</td>
-                            <td class="numeric-cell">{{p.discount_percent}}</td>
-                            <td class="numeric-cell">{{p.amount | moneyFormat}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+            </section>
+            <section v-if="data && data.orderProduct && data.orderProduct.length">
+                <f7-block-title>Books' details:</f7-block-title>
+                <div class="data-table pz-margin-8 pz-shadow">
+                    <table class="equalDivide">
+                        <thead class="pz-bg-gray-lightest">
+                            <tr>
+                                <th style="width:1px;" class="numeric-cell">#</th>
+                                <th style="width:200px;" class="label-cell">Title</th>
+                                <th style="width:100px;" class="label-cell">Publisher</th>
+                                <th class="numeric-cell">MRP</th>
+                                <th class="numeric-cell pz-padding-0">QTY</th>
+                                <th class="numeric-cell pz-padding-0">Buy %</th>
+                                <th class="numeric-cell">Discount</th>
+                                <th class="numeric-cell pz-padding-0">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(p, index) in data.orderProduct" :key="p.id">
+                                <td class="numeric-cell">{{index+1}}</td>
+                                <td class="label-cell">{{p.product.title}}</td>
+                                <td class="label-cell">{{p.product.publisher.name}}</td>
+                                <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
+                                <td class="numeric-cell">{{p.quantity}}</td>
+                                <td class="numeric-cell">{{p.procurement_discount}}%</td>
+                                <td class="numeric-cell">{{p.discount_percent}}</td>
+                                <td class="numeric-cell">{{p.amount | moneyFormat}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
 
-    </f7-page>
+        </f7-page>
+    </section>
 </template>
 
 <style scoped>
-.pz-page-err {
-    font-style: italic;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0px 10%;
-}
-
 .status {
     text-transform: uppercase;
     border: 1px solid green;
@@ -143,20 +150,6 @@ export default {
         };
     },
     computed: {
-        statusText() {
-            if (!this.data || !this.data.order_status) return null;
-            switch (this.data.order_status) {
-                case 1: return 'Received';
-                case 2: return 'Confirmed';
-                case 3: return 'Being Procured';
-                case 4: return 'Being Packed';
-                case 5: return 'Dispatched'; // 5 could be for both partially and fully dispatched, so instead just say dispatched
-                case 6: return 'Fulfilled';
-                case 0: return 'Cancelled';
-
-                default: return 'ERR';
-            }
-        },
         selCrrName() {
             if (!this.selectedCarrier) return null;
             else return this.carriers.find(x => x.id === this.selectedCarrier).carrier.name;
@@ -166,6 +159,37 @@ export default {
             let dispatchData = this.data.orderStatus.find(x => x.status_id === 5);
             if (!dispatchData || !dispatchData.bill_t_file_name) return null;
             return window._pz.uploadsEndPt + 'billt/' + dispatchData.bill_t_file_name;
+        },
+        isPartiallyDispatched() {
+            return this.data && this.data.order_status === 5 &&
+                !this.data.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name) &&
+                !this.data.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
+        },
+        statusText() {
+            if (!this.data || !this.data.order_status) return null;
+            else if (this.data.order_status === 5 && typeof this.isPartiallyDispatched !== 'undefined') {
+                return this.isPartiallyDispatched ? 'Part. Dispatched' : 'Fully Dispatched';
+            }
+            else {
+                switch (this.data.order_status) {
+                    case 1: return 'Received';
+                    case 2: return 'Confirmed';
+                    case 3: return 'Being Procured';
+                    case 4: return 'Being Packed';
+                    case 5: return 'Dispatched'; // 5 could be for both partially and fully dispatched, so instead just say dispatched
+                    case 6: return 'Fulfilled';
+                    case 0: return 'Cancelled';
+
+                    default: return 'ERR';
+                }
+            }
+        },
+        carrierName() {
+            const idxStatus5 = this.data && this.data.orderStatus &&
+                this.data.orderStatus.findIndex(el => el.status_id === 5 && el.carrierTransportationDays);
+
+            if (idxStatus5 !== -1) return this.data.orderStatus[idxStatus5].carrierTransportationDays.carrier.name;
+            else return null;
         }
     },
     methods: {
@@ -199,10 +223,14 @@ export default {
 
             window.vm.$http.patch(`${window._pz.apiEndPt}orders?id=${this.data.id}&modified_by=${localStorage.userID}&updateType=status&carrierId=${this.selectedCarrier}`, params)
                 .then(res => {
+                    // override default back button to load the previous page afresh in order to see the recently made changes to this order
+                    const allOrdersFilters = this.$route.options.context.allOrdersFilters;
+                    setTimeout(() => this.overrideDefaultBack(allOrdersFilters));
+
                     window.vm.$f7.hidePreloader();
+                    window.vm.$f7.addNotification({ message: 'Status changed', hold: 2000 });
+
                     window.vm.$f7.mainView.router.refreshPage();
-                    window._pz.refreshOnBack = true;
-                    window.vm.$f7.addNotification({ message: 'Image uploaded successfully', hold: 2000 });
                 })
                 .catch(error => {
                     window.vm.$f7.hidePreloader();
@@ -219,6 +247,19 @@ export default {
         },
         call(mob) {
             window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
+        },
+        overrideDefaultBack(allOrdersFilters) {
+            let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            window.Dom7('#backBtn')[0].addEventListener('click', e => {
+                // prevent default back button behaviour
+                e.preventDefault();
+                e.stopPropagation();
+                window.vm.$f7.mainView.router.load({
+                    url: prevPage,
+                    reload: true,
+                    context: { comps: allOrdersFilters }
+                });
+            });
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

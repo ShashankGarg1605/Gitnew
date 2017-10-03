@@ -1,0 +1,180 @@
+<template>
+  <f7-page name="AllUsers" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
+
+    <f7-navbar>
+      <f7-nav-left>
+        <f7-link icon="icon-bars" open-panel="left"></f7-link>
+      </f7-nav-left>
+      <f7-nav-center>
+        All Users
+      </f7-nav-center>
+    </f7-navbar>
+
+    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
+      Found {{totalCount}} results
+    </div>
+
+    <div style="overflow: hidden; margin: 16px 16px 16px;">
+      <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
+        <icon name="filter"></icon>
+        <span class="pz-padding-l16">Filter</span>
+      </a>
+    </div>
+
+    <f7-list>
+      <div v-if="allUsers.length" class="list-block">
+        <ul>
+          <li class="item-content" v-for="user in allUsers" :key="user.id">
+            <div class="item-inner" style="flex-direction: column;">
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">User ID:</div>
+                <div class="col-70">{{user.id}}</div>
+              </div>
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Name:</div>
+                <div class="col-70">{{user.name}}</div>
+              </div>
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Mobile:</div>
+                <div class="col-70">
+                  <a @click="call(user.mobile)">{{user.mobile}}</a>
+                </div>
+              </div>
+              <i class="f7-icons pz-popover" @click='openPopover(user, $event)'>more_horiz</i>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allUsers.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allUsers.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
+    </f7-list>
+
+    <f7-popover :id="randomID">
+      <div class="popover-inner">
+        <div class="list-block">
+          <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
+        </div>
+      </div>
+    </f7-popover>
+
+  </f7-page>
+</template>
+
+<style scoped>
+.pz-popover {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 10px;
+}
+</style>
+
+<script>
+export default {
+  name: 'AllUsers',
+  data() {
+    return {
+      allUsers: [],
+      limit: 20,
+      offset: 0,
+      hasReachedEnd: false,
+      totalCount: null,
+      clickedUser: null,
+      randomID: Math.random().toString(36).substr(2, 10),
+      filters: {
+        search: [
+          {
+            placeholder: 'User name:'
+          }
+        ]
+      }
+    };
+  },
+  computed: {
+    filterQuery() {
+      let filterQuery = '';
+
+      let { value: buyerName = null } = this.filters.search[0];
+      if (buyerName !== null) filterQuery += `&buyer_name=${buyerName}`;
+
+      return filterQuery;
+    }
+  },
+  methods: {
+    getAllOrders() {
+
+
+      const url = `${window._pz.apiEndPt}users/search?limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
+      window.vm.$http.get(url)
+        .then(res => {
+          this.totalCount = res.headers.map.count && res.headers.map.count[0];
+
+          this.allUsers = this.allUsers.concat(res.body);
+          this.offset += res.body.length;
+
+          if (this.offset % this.limit !== 0) {
+            this.removeInfiniteScroll();
+          }
+        })
+        .catch((err) => {
+          this.removeInfiniteScroll();
+          window._pz.errFunc2.call(this, err);
+        });
+    },
+    onInfiniteScroll() {
+      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+    },
+    onPullToRefresh() {
+      window.vm.$f7.mainView.router.refreshPage();
+    },
+    openPage(pageName) {
+      const id = this.clickedUser.id;
+      const url = `${pageName}?id=${id}`;
+      window.vm.$f7.mainView.router.load({
+        url: url,
+        context: { listFilters: this.filters } // send currently applied filters to the next page
+      });
+    },
+    openPopover(order, e) {
+      this.clickedUser = order;
+      const popupID = '#' + this.randomID;
+      window.vm.$f7.popover(window.Dom7(popupID), e.target);
+    },
+    // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
+    addInfiniteScroll() {
+      window.vm.$f7.attachInfiniteScroll(window.Dom7('.infinite-scroll'));
+      window.Dom7('.infinite-scroll-preloader').show();
+      this.hasReachedEnd = false;
+    },
+    removeInfiniteScroll() {
+      window.vm.$f7.detachInfiniteScroll(window.Dom7('.infinite-scroll'));
+      window.Dom7('.infinite-scroll-preloader').hide();
+      this.hasReachedEnd = true;
+    },
+    openFilters() {
+      window.vm.$f7.mainView.router.load({
+        url: 'filters',
+        // send over a clone of the filters object to avoid mutating it directly from the filters page
+        context: { comps: JSON.parse(JSON.stringify(this.filters)) }
+      });
+    },
+    call(mob) {
+      window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
+    }
+  },
+
+  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  created() {
+    console.debug(this.$options.name + ' created');
+
+    if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
+    this.getAllOrders();
+  },
+  beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+  mounted() { console.debug(this.$options.name + ' mounted'); },
+  beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+  updated() { console.debug(this.$options.name + ' updated'); },
+  beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+  destroyed() { console.debug(this.$options.name + ' destroyed'); }
+};
+</script>

@@ -123,6 +123,9 @@ body {
 .pz-wht-spc-norm {
     white-space: nowrap !important;
 }
+.pz-word-wrap-brk {
+    word-wrap: break-word !important;
+}
 .image {
     height: 40px;
     width: 40px;
@@ -130,6 +133,14 @@ body {
     box-shadow: 0px 1px 1px 0px lightgrey;
 }
 
+.pz-page-err {
+    font-style: italic;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 10%;
+}
 /* custom */
 
 

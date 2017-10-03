@@ -28,17 +28,6 @@
     </f7-page>
 </template>
 
-<style scoped>
-.pz-page-err {
-    font-style: italic;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0px 10%;
-}
-</style>
-
 <script>
 import ImageUploader from '../shared/ImageUploader';
 

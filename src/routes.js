@@ -10,6 +10,8 @@ import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
 import PlaceImageOrder from './components/pages/PlaceImageOrder';
 import AllImageOrders from './components/pages/AllImageOrders';
 import CommunicationPanel from './components/pages/CommunicationPanel';
+import AllUsers from './components/pages/AllUsers';
+import UserDetail from './components/pages/UserDetail';
 
 export default [
   {
@@ -59,5 +61,13 @@ export default [
   {
     path: '/CommunicationPanel/',
     component: CommunicationPanel
+  },
+  {
+    path: '/AllUsers/',
+    component: AllUsers
+  },
+  {
+    path: '/UserDetail/',
+    component: UserDetail
   }
 ];

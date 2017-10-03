@@ -53,6 +53,7 @@
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
+          <a @click="resetPassword()" class="list-button item-link close-popover">Reset Password</a>
         </div>
       </div>
     </f7-popover>
@@ -113,7 +114,7 @@ export default {
     }
   },
   methods: {
-    getAllOrders() {
+    getAllUsers() {
 
 
       const url = `${window._pz.apiEndPt}users/search?limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
@@ -134,7 +135,7 @@ export default {
         });
     },
     onInfiniteScroll() {
-      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllUsers();
     },
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
@@ -147,8 +148,8 @@ export default {
         context: { listFilters: this.filters } // send currently applied filters to the next page
       });
     },
-    openPopover(order, e) {
-      this.clickedUser = order;
+    openPopover(user, e) {
+      this.clickedUser = user;
       const popupID = '#' + this.randomID;
       window.vm.$f7.popover(window.Dom7(popupID), e.target);
     },
@@ -172,6 +173,23 @@ export default {
     },
     call(mob) {
       window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
+    },
+    resetPassword() {
+      window.f7.prompt('Enter new password for ' + this.clickedUser.name, 'Reset Password', pass => {
+        window.vm.$f7.showPreloader();
+        window.vm.$http.patch(`${window._pz.apiEndPt}users?action=password`, {
+          id: this.clickedUser.id,
+          password_hash: pass
+        })
+          .then(res => {
+            window.vm.$f7.hidePreloader();
+            window.vm.$f7.addNotification({ message: 'Password reset successfully!', hold: 2000 });
+          })
+          .catch(error => {
+            window.vm.$f7.hidePreloader();
+            window._pz.errFunc2.call(this, error);
+          });
+      });
     }
   },
 
@@ -180,7 +198,7 @@ export default {
     console.debug(this.$options.name + ' created');
 
     if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
-    this.getAllOrders();
+    this.getAllUsers();
   },
   beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
   mounted() { console.debug(this.$options.name + ' mounted'); },

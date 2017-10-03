@@ -14,7 +14,7 @@
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
                 <list-item class="pz-padding-l16 pz-size-smaller" :label="'ID'" :value="data.id" />
                 <list-item class="pz-padding-l16 pz-size-smaller" :label="'Role'" :value="'???'" :grayback="true" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Status'" :value="data.status" />
+                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Status'" :value="statusMap[data.status]" />
                 <list-item class="pz-padding-l16 pz-size-smaller" :label="'Buyer Type'" :value="data.buyerType" :grayback="true" />
                 <list-item class="pz-padding-l16 pz-size-smaller" :label="'Name'" :value="data.name" />
                 <list-item class="pz-padding-l16 pz-size-smaller" :label="'Owner Name'" :value="data.owner_name" :grayback="true" />
@@ -25,19 +25,19 @@
                     <a @click="call(data.alternate_mobile)">{{data.alternate_mobile}}</a>
                 </list-item>
                 <list-item :label="'Email'" :value="data.email" />
-                <list-item :label="'User Type'" :value="data.user_type" :grayback="true" />
-                <list-item :label="'Business Type'" :value="data.business_type" />
+                <list-item :label="'User Type'" :value="userTypeMap[data.user_type]" :grayback="true" />
+                <list-item :label="'Business Type'" :value="businessTypeMap[data.business_type]" />
                 <list-item :label="'GSTIN'" :value="data.gstin" :grayback="true" />
                 <list-item :label="'PAN'" :value="data.pan_number" />
                 <list-item :label="'CIN'" :value="data.cin_number" :grayback="true" />
                 <list-item :label="'Shop License No'" :value="data.shop_licence_number" />
                 <list-item :label="'Registration No'" :value="data.registration_number" :grayback="true" />
-                <list-item :label="'Logistics Borne By'" :value="data.logisticStatus" />
-                <list-item :label="'Default Carrier'" :value="'???'" :grayback="true" />
+                <list-item :label="'Logistics Borne By'" :value="logisticStatusMap[data.logistic_status]" />
+                <list-item :label="'Default Carrier'" :value="data.carrier_info && data.carrier_info.carrier.name" :grayback="true" />
                 <list-item :label="'Device Manufacturer'" :value="data.device_manufacturer" />
                 <list-item :label="'Operating System'" :value="data.operating_system" :grayback="true" />
-                <list-item :label="'Account Type'" :value="data.account_type" />
-                <list-item :label="'Bilty Requirements'" :value="data.billt_requirement_code" :grayback="true" />
+                <list-item :label="'Account Type'" :value="accountTypeMap[data.account_type]" />
+                <list-item :label="'Bilty Requirements'" :value="biltyReqMap[data.billt_requirement_code]" :grayback="true" />
                 <list-item :label="'Credit Period'" :value="data.credit_period" />
                 <list-item :label="'Credit Limit'" :value="data.credit_limit" :grayback="true" />
                 <list-item :label="'Last App Use'" :value="data.last_app_use" />
@@ -59,29 +59,7 @@
     </section>
 </template>
 <script>
-
-var listItem = {
-    template: `<div class="row pz-padding-tb-4 pz-padding-l16 pz-size-smaller pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
-                <span class="col-35 color-gray pz-weight-thin ">{{label}}:</span>
-                <span class="col-65 ">
-                   <span v-if="!hasCustomValueSlot">{{value}}</span>
-                   <span v-if="hasCustomValueSlot"> <slot></slot> </span>
-                </span>
-            </div>`,
-    props: {
-        label: String,
-        value: {
-            default: '(Not available)'
-        },
-        grayback: Boolean
-    },
-    computed: {
-        hasCustomValueSlot() {
-            return !!this.$slots.default;
-        }
-    }
-};
-
+import ListItem from '../shared/ListItem';
 
 export default {
     name: 'UserDetail',
@@ -89,11 +67,47 @@ export default {
         return {
             data: null,
             id: null,
-            errMsg: null
+            errMsg: null,
+            userTypeMap: {
+                1: 'Buyer',
+                2: 'Admin'
+            },
+            statusMap: {
+                1: 'Inactive',
+                2: 'Active'
+            },
+            buyerTypeMap: {
+                1: 'Distributor',
+                2: 'School Distributor',
+                3: 'School',
+                4: 'Library'
+            },
+            businessTypeMap: {
+                1: 'Proprietorship',
+                2: 'Partnership Firm',
+                3: 'LLP Firm',
+                4: 'Private Limited Company',
+                5: 'Trust'
+            },
+            biltyReqMap: {
+                1: 'Scanned Bilty Required',
+                2: 'CC Bilty Required',
+                3: 'Physical Bilty Required'
+            },
+            accountTypeMap: {
+                0: 'Not defined',
+                1: 'Postpaid',
+                2: 'Prepaid'
+            },
+            logisticStatusMap: {
+                1: 'Prozo',
+                2: 'Buyer',
+                3: '50-50'
+            }
         };
     },
     components: {
-        'list-item': listItem
+        'list-item': ListItem
     },
     computed: {
         registeredAddr() {
@@ -158,4 +172,5 @@ export default {
     beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
     destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
+
 </script>

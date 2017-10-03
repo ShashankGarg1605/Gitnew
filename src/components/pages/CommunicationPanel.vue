@@ -138,7 +138,7 @@
 
 <script>
 var listItem = {
-    template: `<div class="row pz-padding-tb-4" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
+    template: `<div class="row pz-padding-tb-4 pz-padding-l16 pz-size-smaller pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
                 <span class="col-35 color-gray pz-weight-thin ">{{label}}:</span>
                 <span class="col-65 ">{{value}}</span>
             </div>`,

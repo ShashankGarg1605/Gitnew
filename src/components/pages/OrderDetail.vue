@@ -13,10 +13,10 @@
         <f7-page name="OrderDetail">
 
             <!-- <f7-navbar back-link="Back">
-            <f7-nav-center>
-                Order Detail
-            </f7-nav-center>
-        </f7-navbar> -->
+                <f7-nav-center>
+                    Order Detail
+                </f7-nav-center>
+            </f7-navbar> -->
 
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
                 <div class="row pz-padding-tb-4 pz-padding-lr16">

@@ -12,16 +12,16 @@
         </div>
         <f7-page name="UserDetail">
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'ID'" :value="data.id" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Role'" :value="'???'" :grayback="true" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Status'" :value="statusMap[data.status]" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Buyer Type'" :value="data.buyerType" :grayback="true" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Name'" :value="data.name" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Owner Name'" :value="data.owner_name" :grayback="true" />
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Mobile'">
+                <list-item :label="'ID'" :value="data.id" />
+                <list-item :label="'Role'" :value="'???'" :grayback="true" />
+                <list-item :label="'Status'" :value="statusMap[data.status]" />
+                <list-item :label="'Buyer Type'" :value="data.buyerType" :grayback="true" />
+                <list-item :label="'Name'" :value="data.name" />
+                <list-item :label="'Owner Name'" :value="data.owner_name" :grayback="true" />
+                <list-item :label="'Mobile'">
                     <a @click="call(data.mobile)">{{data.mobile}}</a>
                 </list-item>
-                <list-item class="pz-padding-l16 pz-size-smaller" :label="'Alternate Mobile'" :grayback="true">
+                <list-item :label="'2nd Mobile'" :grayback="true">
                     <a @click="call(data.alternate_mobile)">{{data.alternate_mobile}}</a>
                 </list-item>
                 <list-item :label="'Email'" :value="data.email" />

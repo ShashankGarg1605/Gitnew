@@ -85,6 +85,12 @@ export default {
         search: [
           {
             placeholder: 'User name:'
+          },
+          {
+            placeholder: 'User mobile:'
+          },
+          {
+            placeholder: 'User city:'
           }
         ]
       }
@@ -95,7 +101,13 @@ export default {
       let filterQuery = '';
 
       let { value: buyerName = null } = this.filters.search[0];
-      if (buyerName !== null) filterQuery += `&buyer_name=${buyerName}`;
+      if (buyerName !== null) filterQuery += `&name=${buyerName}`;
+
+      let { value: buyerCity = null } = this.filters.search[1];
+      if (buyerCity !== null) filterQuery += `&city=${buyerCity}`;
+
+      let { value: buyerMobile = null } = this.filters.search[2];
+      if (buyerMobile !== null) filterQuery += `&mobile=${buyerMobile}`;
 
       return filterQuery;
     }

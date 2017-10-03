@@ -13,43 +13,42 @@
         <f7-page name="UserDetail">
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
                 <list-item :label="'ID'" :value="data.id" />
-                <list-item :label="'Role'" :value="'???'" :grayback="true" />
-                <list-item :label="'Status'" :value="statusMap[data.status]" />
-                <list-item :label="'Buyer Type'" :value="data.buyerType" :grayback="true" />
-                <list-item :label="'Name'" :value="data.name" />
-                <list-item :label="'Owner Name'" :value="data.owner_name" :grayback="true" />
-                <list-item :label="'Mobile'">
+                <list-item :label="'Status'" :value="statusMap[data.status]" :grayback="true" />
+                <list-item :label="'Buyer Type'" :value="data.buyerType" />
+                <list-item :label="'Name'" :value="data.name" :grayback="true" />
+                <list-item :label="'Owner Name'" :value="data.owner_name" />
+                <list-item :label="'Mobile'" :grayback="true">
                     <a @click="call(data.mobile)">{{data.mobile}}</a>
                 </list-item>
-                <list-item :label="'2nd Mobile'" :grayback="true">
+                <list-item :label="'2nd Mobile'">
                     <a @click="call(data.alternate_mobile)">{{data.alternate_mobile}}</a>
                 </list-item>
-                <list-item :label="'Email'" :value="data.email" />
-                <list-item :label="'User Type'" :value="userTypeMap[data.user_type]" :grayback="true" />
-                <list-item :label="'Business Type'" :value="businessTypeMap[data.business_type]" />
-                <list-item :label="'GSTIN'" :value="data.gstin" :grayback="true" />
-                <list-item :label="'PAN'" :value="data.pan_number" />
-                <list-item :label="'CIN'" :value="data.cin_number" :grayback="true" />
-                <list-item :label="'Shop License No'" :value="data.shop_licence_number" />
-                <list-item :label="'Registration No'" :value="data.registration_number" :grayback="true" />
-                <list-item :label="'Logistics Borne By'" :value="logisticStatusMap[data.logistic_status]" />
-                <list-item :label="'Default Carrier'" :value="data.carrier_info && data.carrier_info.carrier.name" :grayback="true" />
-                <list-item :label="'Device Manufacturer'" :value="data.device_manufacturer" />
-                <list-item :label="'Operating System'" :value="data.operating_system" :grayback="true" />
-                <list-item :label="'Account Type'" :value="accountTypeMap[data.account_type]" />
-                <list-item :label="'Bilty Requirements'" :value="biltyReqMap[data.billt_requirement_code]" :grayback="true" />
-                <list-item :label="'Credit Period'" :value="data.credit_period" />
-                <list-item :label="'Credit Limit'" :value="data.credit_limit" :grayback="true" />
-                <list-item :label="'Last App Use'" :value="data.last_app_use" />
-                <list-item :label="'Registered Address'" :value="registeredAddr" :grayback="true" />
-                <list-item :label="'Shipping Address'" :value="shippingAddr" />
-                <list-item :label="'PAN Image'" :grayback="true" v-if="panImage">
+                <list-item :label="'Email'" :value="data.email" :grayback="true" />
+                <list-item :label="'User Type'" :value="userTypeMap[data.user_type]" />
+                <list-item :label="'Business Type'" :value="businessTypeMap[data.business_type]" :grayback="true" />
+                <list-item :label="'GSTIN'" :value="data.gstin" />
+                <list-item :label="'PAN'" :value="data.pan_number" :grayback="true" />
+                <list-item :label="'CIN'" :value="data.cin_number" />
+                <list-item :label="'Shop License No'" :value="data.shop_licence_number" :grayback="true" />
+                <list-item :label="'Registration No'" :value="data.registration_number" />
+                <list-item :label="'Logistics Borne By'" :value="logisticStatusMap[data.logistic_status]" :grayback="true" />
+                <list-item :label="'Default Carrier'" :value="data.carrier_info && data.carrier_info.carrier.name" />
+                <list-item :label="'Device Manufacturer'" :value="data.device_manufacturer" :grayback="true" />
+                <list-item :label="'Operating System'" :value="data.operating_system" />
+                <list-item :label="'Account Type'" :value="accountTypeMap[data.account_type]" :grayback="true" />
+                <list-item :label="'Bilty Requirements'" :value="biltyReqMap[data.billt_requirement_code]" />
+                <list-item :label="'Credit Period'" :value="data.credit_period" :grayback="true" />
+                <list-item :label="'Credit Limit'" :value="data.credit_limit" />
+                <list-item :label="'Last App Use'" :value="data.last_app_use" :grayback="true" />
+                <list-item :label="'Registered Address'" :value="registeredAddr" />
+                <list-item :label="'Shipping Address'" :value="shippingAddr" :grayback="true" />
+                <list-item :label="'PAN Image'" v-if="panImage">
                     <img :src="panImage" class="pz-margin-r8 image" @click="openZoomView(panImage)">
                 </list-item>
-                <list-item :label="'CIN Image'" v-if="cinImage">
+                <list-item :label="'CIN Image'" v-if="cinImage" :grayback="true">
                     <img :src="cinImage" class="pz-margin-r8 image" @click="openZoomView(cinImage)">
                 </list-item>
-                <list-item :label="'Shop License Image'" :grayback="true" v-if="shopLicenseImage">
+                <list-item :label="'Shop License Image'" v-if="shopLicenseImage">
                     <img :src="shopLicenseImage" class="pz-margin-r8 image" @click="openZoomView(shopLicenseImage)">
                 </list-item>
             </section>

@@ -13,44 +13,26 @@
         <f7-page name="OrderDetail">
 
             <!-- <f7-navbar back-link="Back">
-                <f7-nav-center>
-                    Order Detail
-                </f7-nav-center>
-            </f7-navbar> -->
+                                            <f7-nav-center>
+                                                Order Detail
+                                            </f7-nav-center>
+                                        </f7-navbar> -->
 
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
-                <div class="row pz-padding-tb-4 pz-padding-lr16">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Status:</span>
-                    <div class="col-65">
-                        <span class="status pz-padding-lr16 ">{{statusText}}</span>
-                    </div>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Order ID:</span>
-                    <span class="col-65 ">{{data.order_id}}</span>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Mobile No:</span>
-                    <span class="col-65 ">
-                        <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
-                    </span>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Buyer Name:</span>
-                    <span class="col-65 ">{{data.user.buyer_name}}</span>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice Amt:</span>
-                    <span class="col-65 ">Rs. {{data.finalOrderValue | moneyFormat}}</span>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Created Date:</span>
-                    <span class="col-65 ">{{data.created_date}}</span>
-                </div>
-                <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="carrierName">
-                    <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Carrier:</span>
-                    <span class="col-65 ">{{carrierName}}</span>
-                </div>
+                <list-item :label="'Status'">
+                    <span class="status pz-padding-lr16 ">{{statusText}}</span>
+                </list-item>
+                <list-item :label="'Order ID'" :value="data.order_id" :grayback="true" />
+                <list-item :label="'Mobile No'" :value="data.order_id">
+                    <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
+                </list-item>
+                <list-item :label="'Buyer Name'" :value="data.user.buyer_name" :grayback="true" />
+                <list-item :label="'Invoice Amt'">
+                    <span>Rs. {{data.finalOrderValue | moneyFormat}}</span>
+                </list-item>
+                <list-item :label="'Created Date'" :value="data.created_date" :grayback="true" />
+                <list-item :label="'Carrier'" :value="carrierName" v-if="carrierName" />
+
                 <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="isPartiallyDispatched && carriers && !biltyImage">
                     <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Select Carrier</span>
                     <span class="col-65 ">
@@ -134,11 +116,13 @@
 </style>
 <script>
 import ImageUploader from '../shared/ImageUploader';
+import ListItem from '../shared/ListItem';
 
 export default {
     name: 'OrderDetail',
     components: {
-        'image-uploader': ImageUploader
+        'image-uploader': ImageUploader,
+        'list-item': ListItem
     },
     data() {
         return {

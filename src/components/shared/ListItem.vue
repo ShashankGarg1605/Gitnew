@@ -1,6 +1,6 @@
 <template>
-    <div class="row pz-padding-tb-4 pz-padding-l16 pz-size-smaller pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
-        <span class="col-35 color-gray pz-weight-thin ">{{label}}:</span>
+    <div class="row pz-padding-tb-4 pz-padding-l16 pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
+        <span class="col-35 color-gray pz-weight-thin" style="text-transform: capitalize;">{{label}}:</span>
         <span class="col-65 ">
             <span v-if="!hasCustomValueSlot">{{value}}</span>
             <span v-if="hasCustomValueSlot">

@@ -32,17 +32,20 @@
                         <f7-list-item accordion-item title="Basic Details" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <list-item :label="'Name'" :value="userDetails.buyer_name" />
-                                    <list-item :label="'Owner Name'" :value="userDetails.owner_name" :grayback="true" />
-                                    <list-item :label="'Location'" :value="'???'" />
+                                    <list-item :label="'Name'" :value="userDetails.name" :grayback="true" />
+                                    <list-item :label="'Owner Name'" :value="userDetails.owner_name" />
                                     <list-item :label="'Account since'" :value="userDetails.created_date" :grayback="true" />
-                                    <list-item :label="'Contact No.'" :value="userDetails.mobile" />
-                                    <list-item :label="'2nd Number'" :value="userDetails.alternate_mobile" :grayback="true" />
+                                    <list-item :label="'Mobile'">
+                                        <a @click="call(userDetails.mobile)">{{userDetails.mobile}}</a>
+                                    </list-item>
+                                    <list-item :label="'2nd Mobile'" :grayback="true">
+                                        <a @click="call(userDetails.alternate_mobile)">{{userDetails.alternate_mobile}}</a>
+                                    </list-item>
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
                                     <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
                                     <list-item :label="'Last app use'" :value="userDetails.last_app_use" />
-                                    <list-item :label="'Account type'" :value="userDetails.account_type" :grayback="true" />
-                                    <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" />
+                                    <list-item :label="'Account type'" :value="accountTypeMap[userDetails.account_type]" :grayback="true" />
+                                    <!-- <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" /> -->
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -64,13 +67,27 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
+                        <f7-list-item accordion-item title="Business Details" v-if="userDetails">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <list-item :label="'Total business till date'">
+                                        <span>Rs. {{totalOrderValue | moneyFormat}}</span>
+                                    </list-item>
+                                    <list-item :label="'Avg order value'" :grayback="true">
+                                        <span>Rs. {{avgOrderValue | moneyFormat}}</span>
+                                    </list-item>
+                                    <list-item :label="'Total Orders till date'" :value="businessDetails && businessDetails.length" />
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
                         <f7-list-item accordion-item title="Logistics Details" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Goods carrier'" :value="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.name" />
                                     <list-item :label="'Carrier mobile'" :value="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile" :grayback="true" />
                                     <list-item :label="'Avg duration of goods delivery'" :value="userDetails.carrier_info && userDetails.carrier_info.transporting_days" />
-                                    <list-item :label="'Logistics paid by'" :value="'???'" :grayback="true" />
+                                    <list-item :label="'Logistics paid by'" :value="userDetails.logisticStatus" :grayback="true" />
                                     <list-item :label="'Bilty reqments'" :value="userDetails.billty_code" />
                                 </f7-block>
                             </f7-accordion-content>
@@ -101,55 +118,42 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'No. of returns'" :value="returnDetails.length" />
-                                    <list-item :label="'% till date'" :value="'???'" :grayback="true" />
-                                    <list-item :label="'Total value till date'" :value="returnDetails.reduce((sum,v)=>sum+v.approved_value, 0) | moneyFormat" />
+                                    <list-item :label="'Total value till date'" :value="returnDetails.reduce((sum,v)=>sum+v.approved_value, 0) | moneyFormat" :grayback="true" />
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
-                            <f7-accordion-content>
-                                <f7-block>
-                                    <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
-                                    <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                                    <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
-                                    <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
-                                    <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
-                                    <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
-                                    <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
-                                    <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
-                                    <list-item :label="'Due after last payment'" :value="'???'" />
-                                    <list-item :label="'Account status'" :value="'???'" :grayback="true" />
-                                    <list-item :label="'No of cheque bounces'" :value="'???'" />
-                                </f7-block>
-                            </f7-accordion-content>
-                        </f7-list-item>
+                        <!-- <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
+        <f7-accordion-content>
+            <f7-block>
+                <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
+                <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
+                <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
+                <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
+                <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
+                <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
+                <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
+                <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
+                <list-item :label="'Due after last payment'" :value="'???'" />
+                <list-item :label="'Account status'" :value="'???'" :grayback="true" />
+                <list-item :label="'No of cheque bounces'" :value="'???'" />
+            </f7-block>
+        </f7-accordion-content>
+        </f7-list-item> -->
 
                     </f7-list>
                 </section>
 
             </f7-page-content>
-            <f7-page-content tab id="tab-2">Tab 2 Content ...</f7-page-content>
-            <f7-page-content tab id="tab-3">Tab 3 Content ...</f7-page-content>
+            <f7-page-content tab id="tab-2">Under construction...</f7-page-content>
+            <f7-page-content tab id="tab-3">Under construction...</f7-page-content>
         </f7-tabs>
 
     </f7-page>
 </template>
 
 <script>
-var listItem = {
-    template: `<div class="row pz-padding-tb-4 pz-padding-l16 pz-size-smaller pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
-                <span class="col-35 color-gray pz-weight-thin ">{{label}}:</span>
-                <span class="col-65 ">{{value}}</span>
-            </div>`,
-    props: {
-        label: String,
-        value: {
-            default: '(Not available)'
-        },
-        grayback: Boolean
-    }
-};
+import ListItem from '../shared/ListItem';
 
 export default {
     name: 'CommunicationPanel',
@@ -161,31 +165,75 @@ export default {
             autocompleteRef: null,
             userDetails: null,
             returnDetails: null,
-            lastPaymentDetails: null,
-            chqBounceDetails: null
+            // lastPaymentDetails: null,
+            chqBounceDetails: null,
+            businessDetails: null,
+            statusMap: {
+                1: 'Inactive',
+                2: 'Active'
+            },
+            buyerTypeMap: {
+                1: 'Distributor',
+                2: 'School Distributor',
+                3: 'School',
+                4: 'Library'
+            },
+            businessTypeMap: {
+                1: 'Proprietorship',
+                2: 'Partnership Firm',
+                3: 'LLP Firm',
+                4: 'Private Limited Company',
+                5: 'Trust'
+            },
+            biltyReqMap: {
+                1: 'Scanned Bilty Required',
+                2: 'CC Bilty Required',
+                3: 'Physical Bilty Required'
+            },
+            accountTypeMap: {
+                0: 'Not defined',
+                1: 'Postpaid',
+                2: 'Prepaid'
+            },
+            logisticStatusMap: {
+                1: 'Prozo',
+                2: 'Buyer',
+                3: '50-50'
+            }
         };
     },
+    computed: {
+        totalOrderValue() {
+            console.log('this.businessDetails: ', this.businessDetails);
+            if (!this.businessDetails || !this.businessDetails.length) return null;
+            else return this.businessDetails.reduce((sum, _) => sum + _.finalOrderValue, 0);
+        },
+        avgOrderValue() {
+            if (!this.businessDetails || !this.businessDetails.length || !this.totalOrderValue) return null;
+            else return this.totalOrderValue / this.businessDetails.length;
+        }
+    },
     components: {
-        'list-item': listItem
+        'list-item': ListItem
     },
     methods: {
         clearBuyerData() {
             this.userID = null;
             this.userDetails = null;
+            this.returnDetails = null;
+            // this.lastPaymentDetails = null;
+            this.chqBounceDetails = null;
+            this.businessDetails = null;
         },
         getAllUsers() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
                 .then(res => {
-                    console.log('res: ', res);
                     if (res.ok) {
                         this.users = res.body;
                         this.setUserSelection();
                     }
                 })
-                .catch(err => {
-                    if (err instanceof Error) throw new Error(err);
-                    this.errMsg = window._pz.errFunc(err);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         setUserSelection() {
             let that = this; // save a ref to this to use inside callbacks
@@ -235,21 +283,32 @@ export default {
                 .then(res => {
                     if (res.ok) this.returnDetails = res.body;
                     else window._pz.errFunc(res);
-                }).catch(catcher);
+                })
+                .catch(window._pz.errFunc2.bind(this));
         },
         getPaymentsData() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/payments/' + this.userID)
                 .then(res => {
                     if (res.ok) this.lastPaymentDetails = res.body.length && res.body[0];
                     else window._pz.errFunc(res);
-                }).catch(catcher);
+                })
+                .catch(window._pz.errFunc2.bind(this));
         },
         getChqBounceData() {
             window.vm.$http.get(window._pz.apiEndPt + 'payments/cheque_bounce?user=' + this.userID)
                 .then(res => {
                     if (res.ok) this.chqBounceDetails = res.body;
                     else window._pz.errFunc(res);
-                }).catch(catcher);
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
+        getBusinessData() {
+            window.vm.$http.get(window._pz.apiEndPt + 'orders?userId=' + this.userID)
+                .then(res => {
+                    if (res.ok) this.businessDetails = res.body;
+                    else window._pz.errFunc(res);
+                })
+                .catch(window._pz.errFunc2.bind(this));
         },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
@@ -257,10 +316,12 @@ export default {
                     if (res.ok) {
                         this.userDetails = res.body;
                         this.getReturnsData();
-                        this.getPaymentsData();
+                        // this.getPaymentsData();
                         this.getChqBounceData();
+                        this.getBusinessData();
                     } else window._pz.errFunc(res);
-                }).catch(catcher);
+                })
+                .catch(window._pz.errFunc2.bind(this));
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
@@ -280,9 +341,4 @@ export default {
     beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
     destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
-
-function catcher(err) {
-    if (err instanceof Error) throw new Error(err);
-    this.errMsg = window._pz.errFunc(err);
-}
 </script>

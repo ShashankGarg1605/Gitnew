@@ -157,8 +157,8 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
       2: 'Admin'
     },
     userStatusMap: {
-      1: 'Inactive',
-      0: 'Active'
+      0: 'Inactive',
+      1: 'Active'
     },
     buyerTypeMap: {
       1: 'Distributor',
@@ -220,10 +220,10 @@ Vue.filter('moneyFormat', function (data) {
 });
 
 Vue.http.interceptors.push(function (request, next) {
-  if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
+  // if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
   ++window.vm.$pzGlobalReactiveData.nbPendingReq;
   next(function (response) {
-    window.vm.$f7.hidePreloader();
+    // window.vm.$f7.hidePreloader();
     --window.vm.$pzGlobalReactiveData.nbPendingReq;
     window.vm.$pzGlobalReactiveData.loaderOnAllReqs = true; // resume the normal functionality that loader is there for all hits (maybe it was set to false for a particular hit,)
   });

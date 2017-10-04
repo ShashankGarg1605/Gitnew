@@ -24,7 +24,7 @@
     <f7-list>
       <div v-if="allUsers.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="user in allUsers" :key="user.id" :class="{ 'pz-bg-red-lightest': user.status==1 }">
+          <li class="item-content" v-for="user in allUsers" :key="user.id" :class="{ 'pz-bg-red-lightest': user.status==0 }">
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">User ID:</div>
@@ -54,8 +54,8 @@
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
           <a @click="resetPassword()" class="list-button item-link close-popover">Reset Password</a>
-          <a v-if="clickedUser && clickedUser.status==1" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
-          <a v-if="clickedUser && clickedUser.status==0" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
+          <a v-if="clickedUser && clickedUser.status==0" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
+          <a v-if="clickedUser && clickedUser.status==1" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
         </div>
       </div>
     </f7-popover>
@@ -97,11 +97,11 @@ export default {
       let { value: buyerName = null } = this.filters.search[0];
       if (buyerName !== null) filterQuery += `&name=${buyerName}`;
 
-      let { value: buyerCity = null } = this.filters.search[1];
-      if (buyerCity !== null) filterQuery += `&city=${buyerCity}`;
-
-      let { value: buyerMobile = null } = this.filters.search[2];
+      let { value: buyerMobile = null } = this.filters.search[1];
       if (buyerMobile !== null) filterQuery += `&mobile=${buyerMobile}`;
+
+      let { value: buyerCity = null } = this.filters.search[2];
+      if (buyerCity !== null) filterQuery += `&city=${buyerCity}`;
 
       return filterQuery;
     }
@@ -177,11 +177,23 @@ export default {
       });
     },
     changeUserStatus(todo) {
+      let url, status, msg;
+      // const that = this;
       if (todo === 'activate') {
-
+        url = `${window._pz.apiEndPt}users?action=activate`;
+        status = 1;
+        msg = 'Activated successfully!';
       } else {
-
+        url = `${window._pz.apiEndPt}users?action=activate`;
+        status = 0;
+        msg = 'De-activated successfully!';
       }
+      window.vm.$http.patch(url, { id: this.clickedUser.id, status: status })
+        .then(res => {
+          window.vm.$f7.addNotification({ message: msg, hold: 2000 });
+          this.allUsers.find(_ => _.id === this.clickedUser.id).status = status;
+        })
+        .catch(window._pz.errFunc2.bind(this));
     }
   },
 

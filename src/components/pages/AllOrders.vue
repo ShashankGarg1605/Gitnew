@@ -63,15 +63,6 @@
   </f7-page>
 </template>
 
-<style scoped>
-.pz-popover {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  padding: 10px;
-}
-</style>
-
 <script>
 export default {
   name: 'AllOrders',

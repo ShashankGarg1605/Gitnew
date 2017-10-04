@@ -120,6 +120,12 @@ body {
 .popover {
     width: 200px !important;
 }
+.pz-popover {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+}
 .pz-wht-spc-norm {
     white-space: nowrap !important;
 }

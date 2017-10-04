@@ -24,7 +24,7 @@
         <f7-list>
             <div v-if="allInvoice.length" class="list-block">
                 <ul>
-                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ redBg: !invoice.image }">
+                    <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ 'pz-bg-red-lightest': !invoice.image }">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
                                 <div class="col-30 color-gray">#{{invoice.invoice_number}}</div>
@@ -64,19 +64,6 @@
 
     </f7-page>
 </template>
-
-<style scoped>
-.pz-popover {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    padding: 10px;
-}
-
-.redBg {
-    background: #FFEBEE !important;
-}
-</style>
 
 <script>
 export default {

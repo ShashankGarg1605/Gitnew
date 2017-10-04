@@ -24,7 +24,7 @@
     <f7-list>
       <div v-if="allUsers.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="user in allUsers" :key="user.id">
+          <li class="item-content" v-for="user in allUsers" :key="user.id" :class="{ 'pz-bg-red-lightest': user.status==1 }">
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">User ID:</div>
@@ -37,7 +37,7 @@
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Mobile:</div>
                 <div class="col-70">
-                  <a @click="call(user.mobile)">{{user.mobile}}</a>
+                  <a @click="$pzGlobalReactiveData.phone(user.mobile)">{{user.mobile}}</a>
                 </div>
               </div>
               <i class="f7-icons pz-popover" @click='openPopover(user, $event)'>more_horiz</i>
@@ -54,6 +54,8 @@
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
           <a @click="resetPassword()" class="list-button item-link close-popover">Reset Password</a>
+          <a v-if="clickedUser && clickedUser.status==1" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
+          <a v-if="clickedUser && clickedUser.status==0" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
         </div>
       </div>
     </f7-popover>
@@ -171,9 +173,6 @@ export default {
         context: { comps: JSON.parse(JSON.stringify(this.filters)) }
       });
     },
-    call(mob) {
-      window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
-    },
     resetPassword() {
       window.f7.prompt('Enter new password for ' + this.clickedUser.name, 'Reset Password', pass => {
         window.vm.$f7.showPreloader();
@@ -190,6 +189,13 @@ export default {
             window._pz.errFunc2.call(this, error);
           });
       });
+    },
+    changeUserStatus(todo) {
+      if (todo === 'activate') {
+
+      } else {
+
+      }
     }
   },
 

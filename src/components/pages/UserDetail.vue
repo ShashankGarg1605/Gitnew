@@ -18,10 +18,10 @@
                 <list-item :label="'Name'" :value="data.name" :grayback="true" />
                 <list-item :label="'Owner Name'" :value="data.owner_name" />
                 <list-item :label="'Mobile'" :grayback="true">
-                    <a @click="call(data.mobile)">{{data.mobile}}</a>
+                    <a @click="$pzGlobalReactiveData.phone(data.mobile)">{{data.mobile}}</a>
                 </list-item>
                 <list-item :label="'2nd Mobile'">
-                    <a @click="call(data.alternate_mobile)">{{data.alternate_mobile}}</a>
+                    <a @click="$pzGlobalReactiveData.phone(data.alternate_mobile)">{{data.alternate_mobile}}</a>
                 </list-item>
                 <list-item :label="'Email'" :value="data.email" :grayback="true" />
                 <list-item :label="'User Type'" :value="$pzGlobalReactiveData.userTypeMap[data.user_type]" />
@@ -46,10 +46,10 @@
                     <img :src="panImage" class="pz-margin-r8 image" @click="$pzGlobalReactiveData.openZoomView(panImage)">
                 </list-item>
                 <list-item :label="'CIN Image'" v-if="cinImage" :grayback="true">
-                    <img :src="cinImage" class="pz-margin-r8 image" @click="openZoomView(cinImage)">
+                    <img :src="cinImage" class="pz-margin-r8 image" @click="$pzGlobalReactiveData.openZoomView(cinImage)">
                 </list-item>
                 <list-item :label="'Shop License Image'" v-if="shopLicenseImage">
-                    <img :src="shopLicenseImage" class="pz-margin-r8 image" @click="openZoomView(shopLicenseImage)">
+                    <img :src="shopLicenseImage" class="pz-margin-r8 image" @click="$pzGlobalReactiveData.openZoomView(shopLicenseImage)">
                 </list-item>
             </section>
 
@@ -109,17 +109,6 @@ export default {
                     }
                 })
                 .catch(window._pz.errFunc2.bind(this));
-        },
-        call(mob) {
-            window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
-        },
-        openZoomView(imgURL) {
-            var a = window.vm.$f7.photoBrowser({
-                type: 'popup',
-                theme: 'dark',
-                toolbar: false,
-                photos: [imgURL]
-            }); a.open();
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },

@@ -157,7 +157,7 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
     },
     userStatusMap: {
       1: 'Inactive',
-      2: 'Active'
+      0: 'Active'
     },
     buyerTypeMap: {
       1: 'Distributor',
@@ -196,6 +196,9 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
         toolbar: false,
         photos: [imgURL]
       }); a.open();
+    },
+    phone(mob) {
+      window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
     }
   }
 });

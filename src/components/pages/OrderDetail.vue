@@ -13,10 +13,10 @@
         <f7-page name="OrderDetail">
 
             <!-- <f7-navbar back-link="Back">
-                                            <f7-nav-center>
-                                                Order Detail
-                                            </f7-nav-center>
-                                        </f7-navbar> -->
+                                                                    <f7-nav-center>
+                                                                        Order Detail
+                                                                    </f7-nav-center>
+                                                                </f7-navbar> -->
 
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
                 <list-item :label="'Status'">
@@ -24,7 +24,7 @@
                 </list-item>
                 <list-item :label="'Order ID'" :value="data.order_id" :grayback="true" />
                 <list-item :label="'Mobile No'" :value="data.order_id">
-                    <a @click="call(data.user.mobile)">{{data.user.mobile}}</a>
+                    <a @click="$pzGlobalReactiveData.phone(data.user.mobile)">{{data.user.mobile}}</a>
                 </list-item>
                 <list-item :label="'Buyer Name'" :value="data.user.buyer_name" :grayback="true" />
                 <list-item :label="'Invoice Amt'">
@@ -59,7 +59,7 @@
                         <image-uploader :maxCount="1" :submitLabel="'Upload Bilty'" @upload="uploadImage($event)" :disabled="!selectedCarrier" />
                     </div>
                     <div class="col-65" v-if="biltyImage">
-                        <img :src="biltyImage" class="pz-margin-r8 image" @click="openZoomView()">
+                        <img :src="biltyImage" class="pz-margin-r8 image" @click="$pzGlobalReactiveData.openZoomView(biltyImage)">
                     </div>
                 </div>
             </section>
@@ -220,17 +220,6 @@ export default {
                     window.vm.$f7.hidePreloader();
                     window._pz.errFunc2.call(this, error);
                 });
-        },
-        openZoomView() {
-            var a = window.vm.$f7.photoBrowser({
-                type: 'popup',
-                theme: 'dark',
-                toolbar: false,
-                photos: [this.biltyImage]
-            }); a.open();
-        },
-        call(mob) {
-            window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
         },
         overrideDefaultBack(allOrdersFilters) {
             let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];

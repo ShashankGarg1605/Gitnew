@@ -44,7 +44,7 @@
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
                                     <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
                                     <list-item :label="'Last app use'" :value="userDetails.last_app_use" />
-                                    <list-item :label="'Account type'" :value="accountTypeMap[userDetails.account_type]" :grayback="true" />
+                                    <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" :grayback="true" />
                                     <!-- <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" /> -->
                                 </f7-block>
                             </f7-accordion-content>
@@ -167,39 +167,7 @@ export default {
             returnDetails: null,
             // lastPaymentDetails: null,
             chqBounceDetails: null,
-            businessDetails: null,
-            statusMap: {
-                1: 'Inactive',
-                2: 'Active'
-            },
-            buyerTypeMap: {
-                1: 'Distributor',
-                2: 'School Distributor',
-                3: 'School',
-                4: 'Library'
-            },
-            businessTypeMap: {
-                1: 'Proprietorship',
-                2: 'Partnership Firm',
-                3: 'LLP Firm',
-                4: 'Private Limited Company',
-                5: 'Trust'
-            },
-            biltyReqMap: {
-                1: 'Scanned Bilty Required',
-                2: 'CC Bilty Required',
-                3: 'Physical Bilty Required'
-            },
-            accountTypeMap: {
-                0: 'Not defined',
-                1: 'Postpaid',
-                2: 'Prepaid'
-            },
-            logisticStatusMap: {
-                1: 'Prozo',
-                2: 'Buyer',
-                3: '50-50'
-            }
+            businessDetails: null
         };
     },
     computed: {

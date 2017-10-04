@@ -150,7 +150,53 @@ window.vm = new Vue({ // eslint-disable-line no-new
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Vue.prototype.$pzGlobalReactiveData = new Vue({
   data: {
-    pendingReq: false
+    pendingReq: false,
+    userTypeMap: {
+      1: 'Buyer',
+      2: 'Admin'
+    },
+    userStatusMap: {
+      1: 'Inactive',
+      2: 'Active'
+    },
+    buyerTypeMap: {
+      1: 'Distributor',
+      2: 'School Distributor',
+      3: 'School',
+      4: 'Library'
+    },
+    businessTypeMap: {
+      1: 'Proprietorship',
+      2: 'Partnership Firm',
+      3: 'LLP Firm',
+      4: 'Private Limited Company',
+      5: 'Trust'
+    },
+    biltyReqMap: {
+      1: 'Scanned Bilty Required',
+      2: 'CC Bilty Required',
+      3: 'Physical Bilty Required'
+    },
+    accountTypeMap: {
+      0: 'Not defined',
+      1: 'Postpaid',
+      2: 'Prepaid'
+    },
+    logisticStatusMap: {
+      1: 'Prozo',
+      2: 'Buyer',
+      3: '50-50'
+    }
+  },
+  methods: {
+    openZoomView(imgURL) {
+      var a = window.vm.$f7.photoBrowser({
+        type: 'popup',
+        theme: 'dark',
+        toolbar: false,
+        photos: [imgURL]
+      }); a.open();
+    }
   }
 });
 

@@ -36,10 +36,10 @@
                                     <list-item :label="'Owner Name'" :value="userDetails.owner_name" />
                                     <list-item :label="'Account since'" :value="userDetails.created_date" :grayback="true" />
                                     <list-item :label="'Mobile'">
-                                        <a @click="call(userDetails.mobile)">{{userDetails.mobile}}</a>
+                                        <a @click="$pzGlobalReactiveData.phone(userDetails.mobile)">{{userDetails.mobile}}</a>
                                     </list-item>
                                     <list-item :label="'2nd Mobile'" :grayback="true">
-                                        <a @click="call(userDetails.alternate_mobile)">{{userDetails.alternate_mobile}}</a>
+                                        <a @click="$pzGlobalReactiveData.phone(userDetails.alternate_mobile)">{{userDetails.alternate_mobile}}</a>
                                     </list-item>
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
                                     <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
@@ -124,22 +124,22 @@
                         </f7-list-item>
 
                         <!-- <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
-        <f7-accordion-content>
-            <f7-block>
-                <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
-                <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
-                <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
-                <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
-                <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
-                <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
-                <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
-                <list-item :label="'Due after last payment'" :value="'???'" />
-                <list-item :label="'Account status'" :value="'???'" :grayback="true" />
-                <list-item :label="'No of cheque bounces'" :value="'???'" />
-            </f7-block>
-        </f7-accordion-content>
-        </f7-list-item> -->
+                <f7-accordion-content>
+                    <f7-block>
+                        <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
+                        <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
+                        <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
+                        <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
+                        <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
+                        <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
+                        <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
+                        <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
+                        <list-item :label="'Due after last payment'" :value="'???'" />
+                        <list-item :label="'Account status'" :value="'???'" :grayback="true" />
+                        <list-item :label="'No of cheque bounces'" :value="'???'" />
+                    </f7-block>
+                </f7-accordion-content>
+                </f7-list-item> -->
 
                     </f7-list>
                 </section>

@@ -13,10 +13,10 @@
         <f7-page name="OrderDetail">
 
             <!-- <f7-navbar back-link="Back">
-                                                                    <f7-nav-center>
-                                                                        Order Detail
-                                                                    </f7-nav-center>
-                                                                </f7-navbar> -->
+                                                                        <f7-nav-center>
+                                                                            Order Detail
+                                                                        </f7-nav-center>
+                                                                    </f7-navbar> -->
 
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
                 <list-item :label="'Status'">
@@ -198,8 +198,6 @@ export default {
                 .catch(window._pz.errFunc2.bind(this));
         },
         uploadImage(image) {
-            window.vm.$f7.showPreloader();
-
             const params = image ? {
                 stringValue: image[0].data,
                 name: image[0].title
@@ -211,15 +209,11 @@ export default {
                     const allOrdersFilters = this.$route.options.context.allOrdersFilters;
                     setTimeout(() => this.overrideDefaultBack(allOrdersFilters));
 
-                    window.vm.$f7.hidePreloader();
                     window.vm.$f7.addNotification({ message: 'Status changed', hold: 2000 });
 
                     window.vm.$f7.mainView.router.refreshPage();
                 })
-                .catch(error => {
-                    window.vm.$f7.hidePreloader();
-                    window._pz.errFunc2.call(this, error);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         overrideDefaultBack(allOrdersFilters) {
             let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];

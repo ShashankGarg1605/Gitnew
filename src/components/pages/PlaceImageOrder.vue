@@ -96,8 +96,6 @@ export default {
             this.autocompleteRef.open();
         },
         uploadImage(images) {
-            window.vm.$f7.showPreloader();
-
             let params = images.map(image => ({
                 stringValue: image.data,
                 name: image.title
@@ -105,7 +103,6 @@ export default {
 
             window.vm.$http.post(window._pz.apiEndPt + 'orders/image?user=' + this.userID, params)
                 .then(res => {
-                    window.vm.$f7.hidePreloader();
                     if (res.ok) {
                         window.vm.$f7.addNotification({ message: `Image order ID ${res.body.id} placed!`, hold: 3000 });
                         let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
@@ -115,10 +112,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
-                    window.vm.$f7.hidePreloader();
-                    window._pz.errFunc2.call(this, err);
-                });
+                .catch(window._pz.errFunc2.bind(this));
 
         }
     },

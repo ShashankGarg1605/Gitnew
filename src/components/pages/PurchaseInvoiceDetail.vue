@@ -134,8 +134,6 @@ export default {
                 .catch(window._pz.errFunc2.bind(this));
         },
         uploadImage(images) {
-            window.vm.$f7.showPreloader();
-
             let params = images.map(image => ({
                 stringValue: image.data,
                 name: image.title
@@ -146,15 +144,11 @@ export default {
                 images: params
             })
                 .then(res => {
-                    window.vm.$f7.hidePreloader();
                     window.vm.$f7.mainView.router.refreshPage();
                     window._pz.refreshOnBack = true;
                     window.vm.$f7.addNotification({ message: 'Invoice uploaded successfully', hold: 2000 });
                 })
-                .catch(error => {
-                    window.vm.$f7.hidePreloader();
-                    window._pz.errFunc2.call(this, error);
-                });
+                .catch(window._pz.errFunc2.bind(this));
         },
         openZoomView(index) {
             var a = window.vm.$f7.photoBrowser({

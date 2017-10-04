@@ -109,7 +109,7 @@ export default {
   methods: {
     getAllUsers() {
 
-
+      window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
       const url = `${window._pz.apiEndPt}users/search?limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
       window.vm.$http.get(url)
         .then(res => {
@@ -166,19 +166,14 @@ export default {
     },
     resetPassword() {
       window.f7.prompt('Enter new password for ' + this.clickedUser.name, 'Reset Password', pass => {
-        window.vm.$f7.showPreloader();
         window.vm.$http.patch(`${window._pz.apiEndPt}users?action=password`, {
           id: this.clickedUser.id,
           password_hash: pass
         })
           .then(res => {
-            window.vm.$f7.hidePreloader();
             window.vm.$f7.addNotification({ message: 'Password reset successfully!', hold: 2000 });
           })
-          .catch(error => {
-            window.vm.$f7.hidePreloader();
-            window._pz.errFunc2.call(this, error);
-          });
+          .catch(window._pz.errFunc2.bind(this));
       });
     },
     changeUserStatus(todo) {

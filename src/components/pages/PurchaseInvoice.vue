@@ -149,7 +149,7 @@ export default {
     },
     methods: {
         getAllInvoices() {
-
+            window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
             let url = `${window._pz.apiEndPt}purchase_invoice?limit=${this.limit}&offset=${this.offset}&orderBy=invoice_date&orderByValue=desc` + this.filterQuery;
             window.vm.$http.get(url)
                 .then(res => {

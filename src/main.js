@@ -150,7 +150,8 @@ window.vm = new Vue({ // eslint-disable-line no-new
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Vue.prototype.$pzGlobalReactiveData = new Vue({
   data: {
-    pendingReq: false,
+    nbPendingReq: 0,
+    loaderOnAllReqs: true,
     userTypeMap: {
       1: 'Buyer',
       2: 'Admin'
@@ -188,6 +189,11 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
       3: '50-50'
     }
   },
+  computed: {
+    pendingReq() {
+      return this.nbPendingReq && this.nbPendingReq > 0;
+    }
+  },
   methods: {
     openZoomView(imgURL) {
       var a = window.vm.$f7.photoBrowser({
@@ -214,9 +220,12 @@ Vue.filter('moneyFormat', function (data) {
 });
 
 Vue.http.interceptors.push(function (request, next) {
-  window.vm.$pzGlobalReactiveData.pendingReq = true;
+  if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
+  ++window.vm.$pzGlobalReactiveData.nbPendingReq;
   next(function (response) {
-    window.vm.$pzGlobalReactiveData.pendingReq = false;
+    window.vm.$f7.hidePreloader();
+    --window.vm.$pzGlobalReactiveData.nbPendingReq;
+    window.vm.$pzGlobalReactiveData.loaderOnAllReqs = true; // resume the normal functionality that loader is there for all hits (maybe it was set to false for a particular hit,)
   });
 });
 

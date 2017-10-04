@@ -127,7 +127,7 @@ export default {
   methods: {
     getAllOrders() {
 
-
+      window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
       let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
       window.vm.$http.get(url)
         .then(res => {

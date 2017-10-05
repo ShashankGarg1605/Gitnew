@@ -191,7 +191,7 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
   },
   computed: {
     pendingReq() {
-      return this.nbPendingReq && this.nbPendingReq > 0;
+      return this.nbPendingReq > 0;
     }
   },
   methods: {

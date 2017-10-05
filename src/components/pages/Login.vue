@@ -17,7 +17,7 @@
             <p class="vald-msg" v-if="errors.has('password')">{{ errors.first('password') }}</p>
             <p class="vald-msg" v-else>&nbsp;</p>
           </div>
-          <button href="#" class="button button-big button-fill button-raised color-teal pz-width100" :disabled="errors.any()">LOGIN</button>
+          <button href="#" class="button button-big button-fill button-raised color-teal pz-width100" :disabled="errors.any() || $pzGlobalReactiveData.pendingReq">LOGIN</button>
         </div>
       </form>
     </section>

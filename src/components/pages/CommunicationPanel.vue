@@ -96,19 +96,19 @@
                         <f7-list-item accordion-item title="Buyer Addresses" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <div v-if="userDetails.userAddress && userDetails.userAddress.length" style="border: 1px dashed lightgrey;">
-                                        <list-item :label="'Address type'" :value="userDetails.userAddress[0].address_type==1?'Registered':'Shipping' " />
-                                        <list-item :label="'Name'" :value="userDetails.userAddress[0].name" :grayback="true" />
-                                        <list-item :label="'Address'" :value="userDetails.userAddress[0].address" />
-                                        <list-item :label="'Landmark'" :value="userDetails.userAddress[0].landmark" :grayback="true" />
-                                        <list-item :label="'City (state)'" :value="userDetails.userAddress[0].city.name + ' (' + userDetails.userAddress[0].city.state.name + ')'" />
+                                    <div v-if="registeredAddr" style="border: 1px dashed lightgrey;">
+                                        <list-item :label="'Address type'" :value="'Registered'" />
+                                        <list-item :label="'Name'" :value="registeredAddr.name" :grayback="true" />
+                                        <list-item :label="'Address'" :value="registeredAddr.address" />
+                                        <list-item :label="'Landmark'" :value="registeredAddr.landmark" :grayback="true" />
+                                        <list-item :label="'City (state)'" :value="registeredAddr.city.name + ' (' + registeredAddr.city.state.name + ')'" />
                                     </div>
-                                    <div v-if="userDetails.userAddress && userDetails.userAddress.length>1" style="border: 1px dashed lightgrey;    margin-top: 8px;">
-                                        <list-item :label="'Address type'" :value="userDetails.userAddress[1].address_type==1?'Registered':'Shipping' " />
-                                        <list-item :label="'Name'" :value="userDetails.userAddress[1].name" :grayback="true" />
-                                        <list-item :label="'Address'" :value="userDetails.userAddress[1].address" />
-                                        <list-item :label="'Landmark'" :value="userDetails.userAddress[1].landmark" :grayback="true" />
-                                        <list-item :label="'City (state)'" :value="userDetails.userAddress[1].city.name + ' (' + userDetails.userAddress[1].city.state.name + ')'" />
+                                    <div v-if="shippingAddr" style="border: 1px dashed lightgrey; margin-top: 8px;">
+                                        <list-item :label="'Address type'" :value="'Shipping'" />
+                                        <list-item :label="'Name'" :value="shippingAddr.name" :grayback="true" />
+                                        <list-item :label="'Address'" :value="shippingAddr.address" />
+                                        <list-item :label="'Landmark'" :value="shippingAddr.landmark" :grayback="true" />
+                                        <list-item :label="'City (state)'" :value="shippingAddr.city.name + ' (' + shippingAddr.city.state.name + ')'" />
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
@@ -124,22 +124,22 @@
                         </f7-list-item>
 
                         <!-- <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
-                <f7-accordion-content>
-                    <f7-block>
-                        <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
-                        <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                        <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
-                        <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
-                        <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
-                        <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
-                        <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
-                        <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
-                        <list-item :label="'Due after last payment'" :value="'???'" />
-                        <list-item :label="'Account status'" :value="'???'" :grayback="true" />
-                        <list-item :label="'No of cheque bounces'" :value="'???'" />
-                    </f7-block>
-                </f7-accordion-content>
-                </f7-list-item> -->
+                                        <f7-accordion-content>
+                                            <f7-block>
+                                                <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
+                                                <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
+                                                <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
+                                                <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
+                                                <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
+                                                <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
+                                                <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
+                                                <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
+                                                <list-item :label="'Due after last payment'" :value="'???'" />
+                                                <list-item :label="'Account status'" :value="'???'" :grayback="true" />
+                                                <list-item :label="'No of cheque bounces'" :value="'???'" />
+                                            </f7-block>
+                                        </f7-accordion-content>
+                                        </f7-list-item> -->
 
                     </f7-list>
                 </section>
@@ -179,6 +179,25 @@ export default {
         avgOrderValue() {
             if (!this.businessDetails || !this.businessDetails.length || !this.totalOrderValue) return null;
             else return this.totalOrderValue / this.businessDetails.length;
+        },
+        registeredAddr() {
+            debugger;
+            if (!this.userDetails) return null;
+            else {
+                const address = this.userDetails.userAddress.find(_ => _.address_type === 1);
+                return address || null;
+            }
+        },
+        shippingAddr() {
+            debugger;
+            if (!this.userDetails) return null;
+            else {
+                const shipAddress = this.userDetails.userAddress.find(_ => _.address_type === 2);
+                const regAddress = this.userDetails.userAddress.find(_ => _.address_type === 1);
+                if (shipAddress) return shipAddress;
+                else if (regAddress) return regAddress;
+                else return null;
+            }
         }
     },
     components: {

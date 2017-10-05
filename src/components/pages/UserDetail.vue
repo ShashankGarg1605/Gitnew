@@ -76,15 +76,18 @@ export default {
         registeredAddr() {
             if (!this.data) return null;
             else {
-                var address = this.data.userAddress.find(_ => _.address_type === 1);
+                const address = this.data.userAddress.find(_ => _.address_type === 1);
                 return address && address.address;
             }
         },
         shippingAddr() {
             if (!this.data) return null;
             else {
-                var address = this.data.userAddress.find(_ => _.address_type === 2);
-                return address && address.address;
+                const shipAddress = this.data.userAddress.find(_ => _.address_type === 2);
+                const regAddress = this.data.userAddress.find(_ => _.address_type === 1);
+                if (shipAddress) return shipAddress.address;
+                else if (regAddress) return regAddress.address;
+                else return null;
             }
         },
         panImage() {

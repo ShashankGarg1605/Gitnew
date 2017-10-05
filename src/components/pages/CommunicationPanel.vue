@@ -181,7 +181,6 @@ export default {
             else return this.totalOrderValue / this.businessDetails.length;
         },
         registeredAddr() {
-            debugger;
             if (!this.userDetails) return null;
             else {
                 const address = this.userDetails.userAddress.find(_ => _.address_type === 1);
@@ -189,7 +188,6 @@ export default {
             }
         },
         shippingAddr() {
-            debugger;
             if (!this.userDetails) return null;
             else {
                 const shipAddress = this.userDetails.userAddress.find(_ => _.address_type === 2);

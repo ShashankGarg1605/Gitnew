@@ -53,7 +53,7 @@
                         <f7-list-item accordion-item title="Profile summary" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <p class="pz-bg-gray-lighter">{{userDetails.profile_summary || '(Not available)'}}</p>
+                                    <p class="pz-bg-gray-lighter pz-border-radius-10 pz-padding-16">{{userDetails.profile_summary || '(Not available)'}}</p>
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -218,7 +218,7 @@
     padding: 10px;
     margin-bottom: 5px;
     max-width: 100%;
-    border: 1px solid lightgrey;
+    border: 1px solid #F5F5F5;
 }
 </style>
 

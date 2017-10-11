@@ -155,7 +155,7 @@
                         <f7-list-item accordion-item title="Conversation with Buyer" v-if="buyerConversations">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <span class="color-gray pz-size-small">Only last 10 conversations are shown</span>
+                                    <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
                                     <div v-for="(msg, index) in buyerConversations" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
                                         <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
                                             <span>{{msg.message_datetime}}</span>
@@ -178,6 +178,24 @@
                                         </div>
                                         <div>{{sr.reasonMaster.text}}</div>
                                         <div style="font-size: smaller;" v-html="sr.description"></div>
+                                    </div>
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
+                        <f7-list-item accordion-item title="Publisher Wise Sales (last 1 year)" v-if="publisherSales">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
+                                    <div v-for="(o, index) in publisherSales" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                            <span>₹ {{o.sales_value | moneyFormat}}</span>
+                                            <span>{{o.quantity}} books</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller;">
+                                            <span>{{o.publisher.name}}</span>
+                                            <span>({{o.publisher.code}})</span>
+                                        </div>
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
@@ -222,7 +240,8 @@ export default {
             businessDetails: null,
             userDiscountDetails: null,
             buyerConversations: null,
-            serviceRequests: null
+            serviceRequests: null,
+            publisherSales: null
         };
     },
     computed: {
@@ -266,6 +285,7 @@ export default {
             this.userDiscountDetails = null;
             this.buyerConversations = null;
             this.serviceRequests = null;
+            this.publisherSales = null;
         },
         getAllUsers() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
@@ -376,6 +396,21 @@ export default {
                 })
                 .catch(window._pz.errFunc2.bind(this));
         },
+        getPublisherSales() {
+            const toDate = window.vm.moment(new Date()).format('YYYY-MM-DD');
+
+            const startDateYear = parseInt(toDate.split('-')[0]) - 1; // 1 year behind toDate
+            const startDateMonth = parseInt(toDate.split('-')[1]);
+            const startDateDay = parseInt(toDate.split('-')[2]) - 1; // just in case today is Feb 29, prev year Feb 29 didnt exist
+            const startDate = [startDateYear, startDateMonth, startDateDay].join('-');
+
+            window.vm.$http.get(`${window._pz.apiEndPt}reporting/sales/buyer_wise_publisher_wise?user=${this.userID}&startDate=${startDate}&toDate=${toDate}`)
+                .then(res => {
+                    if (res.ok) this.publisherSales = res.body.slice(0, 10);
+                    else window._pz.errFunc(res);
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
                 .then(res => {
@@ -388,6 +423,7 @@ export default {
                         this.getUserDiscountDetails();
                         this.getBuyerConversations();
                         this.getServiceRequests();
+                        this.getPublisherSales();
                     } else window._pz.errFunc(res);
                 })
                 .catch(window._pz.errFunc2.bind(this));

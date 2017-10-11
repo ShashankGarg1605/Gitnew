@@ -168,6 +168,21 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
+                        <f7-list-item accordion-item title="Recent Service Requests" v-if="serviceRequests">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <div v-for="(sr, index) in serviceRequests" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                            <span>{{sr.created_date}}</span>
+                                            <span>{{$pzGlobalReactiveData.serviceReqMap[sr.status]}}</span>
+                                        </div>
+                                        <div>{{sr.reasonMaster.text}}</div>
+                                        <div style="font-size: smaller;" v-html="sr.description"></div>
+                                    </div>
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
                     </f7-list>
                 </section>
 
@@ -206,7 +221,8 @@ export default {
             chqBounceDetails: null,
             businessDetails: null,
             userDiscountDetails: null,
-            buyerConversations: null
+            buyerConversations: null,
+            serviceRequests: null
         };
     },
     computed: {
@@ -249,6 +265,7 @@ export default {
             this.businessDetails = null;
             this.userDiscountDetails = null;
             this.buyerConversations = null;
+            this.serviceRequests = null;
         },
         getAllUsers() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
@@ -351,6 +368,14 @@ export default {
                 })
                 .catch(window._pz.errFunc2.bind(this));
         },
+        getServiceRequests() {
+            window.vm.$http.get(window._pz.apiEndPt + 'sr?user=' + this.userID)
+                .then(res => {
+                    if (res.ok) this.serviceRequests = res.body;
+                    else window._pz.errFunc(res);
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
                 .then(res => {
@@ -362,6 +387,7 @@ export default {
                         this.getBusinessData();
                         this.getUserDiscountDetails();
                         this.getBuyerConversations();
+                        this.getServiceRequests();
                     } else window._pz.errFunc(res);
                 })
                 .catch(window._pz.errFunc2.bind(this));

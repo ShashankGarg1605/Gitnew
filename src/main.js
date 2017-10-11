@@ -187,6 +187,12 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
       1: 'Prozo',
       2: 'Buyer',
       3: '50-50'
+    },
+    serviceReqMap: {
+      0: 'Open',
+      1: 'Resolved',
+      2: 'Resolved for buyer',
+      3: 'Non resolvable'
     }
   },
   computed: {

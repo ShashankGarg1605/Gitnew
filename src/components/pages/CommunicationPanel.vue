@@ -123,23 +123,34 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <!-- <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
-                                        <f7-accordion-content>
-                                            <f7-block>
-                                                <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
-                                                <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                                                <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
-                                                <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
-                                                <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
-                                                <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
-                                                <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
-                                                <list-item :label="'Avg payment delay'" :value="'???'" :grayback="true" />
-                                                <list-item :label="'Due after last payment'" :value="'???'" />
-                                                <list-item :label="'Account status'" :value="'???'" :grayback="true" />
-                                                <list-item :label="'No of cheque bounces'" :value="'???'" />
-                                            </f7-block>
-                                        </f7-accordion-content>
-                                        </f7-list-item> -->
+                        <f7-list-item accordion-item title="Payment Details" v-if="lastPaymentDetails && userDetails">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
+                                    <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
+                                    <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
+                                    <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
+                                    <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
+                                    <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
+                                    <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
+                                    <list-item :label="'Due after last payment'" :value="'???'" />
+                                    <list-item :label="'Account status'" :value="'???'" :grayback="true" />
+                                    <list-item :label="'No of cheque bounces'" :value="'???'" />
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
+                        <f7-list-item accordion-item title="Buyer Discount Exceptions" v-if="userDiscountDetails">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <span>(Buyer%)</span>
+                                        <span class="pz-padding-lr16">Current%</span>
+                                    </div>
+                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name" :value=" '('+d.publisherCategory.distributor_discount+') '+d.publisherCategory.distributor_discount" :grayback="index%2==0" :leftColWidth="65" :rightColWidth="35" />
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
 
                     </f7-list>
                 </section>
@@ -165,14 +176,14 @@ export default {
             autocompleteRef: null,
             userDetails: null,
             returnDetails: null,
-            // lastPaymentDetails: null,
+            lastPaymentDetails: null,
             chqBounceDetails: null,
-            businessDetails: null
+            businessDetails: null,
+            userDiscountDetails: null
         };
     },
     computed: {
         totalOrderValue() {
-            console.log('this.businessDetails: ', this.businessDetails);
             if (!this.businessDetails || !this.businessDetails.length) return null;
             else return this.businessDetails.reduce((sum, _) => sum + _.finalOrderValue, 0);
         },
@@ -206,9 +217,10 @@ export default {
             this.userID = null;
             this.userDetails = null;
             this.returnDetails = null;
-            // this.lastPaymentDetails = null;
+            this.lastPaymentDetails = null;
             this.chqBounceDetails = null;
             this.businessDetails = null;
+            this.userDiscountDetails = null;
         },
         getAllUsers() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
@@ -295,15 +307,24 @@ export default {
                 })
                 .catch(window._pz.errFunc2.bind(this));
         },
+        getUserDiscountDetails() {
+            window.vm.$http.get(window._pz.apiEndPt + 'users/discounts/' + this.userID)
+                .then(res => {
+                    if (res.ok) this.userDiscountDetails = res.body;
+                    else window._pz.errFunc(res);
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
                 .then(res => {
                     if (res.ok) {
                         this.userDetails = res.body;
                         this.getReturnsData();
-                        // this.getPaymentsData();
+                        this.getPaymentsData();
                         this.getChqBounceData();
                         this.getBusinessData();
+                        this.getUserDiscountDetails();
                     } else window._pz.errFunc(res);
                 })
                 .catch(window._pz.errFunc2.bind(this));

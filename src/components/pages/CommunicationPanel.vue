@@ -133,9 +133,8 @@
                                     <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
                                     <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
                                     <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
-                                    <list-item :label="'Due after last payment'" :value="'???'" />
-                                    <list-item :label="'Account status'" :value="'???'" :grayback="true" />
-                                    <list-item :label="'No of cheque bounces'" :value="'???'" />
+                                    <list-item :label="'Due after last payment'" :value="userDetails.collection_due | moneyFormat" />
+                                    <list-item v-if="chqBounceDetails" :label="'No of cheque bounces'" :value="chqBounceDetails.length" />
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -163,7 +162,7 @@
                                             <span>{{msg.caller.buyer_name}}</span>
                                         </div>
                                         <div>{{msg.reason.text}}</div>
-                                        <div style="font-size: smaller;">{{msg.message}}</div>
+                                        <div style="font-size: smaller;" v-html="msg.message"></div>
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>

@@ -148,6 +148,23 @@
                                         <span class="pz-padding-lr16">Current%</span>
                                     </div>
                                     <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name" :value=" '('+d.publisherCategory.distributor_discount+') '+d.publisherCategory.distributor_discount" :grayback="index%2==0" :leftColWidth="65" :rightColWidth="35" />
+
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
+                        <f7-list-item accordion-item title="Conversation with Buyer" v-if="buyerConversations">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <span class="color-gray pz-size-small">Only last 10 conversations are shown</span>
+                                    <div v-for="(msg, index) in buyerConversations" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                            <span>{{msg.message_datetime}}</span>
+                                            <span>{{msg.caller.buyer_name}}</span>
+                                        </div>
+                                        <div>{{msg.reason.text}}</div>
+                                        <div style="font-size: smaller;">{{msg.message}}</div>
+                                    </div>
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -162,6 +179,16 @@
 
     </f7-page>
 </template>
+
+<style scoped>
+.message {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+    max-width: 100%;
+    border: 1px solid lightgrey;
+}
+</style>
 
 <script>
 import ListItem from '../shared/ListItem';
@@ -179,7 +206,8 @@ export default {
             lastPaymentDetails: null,
             chqBounceDetails: null,
             businessDetails: null,
-            userDiscountDetails: null
+            userDiscountDetails: null,
+            buyerConversations: null
         };
     },
     computed: {
@@ -221,6 +249,7 @@ export default {
             this.chqBounceDetails = null;
             this.businessDetails = null;
             this.userDiscountDetails = null;
+            this.buyerConversations = null;
         },
         getAllUsers() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
@@ -315,6 +344,14 @@ export default {
                 })
                 .catch(window._pz.errFunc2.bind(this));
         },
+        getBuyerConversations() {
+            window.vm.$http.get(window._pz.apiEndPt + 'communication/' + this.userID)
+                .then(res => {
+                    if (res.ok) this.buyerConversations = res.body.slice(0, 10);
+                    else window._pz.errFunc(res);
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
                 .then(res => {
@@ -325,6 +362,7 @@ export default {
                         this.getChqBounceData();
                         this.getBusinessData();
                         this.getUserDiscountDetails();
+                        this.getBuyerConversations();
                     } else window._pz.errFunc(res);
                 })
                 .catch(window._pz.errFunc2.bind(this));

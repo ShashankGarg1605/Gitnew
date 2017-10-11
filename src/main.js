@@ -317,6 +317,15 @@ if (localStorage.tenantData) {
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;
 }
 
+// show the environment on top left if not on prod
+if (window._pz.domain !== 'http://admin.prozo.com') {
+  var env = document.createElement('span');
+  env.innerHTML = window._pz.domain;
+  env.setAttribute('style', 'position: absolute; top: 0; left: 0; z-index: 9999; font-size: xx-small; background: #ff000078; color: white; font-weight: bold;');
+  document.body.append(env);
+}
+
+
 window._pz.errFunc = function (err) {
   let errMsg;
   if (err.status === 404) errMsg = window._pz.err.ERR_404;

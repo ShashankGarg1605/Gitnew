@@ -23,7 +23,7 @@
             <image-uploader :maxCount="5" :submitLabel="'Place Image Order'" :inputTitles="true" :tooltip="true" @upload="uploadImage($event)" />
         </section>
 
-        <div class="color-gray pz-page-err" v-if="!users && !$pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!users && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
 
     </f7-page>
 </template>

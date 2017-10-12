@@ -193,7 +193,8 @@ Vue.prototype.$pzGlobalReactiveData = new Vue({
       1: 'Resolved',
       2: 'Resolved for buyer',
       3: 'Non resolvable'
-    }
+    },
+    navHistory: window.vm.$f7.mainView.history
   },
   computed: {
     pendingReq() {

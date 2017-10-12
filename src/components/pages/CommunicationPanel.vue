@@ -12,7 +12,6 @@
         <f7-toolbar tabbar>
             <a href="#" data-tab="#tab-1" class="tab-link active" :disabled="!userID">Buyer Details</a>
             <a href="#" data-tab="#tab-2" class="tab-link" :disabled="!userID">Comms Panel</a>
-            <a href="#" data-tab="#tab-3" class="tab-link" :disabled="!userID">Last 20 orders</a>
         </f7-toolbar>
         <f7-tabs swipeable>
             <f7-page-content tab active id="tab-1">
@@ -201,12 +200,15 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
+                        <f7-list-item accordion-item title="View Orders" @click="openOrders()">
+                            <f7-accordion-content />
+                        </f7-list-item>
+
                     </f7-list>
                 </section>
 
             </f7-page-content>
             <f7-page-content tab id="tab-2">Under construction...</f7-page-content>
-            <f7-page-content tab id="tab-3">Under construction...</f7-page-content>
         </f7-tabs>
 
     </f7-page>
@@ -427,6 +429,16 @@ export default {
                     } else window._pz.errFunc(res);
                 })
                 .catch(window._pz.errFunc2.bind(this));
+        },
+        openOrders() {
+            allOrdersFilters.search[1].value = this.userID;
+            console.log('allOrdersFilters: ', allOrdersFilters);
+            window.vm.$f7.mainView.router.load({
+                url: 'allorders',
+                context: {
+                    comps: allOrdersFilters
+                }
+            });
         }
     },
     beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
@@ -445,5 +457,39 @@ export default {
     updated() { console.debug(this.$options.name + ' updated'); },
     beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
     destroyed() { console.debug(this.$options.name + ' destroyed'); }
+};
+
+const allOrdersFilters = {
+    date: [
+        {
+            placeholder: 'Chose date range',
+            value: null
+        }
+    ],
+    singleselect: [
+        {
+            placeholder: 'Chose status',
+            value: null,
+            opts: [
+                { label: 'All', value: null },
+                { label: 'Received', value: '101' },
+                { label: 'Confirmed', value: '102' },
+                { label: 'Being Procured', value: '103' },
+                { label: 'Being Packed', value: '104' },
+                { label: 'Partially Dispatched', value: '105' },
+                { label: 'Fully Dispatched', value: '114' },
+                { label: 'Fulfilled', value: '106' },
+                { label: 'Cancelled', value: '107' }
+            ]
+        }
+    ],
+    search: [
+        {
+            placeholder: 'Order ID:'
+        },
+        {
+            placeholder: 'User ID:'
+        }
+    ]
 };
 </script>

@@ -102,6 +102,9 @@ export default {
         search: [
           {
             placeholder: 'Order ID:'
+          },
+          {
+            placeholder: 'User ID:'
           }
         ]
       }
@@ -120,6 +123,9 @@ export default {
 
       let { value: orderID = null } = this.filters.search[0];
       if (orderID !== null) filterQuery += `&order_id=${orderID}`;
+
+      let { value: userID = null } = this.filters.search[1];
+      if (userID !== null) filterQuery += `&userId=${userID}`;
 
       return filterQuery;
     }

@@ -37,6 +37,9 @@ module.exports = {
     'indent': 0,
     'brace-style': 0,
     'no-extend-native': 0,
-    'spaced-comment': 0
+    'spaced-comment': 0,
+    'quotes': 0,
+    'curly': 0
+
   }
 }

@@ -337,6 +337,10 @@ body {
 .pz-flex-j-start {
     justify-content: flex-start !important;
 }
+.pz-flex-j-sb {
+    display: flex !important;
+    justify-content: space-between !important;
+}
 .pz-flex-c-c {
     display: flex !important;
     justify-content: center !important;

@@ -150,6 +150,7 @@ window.vm = new Vue({ // eslint-disable-line no-new
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Vue.prototype.$pzGlobalReactiveData = new Vue({
   data: {
+    userID: window.localStorage.userID,
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {

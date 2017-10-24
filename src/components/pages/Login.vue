@@ -63,7 +63,7 @@ input {
   align-items: center;
 }
 
-.choseTenant>div {
+.choseTenant > div {
   height: 40px;
   display: flex;
   align-items: center;
@@ -72,11 +72,11 @@ input {
   box-shadow: inset 0px 0px 10px 2px lightgrey;
 }
 
-.choseTenant>div>img {
+.choseTenant > div > img {
   height: 30px;
 }
 
-.choseTenant>span {
+.choseTenant > span {
   margin-left: 15px;
 }
 </style>
@@ -84,12 +84,11 @@ input {
 
 
 <script>
-
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
-      title: 'Login Page',
+      title: "Login Page",
       // username: '9876543210',
       // password: 'password12'
       username: null,
@@ -98,7 +97,6 @@ export default {
   },
   methods: {
     validateBeforeSubmit(e) {
-
       this.$validator.validateAll();
       if (!this.errors.any()) {
         this.login();
@@ -108,13 +106,15 @@ export default {
     login() {
       var tempTenant = null;
       // get list of tenants
-      window.vm.$http.post(window._pz.apiEndPt + 'tenant', {
-        userName: this.username
-      })
+      window.vm.$http
+        .post(window._pz.apiEndPt + "tenant", {
+          userName: this.username
+        })
         //  check status and lenth
         .then(res => {
           if (res.ok && res.body.length) return Promise.resolve(res.body);
-          else if (res.ok && !res.body.length) return Promise.reject('You dont have an account');
+          else if (res.ok && !res.body.length)
+            return Promise.reject("You dont have an account");
           else return Promise.reject(res.status);
         })
         // ask user to select a tenant
@@ -131,67 +131,100 @@ export default {
               }
             }));
             buttons.unshift({
-              text: 'Select an account',
+              text: "Select an account",
               label: true
             });
             window.vm.$f7.actions(buttons);
-            window.Dom7('.actions-modal').on('closed', () => reject());
+            window.Dom7(".actions-modal").on("closed", () => reject());
           });
         })
         // auth with password
-        .then(tenant => window.vm.$http.post(window._pz.apiEndPt + 'auth', {
-          username: this.username,
-          password: this.password
-        }, {
-            headers: {
-              tenant: 'tenant_' + tenant.id,
-              source: '3',
-              'Content-type': 'application/json;charset=UTF-8; charset=UTF-8'
+        .then(tenant =>
+          window.vm.$http.post(
+            window._pz.apiEndPt + "auth",
+            {
+              username: this.username,
+              password: this.password
+            },
+            {
+              headers: {
+                tenant: "tenant_" + tenant.id,
+                source: "3",
+                "Content-type": "application/json;charset=UTF-8; charset=UTF-8"
+              }
             }
-          })
+          )
         )
         // check status
-        .then(res => res.ok ? Promise.resolve(res) : Promise.reject(res.status))
+        .then(
+          res => (res.ok ? Promise.resolve(res) : Promise.reject(res.status))
+        )
         // GO GO GO !
         .then(res => {
           if (res.ok) {
             setGlobals(res.body.token, tempTenant, res.body.id);
             clearAllHistory();
-            window.vm.$f7.mainView.router.loadPage('allorders');
+            window.vm.$f7.mainView.router.loadPage("allorders");
           }
         })
         .catch(function(error) {
-          console.log('error: ', error);
+          console.log("error: ", error);
           var msg;
-          if (typeof error === 'string') msg = window._pz.err[error] || error;
-          else if (typeof error === 'number') msg = `Something went wrong. (Error ${error})`;
-          else if (typeof error === 'object' && error.status && error.status === 401) msg = window._pz.err['ERR_CREDS'];
-          else if (error && !error.ok) msg = window._pz.err['ERR_NET'];
+          if (typeof error === "string") msg = window._pz.err[error] || error;
+          else if (typeof error === "number")
+            msg = `Something went wrong. (Error ${error})`;
+          else if (
+            typeof error === "object" &&
+            error.status &&
+            error.status === 401
+          )
+            msg = window._pz.err["ERR_CREDS"];
+          else if (error && !error.ok) msg = window._pz.err["ERR_NET"];
 
           if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
         });
     }
   },
-  beforeCreate() { console.debug(this.$options.name + 'created'); },
-  created() { console.debug(this.$options.name + 'created'); },
-  beforeMount() { console.debug(this.$options.name + 'beforeMount'); },
-  mounted() { console.debug(this.$options.name + 'mounted'); },
-  beforeUpdate() { console.debug(this.$options.name + 'beforeUpdate'); },
-  updated() { console.debug(this.$options.name + 'updated'); },
-  beforeDestroy() { console.debug(this.$options.name + 'beforeDestroy'); },
-  destroyed() { console.debug(this.$options.name + 'destroyed'); }
+  beforeCreate() {
+    console.debug(this.$options.name + "created");
+  },
+  created() {
+    console.debug(this.$options.name + "created");
+  },
+  beforeMount() {
+    console.debug(this.$options.name + "beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + "mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + "beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + "updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + "beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + "destroyed");
+  }
 };
 
 function setGlobals(authToken, tenantData, userID) {
   window.vm.$options.http.headers.Authorization = authToken;
-  window.vm.$options.http.headers.ID = '' + userID;
-  window.vm.$options.http.headers.tenant = 'tenant_' + tenantData.id;
+  window.vm.$options.http.headers.ID = "" + userID;
+  window.vm.$options.http.headers.tenant = "tenant_" + tenantData.id;
 
   window.localStorage.authToken = authToken;
   window.localStorage.userID = userID;
   window.localStorage.tenantData = JSON.stringify(tenantData);
 
-  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${tenantData.id}/`;
+  window._pz.uploadsEndPt = `${window._pz
+    .domain}/backend/web/uploads/tenant_${tenantData.id}/`;
+
+  // add user specific stuff to the global useable object
+  window.vm.$pzGlobalReactiveData.userID = userID;
 }
 
 function clearAllHistory() {

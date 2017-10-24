@@ -7,7 +7,7 @@
 
         <div class="list-block">
           <ul>
-            <!-- <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item> -->
+            <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item>
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
             <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
@@ -33,7 +33,7 @@ var menuItem = {
                 <div class="item-title">{{label}}</div>
               </div>
             </a>`,
-  props: ['icon', 'url', 'label'],
+  props: ["icon", "url", "label"],
   methods: {
     openPage(name) {
       // a left menu click means a new navigational stack, hence delete all history
@@ -46,7 +46,7 @@ var menuItem = {
   }
 };
 export default {
-  name: 'LeftPanel',
+  name: "LeftPanel",
   data() {
     return {
       isMaterial: window.isMaterial,
@@ -60,16 +60,15 @@ export default {
       window.localStorage.clear();
       window.vm.$f7.mainView.history = [];
       window.vm.$f7.mainView.router.loadPage({
-        url: '/',
+        url: "/",
         reload: true
       });
     }
   },
   components: {
-    'menu-item': menuItem
+    "menu-item": menuItem
   }
 };
-
 </script>
 
 <style scoped>

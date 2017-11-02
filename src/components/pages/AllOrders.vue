@@ -32,7 +32,7 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
-                <div class="col-70">{{order.user.buyer_name}} ({{order.user.userAddress[0].city.name}})</div>
+                <div class="col-70">{{order.user.buyer_name}} ({{order.user.userAddress.find(c=>c.address_type===1).city.name}})</div>
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Value:</div>

@@ -14,8 +14,8 @@
       <div class="card">
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
-                <span>Open Order</span>
-                <span class="value">222</span>
+                <span>No. of open orders</span>
+                <span class="value">{{nbOpenOrders}}</span>
               </div>
           </div>
       </div>
@@ -23,8 +23,8 @@
       <div class="card">
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
-                <span>Total inventory value</span>
-                <span class="value">Rs. 45,422</span>
+                <span>Total value of inventory</span>
+                <span class="value">Rs. {{totalInventoryValue | moneyFormat}}</span>
               </div>
           </div>
       </div>
@@ -32,35 +32,8 @@
       <div class="card">
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
-                <span>total receivables</span>
-                <span class="value">Rs. 15,422</span>
-              </div>
-          </div>
-      </div>
-
-      <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>New accounts added in last 30 days</span>
-                <span class="value">422</span>
-              </div>
-          </div>
-      </div>
-
-      <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>open returns</span>
-                <span class="value">12</span>
-              </div>
-          </div>
-      </div>
-
-      <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>Image orders not converted</span>
-                <span class="value">22</span>
+                <span>Total value of receivables</span>
+                <span class="value">Rs. {{totalReceivables | moneyFormat}}</span>
               </div>
           </div>
       </div>
@@ -68,11 +41,49 @@
       <div class="card">
           <div class="card-content">
               <div class="card-content-inner" style="display: flex; justify-content: space-between; flex-direction: column;">
-                <div>Buyer conversations</div>
-                <div style="display: flex; justify-content: space-between;"><span>Today</span>
-                <span class="value">22</span></div>
-                <div style="display: flex; justify-content: space-between;"><span>Today</span>
-                <span class="value">22</span></div>
+                <div>No. of accounts:</div>
+                <div style="display: flex; justify-content: space-between;"><span>Active</span>
+                <span class="value">{{nbActiveUsers}}</span></div>
+                <div style="display: flex; justify-content: space-between;"><span>Inactive</span>
+                <span class="value">{{nbInactiveUsers}}</span></div>
+                <div style="display: flex; justify-content: space-between;"><span>Total</span>
+                <span class="value">{{nbTotalUsers}}</span></div>
+              </div>
+          </div>
+      </div>
+
+      <div class="card">
+          <div class="card-content">
+              <div class="card-content-inner pz-flex-j-sb">
+                <span>No. of open returns</span>
+                <span class="value">{{nbOpenReturns}}</span>
+              </div>
+          </div>
+      </div>
+
+      <div class="card">
+          <div class="card-content">
+              <div class="card-content-inner pz-flex-j-sb">
+                <span>Value of open returns</span>
+                <span class="value">Rs. {{openReturnsValue | moneyFormat}}</span>
+              </div>
+          </div>
+      </div>
+
+      <div class="card">
+          <div class="card-content">
+              <div class="card-content-inner pz-flex-j-sb">
+                <span>No. of un-converted image orders</span>
+                <span class="value">{{nbImageOrdersNotConv}}</span>
+              </div>
+          </div>
+      </div>
+
+      <div class="card">
+          <div class="card-content">
+              <div class="card-content-inner pz-flex-j-sb">
+                <span>Buyer conversations in last week</span>
+                <span class="value">{{nbBuyerConvosToday}}</span></div>
               </div>
           </div>
       </div>
@@ -83,8 +94,11 @@
 
 <style scoped>
 .value {
-  font-weight: bold;
-  color: #419688;
+    font-weight: bold;
+    color: #419688;
+    flex: 1 0 auto;
+    text-align: right;
+    padding-left: 15px;
 }
 </style>
 
@@ -93,32 +107,99 @@ export default {
   name: "Dashboard",
   data() {
     return {
-      title: "Dashboard Page"
+      title: "Dashboard Page",
+      nbOpenOrders: null,
+      totalInventoryValue: null,
+      totalReceivables: null,
+      nbOpenReturns: null,
+      openReturnsValue: null,
+      nbImageOrdersNotConv: null,
+      nbBuyerConvosToday: null,
+      nbBuyerConvosYest: null,
+      nbActiveUsers: null,
+      nbInactiveUsers: null,
+      nbTotalUsers: null
     };
   },
-  beforeCreate: function() {
-    console.log("Dashboard before create");
+  methods: {
+    loadAllData() {
+      this.getNbOpenOrders();
+      this.getTotalInventoryValue();
+      this.getTotalReceivables();
+      this.getOpenReturns();
+      this.getNbImageOrdersNotConv();
+      this.getNbBuyerConvosToday();
+      this.getNbUsers();
+    },
+    getNbOpenOrders() {
+      window.vm.$http.get(window._pz.apiEndPt + 'orders?status=113')
+        .then(res => {
+            if (res.ok && window._pz.checkNested(res, 'headers', 'map', 'count')) this.nbOpenOrders = res.headers.map.count[0];
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getTotalInventoryValue() {
+      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/inventory')
+        .then(res => {
+          if (res.ok && res.body.inventoryValue !== undefined) this.totalInventoryValue = res.body.inventoryValue;
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getTotalReceivables() {
+        window.vm.$http.get(window._pz.apiEndPt + 'dashboard/collections')
+        .then(res => {
+          if (res.ok && res.body.collectionDue !== undefined) this.totalReceivables = res.body.collectionDue;
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getOpenReturns() {
+      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/returns')
+        .then(res => {
+          if (res.ok && res.body.openReturns !== undefined){
+            this.nbOpenReturns = res.body.openReturns;
+            this.openReturnsValue = res.body.openReturnsValue;
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getNbImageOrdersNotConv() {
+      window.vm.$http.get(window._pz.apiEndPt + 'orders/image?view=daily')
+        .then(res => {
+          if (res.ok) this.nbImageOrdersNotConv = res.body.length;
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getNbBuyerConvosToday() {
+      const endDate = window.vm.moment().format('YYYY-MM-DD');
+      const startDate = window.vm.moment().subtract(7, 'd').format('YYYY-MM-DD');
+      window.vm.$http.get(`${window._pz.apiEndPt}communication/hours?startDate=${startDate}&endDate=${endDate}`)
+        .then(res => {
+          if (res.ok) this.nbBuyerConvosToday = res.body.length;
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    getNbUsers() {
+      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/users')
+        .then(res => {
+          if (res.ok){
+            this.nbActiveUsers = res.body.totalActiveCount;
+            this.nbInactiveUsers = res.body.totalInactiveCount;
+            this.nbTotalUsers = res.body.totalUserCount;
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    }
   },
-  created: function() {
-    console.log("Dashboard created");
+  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  created() {
+    console.debug(this.$options.name + ' created'); 
+    this.loadAllData();
   },
-  beforeMount: function() {
-    console.log("Dashboard before mounted");
-  },
-  mounted: function() {
-    console.log("Dashboard mounted");
-  },
-  beforeUpdate: function() {
-    console.log("Dashboard befor updated");
-  },
-  updated: function() {
-    console.log("Dashboard updated");
-  },
-  beforeDestroy: function() {
-    console.log("Dashboard before destroyed");
-  },
-  destroyed: function() {
-    console.log("Dashboard destroyed");
-  }
+  beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
+  mounted() { console.debug(this.$options.name + ' mounted'); },
+  beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
+  updated() { console.debug(this.$options.name + ' updated'); },
+  beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
+  destroyed() { console.debug(this.$options.name + ' destroyed'); }
 };
 </script>

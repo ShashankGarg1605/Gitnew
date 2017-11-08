@@ -36,7 +36,7 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Value:</div>
-                <div class="col-70">Rs. {{order.finalOrderValue | moneyFormat}}</div>
+                <div class="col-70">{{order.finalOrderValue | moneyFormat}}</div>
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Status:</div>

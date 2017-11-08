@@ -72,10 +72,10 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Total business till date'">
-                                        <span>Rs. {{totalOrderValue | moneyFormat}}</span>
+                                        <span>₹ {{totalOrderValue | moneyFormat}}</span>
                                     </list-item>
                                     <list-item :label="'Avg order value'" :grayback="true">
-                                        <span>Rs. {{avgOrderValue | moneyFormat}}</span>
+                                        <span>₹ {{avgOrderValue | moneyFormat}}</span>
                                     </list-item>
                                     <list-item :label="'Total Orders till date'" :value="businessDetails && businessDetails.length" />
                                 </f7-block>
@@ -131,11 +131,11 @@
                                 <f7-block>
                                     <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
                                     <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                                    <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
+                                    <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount | moneyFormat" />
                                     <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
                                     <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date | dateFormat" />
                                     <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
-                                    <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
+                                    <list-item :label="'Credit limit'" :value="userDetails.credit_limit | moneyFormat" />
                                     <list-item :label="'Due after last payment'" :value="userDetails.collection_due | moneyFormat" />
                                     <list-item v-if="chqBounceDetails" :label="'No of cheque bounces'" :value="chqBounceDetails.length" />
                                 </f7-block>

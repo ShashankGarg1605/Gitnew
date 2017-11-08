@@ -28,7 +28,7 @@
                 </list-item>
                 <list-item :label="'Buyer Name'" :value="data.user.buyer_name" :grayback="true" />
                 <list-item :label="'Invoice Amt'">
-                    <span>Rs. {{data.finalOrderValue | moneyFormat}}</span>
+                    <span>{{data.finalOrderValue | moneyFormat}}</span>
                 </list-item>
                 <list-item :label="'Created Date'" :value="data.created_date | dateFormat" :grayback="true" />
                 <list-item :label="'Carrier'" :value="carrierName" v-if="carrierName" />

@@ -24,7 +24,7 @@
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
                 <span>Total value of inventory</span>
-                <span class="value">Rs. {{totalInventoryValue | moneyFormat}}</span>
+                <span class="value">{{totalInventoryValue | moneyFormat}}</span>
               </div>
           </div>
       </div>
@@ -33,7 +33,7 @@
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
                 <span>Total value of receivables</span>
-                <span class="value">Rs. {{totalReceivables | moneyFormat}}</span>
+                <span class="value">{{totalReceivables | moneyFormat}}</span>
               </div>
           </div>
       </div>
@@ -65,7 +65,7 @@
           <div class="card-content">
               <div class="card-content-inner pz-flex-j-sb">
                 <span>Value of open returns</span>
-                <span class="value">Rs. {{openReturnsValue | moneyFormat}}</span>
+                <span class="value">{{openReturnsValue | moneyFormat}}</span>
               </div>
           </div>
       </div>

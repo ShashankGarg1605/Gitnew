@@ -24,7 +24,7 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Value:</span>
-                <span class="col-65 ">Rs. {{data.value | moneyFormat}}</span>
+                <span class="col-65 ">{{data.value | moneyFormat}}</span>
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Books:</span>

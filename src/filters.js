@@ -8,7 +8,7 @@ Vue.filter('moneyFormat', function (amount) {
     var lastThree = amount.substring(amount.length - 3);
     var otherNumbers = amount.substring(0, amount.length - 3);
     if (otherNumbers !== '') lastThree = ',' + lastThree;
-    return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+    return '₹ ' + otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
 });
 
 Vue.filter('dateFormat', function (date, inputFormat = 'DD-MM-YYYY HH:mm', outputFormat = 'Do MMM YY') {

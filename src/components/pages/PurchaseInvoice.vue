@@ -36,7 +36,7 @@
                             </div>
                             <div class=" row pz-width100 ">
                                 <div class="col-30 color-gray pz-weight-thin ">Date:</div>
-                                <div class="col-70 ">{{moment(invoice.invoice_date, 'DD-MM-YYYY hh:mm').format('ddd, Do MMM YYYY')}}</div>
+                                <div class="col-70 ">{{invoice.invoice_date | dateFormat}}</div>
                             </div>
                             <div class="row pz-width100 ">
                                 <div class="col-30 color-gray pz-weight-thin ">Qty:</div>

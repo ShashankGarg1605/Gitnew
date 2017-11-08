@@ -39,7 +39,7 @@
                 <list-item :label="'Bilty Requirements'" :value="$pzGlobalReactiveData.biltyReqMap[data.billt_requirement_code]" />
                 <list-item :label="'Credit Period'" :value="data.credit_period" :grayback="true" />
                 <list-item :label="'Credit Limit'" :value="data.credit_limit" />
-                <list-item :label="'Last App Use'" :value="data.last_app_use" :grayback="true" />
+                <list-item :label="'Last App Use'" :value="data.last_app_use | dateFormat" :grayback="true" />
                 <list-item :label="'Registered Address'" :value="registeredAddr" />
                 <list-item :label="'Shipping Address'" :value="shippingAddr" :grayback="true" />
                 <list-item :label="'PAN Image'" v-if="panImage">

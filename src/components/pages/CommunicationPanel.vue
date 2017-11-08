@@ -33,7 +33,7 @@
                                 <f7-block>
                                     <list-item :label="'Name'" :value="userDetails.name" :grayback="true" />
                                     <list-item :label="'Owner Name'" :value="userDetails.owner_name" />
-                                    <list-item :label="'Account since'" :value="userDetails.created_date" :grayback="true" />
+                                    <list-item :label="'Account since'" :value="userDetails.created_date | dateFormat" :grayback="true" />
                                     <list-item :label="'Mobile'">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.mobile)">{{userDetails.mobile}}</a>
                                     </list-item>
@@ -42,7 +42,7 @@
                                     </list-item>
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
                                     <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
-                                    <list-item :label="'Last app use'" :value="userDetails.last_app_use" />
+                                    <list-item :label="'Last app use'" :value="userDetails.last_app_use | dateFormat" />
                                     <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" :grayback="true" />
                                     <!-- <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" /> -->
                                 </f7-block>
@@ -129,7 +129,7 @@
                                     <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
                                     <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount" />
                                     <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
-                                    <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date" />
+                                    <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date | dateFormat" />
                                     <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
                                     <list-item :label="'Credit limit'" :value="userDetails.credit_limit" />
                                     <list-item :label="'Due after last payment'" :value="userDetails.collection_due | moneyFormat" />
@@ -157,7 +157,7 @@
                                     <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
                                     <div v-for="(msg, index) in buyerConversations" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
                                         <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
-                                            <span>{{msg.message_datetime}}</span>
+                                            <span>{{msg.message_datetime | dateFormat}}</span>
                                             <span>{{msg.caller.buyer_name}}</span>
                                         </div>
                                         <div>{{msg.reason.text}}</div>
@@ -172,7 +172,7 @@
                                 <f7-block>
                                     <div v-for="(sr, index) in serviceRequests" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
                                         <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
-                                            <span>{{sr.created_date}}</span>
+                                            <span>{{sr.created_date | dateFormat}}</span>
                                             <span>{{$pzGlobalReactiveData.serviceReqMap[sr.status]}}</span>
                                         </div>
                                         <div>{{sr.reasonMaster.text}}</div>
@@ -399,12 +399,8 @@ export default {
                 .catch(window._pz.errFunc2.bind(this));
         },
         getPublisherSales() {
-            const toDate = window.vm.moment(new Date()).format('YYYY-MM-DD');
-
-            const startDateYear = parseInt(toDate.split('-')[0]) - 1; // 1 year behind toDate
-            const startDateMonth = parseInt(toDate.split('-')[1]);
-            const startDateDay = parseInt(toDate.split('-')[2]) - 1; // just in case today is Feb 29, prev year Feb 29 didnt exist
-            const startDate = [startDateYear, startDateMonth, startDateDay].join('-');
+            const toDate = window.vm.moment().format('YYYY-MM-DD');
+            const startDate = window.vm.moment().subtract(1, 'y').format('YYYY-MM-DD');
 
             window.vm.$http.get(`${window._pz.apiEndPt}reporting/sales/buyer_wise_publisher_wise?user=${this.userID}&startDate=${startDate}&toDate=${toDate}`)
                 .then(res => {

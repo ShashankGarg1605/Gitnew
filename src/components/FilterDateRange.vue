@@ -55,17 +55,10 @@ window.FilterComponents = {
         compvalueReadable() {
             if (!this.compvalue || !this.compvalue.length) return null;
 
-            // if we get an array of stringified date objects (when we open date filter after having applied already), create new date objects from it
-            let startDate = typeof this.compvalue[0] === 'string' ? new Date(this.compvalue[0]) : this.compvalue[0];
-            if (typeof startDate.valueOf() === 'number') startDate = window.vm.moment(startDate).format('Do MMM');
-            else startDate = 'ERR';
-
+            const startDate = window.vm.moment(this.compvalue[0]).format('Do MMM YY');
             if (this.compvalue.length === 1) return startDate; // if we only have a start date, no end date 
             else {
-                let endDate = typeof this.compvalue[1] === 'string' ? new Date(this.compvalue[1]) : this.compvalue[1];
-                if (typeof endDate.valueOf() === 'number') endDate = window.vm.moment(endDate).format('Do MMM');
-                else endDate = 'ERR';
-
+                const endDate = window.vm.moment(this.compvalue[1]).format('Do MMM YY');
                 return startDate + ' to ' + endDate;
             }
         }

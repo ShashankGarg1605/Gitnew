@@ -36,7 +36,7 @@
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice Date:</span>
-                <span class="col-65 ">{{data.invoice_date}}</span>
+                <span class="col-65 ">{{data.invoice_date | dateFormat}}</span>
             </div>
             <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
                 <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Invoice:</span>

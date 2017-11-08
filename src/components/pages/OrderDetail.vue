@@ -30,7 +30,7 @@
                 <list-item :label="'Invoice Amt'">
                     <span>Rs. {{data.finalOrderValue | moneyFormat}}</span>
                 </list-item>
-                <list-item :label="'Created Date'" :value="data.created_date" :grayback="true" />
+                <list-item :label="'Created Date'" :value="data.created_date | dateFormat" :grayback="true" />
                 <list-item :label="'Carrier'" :value="carrierName" v-if="carrierName" />
 
                 <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="isPartiallyDispatched && carriers && !biltyImage">

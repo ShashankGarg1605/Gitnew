@@ -2,7 +2,7 @@ import Vue from 'vue';
 // import moment from 'moment';
 
 Vue.filter('moneyFormat', function (amount) {
-    if (!amount) return '';
+    if (!amount) return amount;
     amount = parseInt(amount);
     amount = amount.toString();
     var lastThree = amount.substring(amount.length - 3);

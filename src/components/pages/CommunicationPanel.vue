@@ -146,10 +146,15 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <div style="display: flex; justify-content: flex-end;">
+                                        <span style="flex-grow: 1;" class="color-gray">Category Name</span>
                                         <span>(Buyer%)</span>
-                                        <span class="pz-padding-lr16">Current%</span>
+                                        <span style="padding-left: 5px;">Current%</span>
                                     </div>
-                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name" :value=" '('+d.publisherCategory.distributor_discount+') '+d.publisherCategory.distributor_discount" :grayback="index%2==0" :leftColWidth="65" :rightColWidth="35" />
+                                    <div class="color-gray">(Publisher Name)</div>
+                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" 
+                                    :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" 
+                                    :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" 
+                                    :grayback="index%2==0" :leftColWidth="70" :rightColWidth="30" />
 
                                 </f7-block>
                             </f7-accordion-content>

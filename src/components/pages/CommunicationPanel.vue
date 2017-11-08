@@ -346,57 +346,43 @@ export default {
             window.vm.$http.get(window._pz.apiEndPt + 'returns?user=' + this.userID)
                 .then(res => {
                     if (res.ok) this.returnDetails = res.body;
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getPaymentsData() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/payments/' + this.userID)
                 .then(res => {
                     if (res.ok) this.lastPaymentDetails = res.body.length && res.body[0];
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getChqBounceData() {
             window.vm.$http.get(window._pz.apiEndPt + 'payments/cheque_bounce?user=' + this.userID)
                 .then(res => {
                     if (res.ok) this.chqBounceDetails = res.body;
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getBusinessData() {
             window.vm.$http.get(window._pz.apiEndPt + 'orders?userId=' + this.userID)
                 .then(res => {
                     if (res.ok) this.businessDetails = res.body;
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getUserDiscountDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/discounts/' + this.userID)
                 .then(res => {
                     if (res.ok) this.userDiscountDetails = res.body;
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getBuyerConversations() {
             window.vm.$http.get(window._pz.apiEndPt + 'communication/' + this.userID)
                 .then(res => {
                     if (res.ok) this.buyerConversations = res.body.slice(0, 10);
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getServiceRequests() {
             window.vm.$http.get(window._pz.apiEndPt + 'sr?user=' + this.userID)
                 .then(res => {
                     if (res.ok) this.serviceRequests = res.body;
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getPublisherSales() {
             const toDate = window.vm.moment().format('YYYY-MM-DD');
@@ -405,9 +391,7 @@ export default {
             window.vm.$http.get(`${window._pz.apiEndPt}reporting/sales/buyer_wise_publisher_wise?user=${this.userID}&startDate=${startDate}&toDate=${toDate}`)
                 .then(res => {
                     if (res.ok) this.publisherSales = res.body.slice(0, 10);
-                    else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                });
         },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
@@ -422,13 +406,11 @@ export default {
                         this.getBuyerConversations();
                         this.getServiceRequests();
                         this.getPublisherSales();
-                    } else window._pz.errFunc(res);
-                })
-                .catch(window._pz.errFunc2.bind(this));
+                    }
+                });
         },
         openOrders() {
             allOrdersFilters.search[1].value = this.userID;
-            console.log('allOrdersFilters: ', allOrdersFilters);
             window.vm.$f7.mainView.router.load({
                 url: 'allorders',
                 context: {

@@ -9,7 +9,7 @@
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
-    <f7-block-title>Welcome {{$pzGlobalReactiveData.userID}}</f7-block-title>
+    <f7-block-title>Welcome {{$pzGlobalReactiveData.userName}}</f7-block-title>
     <f7-block inner>
       <div class="card">
           <div class="card-content">

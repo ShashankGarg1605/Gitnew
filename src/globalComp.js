@@ -3,6 +3,7 @@ import Vue from 'vue';
 export default new Vue({
   data: {
     userID: window.localStorage.userID,
+    userName: window.localStorage.userName,
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {

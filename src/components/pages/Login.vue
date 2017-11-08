@@ -106,10 +106,7 @@ export default {
     login() {
       var tempTenant = null;
       // get list of tenants
-      window.vm.$http
-        .post(window._pz.apiEndPt + "tenant", {
-          userName: this.username
-        })
+      window.vm.$http.post(window._pz.apiEndPt + "tenant", { userName: this.username })
         //  check status and lenth
         .then(res => {
           if (res.ok && res.body.length) return Promise.resolve(res.body);
@@ -168,22 +165,22 @@ export default {
           if (res.ok) {
             setGlobals(res.body.token, tempTenant, res.body.id);
             clearAllHistory();
-            window.vm.$f7.mainView.router.loadPage("allorders");
+            window.vm.$f7.mainView.router.loadPage("dashboard");
+
+            window.vm.$http.get(window._pz.apiEndPt + "users/" + res.body.id).then(res => {
+              if (!res.ok || !res.body.buyer_name) return;
+              window.localStorage.userName = res.body.buyer_name;
+              window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
+            });
           }
         })
-        .catch(function(error) {
-          console.log("error: ", error);
+        .catch(function(err) {
+          console.log("err: ", err);
           var msg;
-          if (typeof error === "string") msg = window._pz.err[error] || error;
-          else if (typeof error === "number")
-            msg = `Something went wrong. (Error ${error})`;
-          else if (
-            typeof error === "object" &&
-            error.status &&
-            error.status === 401
-          )
-            msg = window._pz.err["ERR_CREDS"];
-          else if (error && !error.ok) msg = window._pz.err["ERR_NET"];
+          if (typeof err === "string") msg = window._pz.err[err] || err;
+          else if (typeof err === "number") msg = `Something went wrong. (err ${err})`;
+          else if (typeof err === "object" && err.status && err.status === 401) msg = window._pz.err["ERR_CREDS"];
+          else if (err && !err.ok) msg = window._pz.err["ERR_NET"];
 
           if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
         });

@@ -119,8 +119,13 @@ export default {
         })
         // ask user to select a tenant
         .then(res => {
+          if (res.length === 1){
+            tempTenant = res[0].tenants;
+            return Promise.resolve(res[0].tenants);
+          }
+
           return new Promise((resolve, reject) => {
-            var buttons = res.map(tenant => ({
+            let buttons = res.map(tenant => ({
               text: `<div class="choseTenant">
                       <div><img src="${tenant.tenants.logo_lnk}"></div>
                       <span>${tenant.tenants.tenant_name}</span>
@@ -139,8 +144,7 @@ export default {
           });
         })
         // auth with password
-        .then(tenant =>
-          window.vm.$http.post(
+        .then(tenant => window.vm.$http.post(
             window._pz.apiEndPt + "auth",
             {
               username: this.username,

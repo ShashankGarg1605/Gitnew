@@ -10,55 +10,31 @@ import Vue from 'vue';
 /* eslint-disable no-unused-vars */
 import Framework7 from 'framework7';
 
-import Framework7Vue from 'framework7-vue';
-import Routes from './routes';
-import App from './App';
-import VeeValidate from 'vee-validate';
-import VueResource from 'vue-resource';
-import moment from 'moment';
-import 'vue-awesome/icons';
-import Icon from 'vue-awesome/components/Icon';
+import filters from './filters.js';
+import mainComp from './mainComp.js';
+import globalComp from './globalComp.js';
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+require('framework7/dist/css/framework7.material.min.css');
+require('framework7/dist/css/framework7.material.colors.min.css');
 
-// Set up some useful globals
-window.isMaterial = !window.Framework7.prototype.device.ios;
-window.isiOS = window.Framework7.prototype.device.ios;
-
-// force use of Material design throughout
-window.isMaterial = true;
-window.isiOS = false;
-
-// Import F7 iOS Theme Styles
-/* eslint-disable global-require */
-if (window.isiOS) {
-  const Framework7Theme = require('framework7/dist/css/framework7.ios.min.css');
-  const Framework7ThemeColors = require('framework7/dist/css/framework7.ios.colors.min.css');
-} else {
-  /* OR for Material Theme: */
-  const Framework7ThemeMaterial = require('framework7/dist/css/framework7.material.min.css');
-  const Framework7ThemeColorsMaterial = require('framework7/dist/css/framework7.material.colors.min.css');
-}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 window._pz = {};
+// Init App
+window.vm = mainComp;
+Vue.prototype.$pzGlobalReactiveData = globalComp;
 
-Vue.use(VueResource);
-Vue.use(Framework7Vue);
-Vue.use(VeeValidate);
+Vue.http.interceptors.push(function (request, next) {
+  // if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
+  ++window.vm.$pzGlobalReactiveData.nbPendingReq;
+  next(function (response) {
+    // window.vm.$f7.hidePreloader();
+    --window.vm.$pzGlobalReactiveData.nbPendingReq;
+    window.vm.$pzGlobalReactiveData.loaderOnAllReqs = true; // resume the normal functionality that loader is there for all hits (maybe it was set to false for a particular hit,)
+  });
+});
 
-
-// add the moment library to the Vue prototype so we can use it from any template directly
-Vue.prototype.moment = moment;
-
-// register font-awesome as a global component
-Vue.component('icon', Icon);
-
-
-// empty Vue instance as a central event bus, and some other common utils
-// Vue.prototype.$pzBus = new Vue();
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -86,156 +62,20 @@ Vue.component('icon', Icon);
 //   });
 // }
 
-window.onunhandledrejection = function (e) {
-  throw e;
-};
+// window.onunhandledrejection = function (e) {
+//   throw e;
+// };
 
-window.onerror = function (msg, url, lineNo, columnNo, error) {
-  console.log('-------------------ERROR-------------------');
-  console.log('columnNo: ', columnNo);
-  console.log('lineNo: ', lineNo);
-  console.log('url: ', url);
-  console.log('msg: ', msg);
-  console.log('error: ', error);
-  console.log('-------------------ERROR-------------------');
-  // window.vm.$http.post('fakeurl', {
-  //   msg: msg,
-  //   error: JSON.stringify(error)
-  // });
-  return false;
-};
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-// Init App
-window.vm = new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  template: '<app />',
-  // Init Framework7 by passing parameters here
-  framework7: {
-    root: '#app',
-    swipePanel: 'left',
-    routes: Routes,
-    material: window.isMaterial,
-    animateNavBackIcon: window.isiOS,
-    pushState: true,
-    pushStateNoAnimation: true,
-    panelLeftBreakpoint: 960,
-    swipePanelActiveArea: 20,
-    swipePanelNoFollow: true,
-    cache: false,
-    hideNavbarOnPageScroll: true,
-    cacheDuration: 0
-  },
-  http: {
-    headers: {
-      'Content-type': 'application/json;charset=UTF-8; charset=UTF-8',
-      'source': '3',
-      'Authorization': (() => window.localStorage.authToken)(),
-      'ID': (() => window.localStorage.userID)(),
-      'tenant': (() => window.localStorage.tenantData && ('tenant_' + JSON.parse(window.localStorage.tenantData).id))()
-    }
-  },
-  // Register App Component
-  components: {
-    app: App
-  }
-});
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Vue.prototype.$pzGlobalReactiveData = new Vue({
-  data: {
-    userID: window.localStorage.userID,
-    nbPendingReq: 0,
-    loaderOnAllReqs: true,
-    userTypeMap: {
-      1: 'Buyer',
-      2: 'Admin'
-    },
-    userStatusMap: {
-      0: 'Inactive',
-      1: 'Active'
-    },
-    buyerTypeMap: {
-      1: 'Distributor',
-      2: 'School Distributor',
-      3: 'School',
-      4: 'Library'
-    },
-    businessTypeMap: {
-      1: 'Proprietorship',
-      2: 'Partnership Firm',
-      3: 'LLP Firm',
-      4: 'Private Limited Company',
-      5: 'Trust'
-    },
-    biltyReqMap: {
-      1: 'Scanned Bilty Required',
-      2: 'CC Bilty Required',
-      3: 'Physical Bilty Required'
-    },
-    accountTypeMap: {
-      0: 'Not defined',
-      1: 'Postpaid',
-      2: 'Prepaid'
-    },
-    logisticStatusMap: {
-      1: 'Prozo',
-      2: 'Buyer',
-      3: '50-50'
-    },
-    serviceReqMap: {
-      0: 'Open',
-      1: 'Resolved',
-      2: 'Resolved for buyer',
-      3: 'Non resolvable'
-    },
-    navHistory: window.vm.$f7.mainView.history
-  },
-  computed: {
-    pendingReq() {
-      return this.nbPendingReq > 0;
-    }
-  },
-  methods: {
-    openZoomView(imgURL) {
-      var a = window.vm.$f7.photoBrowser({
-        type: 'popup',
-        theme: 'dark',
-        toolbar: false,
-        photos: [imgURL]
-      }); a.open();
-    },
-    phone(mob) {
-      window.plugins && window.plugins.CallNumber && window.plugins.CallNumber.callNumber(() => { }, () => { }, mob, true);
-    }
-  }
-});
-
-Vue.filter('moneyFormat', function (data) {
-  if (!data) return '';
-  data = parseInt(data);
-  data = data.toString();
-  var lastThree = data.substring(data.length - 3);
-  var otherNumbers = data.substring(0, data.length - 3);
-  if (otherNumbers !== '') lastThree = ',' + lastThree;
-  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
-});
-
-Vue.http.interceptors.push(function (request, next) {
-  // if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
-  ++window.vm.$pzGlobalReactiveData.nbPendingReq;
-  next(function (response) {
-    // window.vm.$f7.hidePreloader();
-    --window.vm.$pzGlobalReactiveData.nbPendingReq;
-    window.vm.$pzGlobalReactiveData.loaderOnAllReqs = true; // resume the normal functionality that loader is there for all hits (maybe it was set to false for a particular hit,)
-  });
-});
+// window.onerror = function (msg, url, lineNo, columnNo, error) {
+//   console.log('-------------------ERROR-------------------');
+//   console.log('columnNo: ', columnNo);
+//   console.log('lineNo: ', lineNo);
+//   console.log('url: ', url);
+//   console.log('msg: ', msg);
+//   console.log('error: ', error);
+//   console.log('-------------------ERROR-------------------');
+//   return false;
+// };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -311,12 +151,6 @@ document.addEventListener('deviceready', () => {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-window._pz.err = {
-  'ERR_NET': 'Please check your internet connection and try again.',
-  'ERR_CREDS': 'You have entered an incorrect username and/or password',
-  'ERR_404': 'No results found'
-};
-
 // window._pz.domain = 'http://admin.prozo.com';
 window._pz.domain = 'http://staging.prozo.com';
 // window._pz.domain = 'http://192.168.1.3:8091';
@@ -333,6 +167,11 @@ if (window._pz.domain !== 'http://admin.prozo.com') {
   document.body.append(env);
 }
 
+window._pz.err = {
+  'ERR_NET': 'Please check your internet connection and try again.',
+  'ERR_CREDS': 'You have entered an incorrect username and/or password',
+  'ERR_404': 'No results found'
+};
 
 window._pz.errFunc = function (err) {
   let errMsg;
@@ -349,7 +188,7 @@ window._pz.errFunc2 = function (err) {
   else if (err.status === 0) this.errMsg = window._pz.err.ERR_NET;
   else this.errMsg = `Uh oh! Something went wrong (Error ${err.status})`;
 
-  window.vm.$f7.addNotification({ message: this.errMsg, hold: 2000 });
+  window.f7.addNotification({ message: this.errMsg, hold: 2000 });
   return this.errMsg;
 };
 
@@ -360,10 +199,6 @@ window._pz.checkNested = function (obj, ...args) {
   }
   return true;
 };
-
-
-window._pz.utils = {};
-
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

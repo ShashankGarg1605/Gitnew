@@ -39,7 +39,7 @@ module.exports = {
     'no-extend-native': 0,
     'spaced-comment': 0,
     'quotes': 0,
-    'curly': 0
-
+    'curly': 0,
+    'space-before-blocks': 0
   }
 }

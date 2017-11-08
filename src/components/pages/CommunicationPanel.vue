@@ -11,7 +11,7 @@
         </f7-navbar>
         <f7-toolbar tabbar>
             <a href="#" data-tab="#tab-1" class="tab-link active" :disabled="!userID">Buyer Details</a>
-            <a href="#" data-tab="#tab-2" class="tab-link" :disabled="!userID">Comms Panel</a>
+            <!-- <a href="#" data-tab="#tab-2" class="tab-link" :disabled="!userID">Comms Panel</a> -->
         </f7-toolbar>
         <f7-tabs swipeable>
             <f7-page-content tab active id="tab-1">
@@ -61,7 +61,9 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Mgr name'" :value="userDetails.rm_name" />
-                                    <list-item :label="'Mgr mobile'" :value="userDetails.rm_mobile" :grayback="true" />
+                                    <list-item :label="'Mgr mobile'" :grayback="true">
+                                        <a @click="$pzGlobalReactiveData.phone(userDetails.rm_mobile)">{{userDetails.rm_mobile}}</a>
+                                    </list-item>
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -84,7 +86,9 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Goods carrier'" :value="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.name" />
-                                    <list-item :label="'Carrier mobile'" :value="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile" :grayback="true" />
+                                    <list-item :label="'Carrier mobile'" :grayback="true" v-if="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile">
+                                        <a @click="$pzGlobalReactiveData.phone(userDetails.carrier_info.carrier.mobile)">{{userDetails.carrier_info.carrier.mobile}}</a>
+                                    </list-item>
                                     <list-item :label="'Avg duration of goods delivery'" :value="userDetails.carrier_info && userDetails.carrier_info.transporting_days" />
                                     <list-item :label="'Logistics paid by'" :value="userDetails.logisticStatus" :grayback="true" />
                                     <list-item :label="'Bilty reqments'" :value="userDetails.billty_code" />

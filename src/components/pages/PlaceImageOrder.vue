@@ -107,7 +107,7 @@ export default {
                 .then(res => {
                     window.vm.$f7.hidePreloader();
                     if (res.ok) {
-                        window.vm.$f7.addNotification({ message: `Image order ID ${res.body.id} placed!`, hold: 3000 });
+                        window.vm.$f7.addNotification({ message: `Image order ID ${res.body.id} placed!`, hold: 5000 });
                         let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
                         window.vm.$f7.mainView.router.load({
                             url: prevPage,

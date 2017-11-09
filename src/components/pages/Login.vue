@@ -104,9 +104,12 @@ export default {
     },
 
     login() {
-      var tempTenant = null;
+      let tempTenant = null;
+      let authToken = null;
       // get list of tenants
       window.vm.$http.post(window._pz.apiEndPt + "tenant", { userName: this.username })
+
+
         //  check status and lenth
         .then(res => {
           if (res.ok && res.body.length) return Promise.resolve(res.body);
@@ -114,6 +117,8 @@ export default {
             return Promise.reject("You dont have an account");
           else return Promise.reject(res.status);
         })
+
+
         // ask user to select a tenant
         .then(res => {
           if (res.length === 1){
@@ -140,6 +145,8 @@ export default {
             window.Dom7(".actions-modal").on("closed", () => reject());
           });
         })
+
+
         // auth with password
         .then(tenant => window.vm.$http.post(
             window._pz.apiEndPt + "auth",
@@ -156,24 +163,44 @@ export default {
             }
           )
         )
-        // check status
-        .then(
-          res => (res.ok ? Promise.resolve(res) : Promise.reject(res.status))
-        )
-        // GO GO GO !
-        .then(res => {
-          if (res.ok) {
-            setGlobals(res.body.token, tempTenant, res.body.id);
-            clearAllHistory();
-            window.vm.$f7.mainView.router.loadPage("dashboard");
 
-            window.vm.$http.get(window._pz.apiEndPt + "users/" + res.body.id).then(res => {
-              if (!res.ok || !res.body.buyer_name) return;
-              window.localStorage.userName = res.body.buyer_name;
-              window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
-            });
+
+        // check status and get user details
+        .then(
+          res => {
+            if (res.ok){
+              authToken = res.body.token;
+              return window.vm.$http.get(
+                window._pz.apiEndPt + "users/" + res.body.id, 
+                {
+                  headers: {
+                    tenant: "tenant_" + tempTenant.id,
+                    source: "3",
+                    "Content-type": "application/json;charset=UTF-8; charset=UTF-8",
+                    Authorization: authToken
+                  }
+                });
+            } else return Promise.reject(res.status);
           }
+        )
+
+
+        // check if its an admin
+        .then(res => {
+          if (!res.ok) return Promise.reject(res.status);
+          if (res.body.user_type === 1){
+
+            setGlobals(authToken, tempTenant, res.body.id);
+            clearAllHistory();
+
+            window.localStorage.userName = res.body.buyer_name;
+            window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
+
+            window.vm.$f7.mainView.router.loadPage("dashboard");
+          } else return Promise.reject('You are not an admin.');
         })
+
+        
         .catch(function(err) {
           console.log("err: ", err);
           var msg;

@@ -43,7 +43,8 @@
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
                                     <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
                                     <list-item :label="'Last app use'" :value="userDetails.last_app_use | dateFormat" />
-                                    <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" :grayback="true" />
+                                    <list-item :label="'App version'" :value="userDetails.app_version" :grayback="true" />
+                                    <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" />
                                     <!-- <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" /> -->
                                 </f7-block>
                             </f7-accordion-content>
@@ -72,10 +73,10 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Total business till date'">
-                                        <span>₹ {{totalOrderValue | moneyFormat}}</span>
+                                        <span>{{totalOrderValue | moneyFormat}}</span>
                                     </list-item>
                                     <list-item :label="'Avg order value'" :grayback="true">
-                                        <span>₹ {{avgOrderValue | moneyFormat}}</span>
+                                        <span>{{avgOrderValue | moneyFormat}}</span>
                                     </list-item>
                                     <list-item :label="'Total Orders till date'" :value="businessDetails && businessDetails.length" />
                                 </f7-block>
@@ -89,7 +90,7 @@
                                     <list-item :label="'Carrier mobile'" :grayback="true" v-if="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.carrier_info.carrier.mobile)">{{userDetails.carrier_info.carrier.mobile}}</a>
                                     </list-item>
-                                    <list-item :label="'Avg duration of goods delivery'" :value="userDetails.carrier_info && userDetails.carrier_info.transporting_days" />
+                                    <list-item :label="'Avg duration of goods delivery'" :value="userDetails.carrier_info && userDetails.carrier_info.transporting_days + ' days'" />
                                     <list-item :label="'Logistics paid by'" :value="userDetails.logisticStatus" :grayback="true" />
                                     <list-item :label="'Bilty reqments'" :value="userDetails.billty_code" />
                                 </f7-block>
@@ -105,6 +106,7 @@
                                         <list-item :label="'Address'" :value="registeredAddr.address" />
                                         <list-item :label="'Landmark'" :value="registeredAddr.landmark" :grayback="true" />
                                         <list-item :label="'City (state)'" :value="registeredAddr.city.name + ' (' + registeredAddr.city.state.name + ')'" />
+                                        <list-item :label="'Pincode'" :value="registeredAddr.pincode" :grayback="true" />
                                     </div>
                                     <div v-if="shippingAddr" style="border: 1px dashed lightgrey; margin-top: 8px;">
                                         <list-item :label="'Address type'" :value="'Shipping'" />
@@ -112,6 +114,7 @@
                                         <list-item :label="'Address'" :value="shippingAddr.address" />
                                         <list-item :label="'Landmark'" :value="shippingAddr.landmark" :grayback="true" />
                                         <list-item :label="'City (state)'" :value="shippingAddr.city.name + ' (' + shippingAddr.city.state.name + ')'" />
+                                        <list-item :label="'Pincode'" :value="shippingAddr.pincode" :grayback="true" />
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
@@ -134,7 +137,7 @@
                                     <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount | moneyFormat" />
                                     <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
                                     <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date | dateFormat" />
-                                    <list-item :label="'Credit days'" :value="userDetails.credit_period" :grayback="true" />
+                                    <list-item :label="'Credit days'" :value="userDetails.credit_period + ' days'" :grayback="true" />
                                     <list-item :label="'Credit limit'" :value="userDetails.credit_limit | moneyFormat" />
                                     <list-item :label="'Due after last payment'" :value="userDetails.collection_due | moneyFormat" />
                                     <list-item v-if="chqBounceDetails" :label="'No of cheque bounces'" :value="chqBounceDetails.length" />
@@ -197,7 +200,7 @@
                                     <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
                                     <div v-for="(o, index) in publisherSales" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
                                         <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
-                                            <span>₹ {{o.sales_value | moneyFormat}}</span>
+                                            <span>{{o.sales_value | moneyFormat}}</span>
                                             <span>{{o.quantity}} books</span>
                                         </div>
                                         <div style="display: flex; justify-content: space-between; font-size: smaller;">

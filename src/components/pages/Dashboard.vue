@@ -4,8 +4,9 @@
       <f7-nav-left>
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-center>
-        Dashboard
+      <f7-nav-center style="display: flex;align-items: center;">
+        <span>Dashboard</span>
+        <img style="height: 30px;padding-left: 30px;" :src="tenantImage" />
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
@@ -108,6 +109,7 @@ export default {
   data() {
     return {
       title: "Dashboard Page",
+      tenantImage: JSON.parse(window.localStorage.tenantData).logo_lnk,
       nbOpenOrders: null,
       totalInventoryValue: null,
       totalReceivables: null,

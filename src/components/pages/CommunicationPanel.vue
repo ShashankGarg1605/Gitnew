@@ -220,7 +220,7 @@
                 </section>
 
             </f7-page-content>
-            <f7-page-content tab id="tab-2">Under construction...</f7-page-content>
+            <!-- <f7-page-content tab id="tab-2">Under construction...</f7-page-content> -->
         </f7-tabs>
 
     </f7-page>

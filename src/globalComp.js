@@ -7,8 +7,8 @@ export default new Vue({
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {
-      1: 'Buyer',
-      2: 'Admin'
+      1: 'Admin',
+      2: 'Buyer'
     },
     userStatusMap: {
       0: 'Inactive',

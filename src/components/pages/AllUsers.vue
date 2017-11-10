@@ -32,7 +32,7 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Name:</div>
-                <div class="col-70">{{user.name}}</div>
+                <div class="col-70">{{user.buyer_name}}</div>
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Mobile:</div>

@@ -172,9 +172,9 @@ export default {
         .catch(window._pz.errFunc2.bind(this));
     },
     getNbBuyerConvosToday() {
-      const endDate = window.vm.moment().format('YYYY-MM-DD');
-      const startDate = window.vm.moment().subtract(7, 'd').format('YYYY-MM-DD');
-      window.vm.$http.get(`${window._pz.apiEndPt}communication/hours?startDate=${startDate}&endDate=${endDate}`)
+      const endDate = window.vm.moment().add(1, 'd').format('YYYY-MM-DD');
+      const startDate = window.vm.moment().format('YYYY-MM-DD');
+      window.vm.$http.get(`${window._pz.apiEndPt}communication?startDate=${startDate}&endDate=${endDate}`)
         .then(res => {
           if (res.ok) this.nbBuyerConvosToday = res.body.length;
         })

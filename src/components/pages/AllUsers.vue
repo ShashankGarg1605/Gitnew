@@ -184,11 +184,11 @@ export default {
         status = 1;
         msg = 'Activated successfully!';
       } else {
-        url = `${window._pz.apiEndPt}users?action=activate`;
+        url = `${window._pz.apiEndPt}users?action=deactivate`;
         status = 0;
         msg = 'De-activated successfully!';
       }
-      window.vm.$http.patch(url, { id: this.clickedUser.id, status: status })
+      window.vm.$http.patch(url, { id: this.clickedUser.id, status: status, deactivate_reason: '' })
         .then(res => {
           window.vm.$f7.addNotification({ message: msg, hold: 2000 });
           this.allUsers.find(_ => _.id === this.clickedUser.id).status = status;

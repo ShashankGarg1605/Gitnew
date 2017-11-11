@@ -46,8 +46,12 @@
                                 <div class="col-30 color-gray pz-weight-thin">Created:</div>
                                 <div class="col-70">{{order.created_date | dateFormat}}</div>
                             </div>
-                            <div v-if="order.listOfImages && order.listOfImages.length" style="display: flex; width: 100%; justify-content: flex-start;">
-                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages, index)" class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16">
+                            <div v-if="order.listOfImages && order.listOfImages.length" style="width:100%;">
+                             <!-- style="display: flex; width: 100%; justify-content: flex-start;"> -->
+                                <span v-for="(image, index) in order.listOfImages" :key="index" 
+                                @click="openPhotoBrowser(order.listOfImages, index)" 
+                                class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" 
+                                style="float: left; margin-bottom: 10px;">
                                     <icon name="image"></icon>#{{index+1}}
                                     <!-- <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image"> -->
                                 </span>

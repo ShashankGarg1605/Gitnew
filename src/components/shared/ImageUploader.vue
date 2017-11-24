@@ -17,7 +17,7 @@
                 <img v-for="(image, index) in images" :key="index" :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
             </div>
         </div>
-        <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="images.length>0">
+        <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="!hideSubmitBtn && images.length>0">
             {{submitLabel}}
             <icon name="cloud-upload"></icon>
         </a>
@@ -26,17 +26,17 @@
 
 <style scoped>
 input {
-    flex-grow: 1;
-    border: 1px dashed lightgrey;
-    border-radius: 3px;
-    font-size: 1em;
+  flex-grow: 1;
+  border: 1px dashed lightgrey;
+  border-radius: 3px;
+  font-size: 1em;
 }
 </style>
 
 <script>
 export default {
 
-    props: ['maxCount', 'submitLabel', 'inputTitles', 'tooltip'],
+    props: ['maxCount', 'submitLabel', 'inputTitles', 'tooltip', 'hideSubmitBtn'],
     data() {
         return {
             images: []
@@ -48,11 +48,11 @@ export default {
                 { text: 'Upload invoice using', label: true },
                 {
                     text: 'Camera',
-                    onClick: function() { this.getImage('CAMERA'); }.bind(this)
+                    onClick: function () { this.getImage('CAMERA'); }.bind(this)
                 },
                 {
                     text: 'Gallery',
-                    onClick: function() { this.getImage('PHOTOLIBRARY'); }.bind(this)
+                    onClick: function () { this.getImage('PHOTOLIBRARY'); }.bind(this)
                 }
             ];
             window.vm.$f7.actions(buttons);
@@ -65,6 +65,7 @@ export default {
                     data: res,
                     title: ''
                 });
+                this.$emit('added', this.images);
                 // xxx
                 return;
             }
@@ -87,14 +88,15 @@ export default {
             let buttons = [
                 {
                     text: 'View',
-                    onClick: function() {
+                    onClick: function () {
                         this.openZoomView(index);
                     }.bind(this)
                 },
                 {
                     text: 'Remove',
-                    onClick: function() {
+                    onClick: function () {
                         this.images.splice(index, 1);
+                        this.$emit('removed', this.images);
                     }.bind(this)
                 }
             ];
@@ -118,9 +120,7 @@ export default {
             }); a.open();
         },
         uploadImages() {
-            this.$emit('upload',
-                this.images
-            );
+            this.$emit('upload', this.images);
         }
     }
 };

@@ -19,26 +19,26 @@
 
 <style scoped>
 #datepick::placeholder {
-    color: inherit;
+  color: inherit;
 }
 
 #datepick {
-    height: 44px;
+  height: 44px;
 }
 
 .selected-values {
-    position: absolute !important;
-    left: 0px !important;
-    bottom: -10px !important;
-    color: #419688 !important;
-    font-size: x-small !important;
+  position: absolute !important;
+  left: 0px !important;
+  bottom: -10px !important;
+  color: #419688 !important;
+  font-size: x-small !important;
 }
 
 .text-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    line-height: 37px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  line-height: 37px !important;
 }
 </style>
 
@@ -83,9 +83,9 @@ window.FilterComponents = {
             input: '#datepick',
             rangePicker: true,
             dateFormat: 'd-M-yy',
-            onChange: function(p, values, displayValues) {
+            onChange: (p, values, displayValues) => {
                 this.compvalue = values;
-            }.bind(this)
+            }
         });
     },
     beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },

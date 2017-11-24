@@ -55,7 +55,7 @@
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('orderdetail')" class="list-button item-link close-popover">Details</a>
-          <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderdetail')" class="list-button item-link close-popover">Update</a>
+          <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a>
         </div>
       </div>
     </f7-popover>

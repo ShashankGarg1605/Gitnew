@@ -50,7 +50,7 @@
             <p class="vald-msg" v-if="errors.has('biltyType')">Please input a correct value</p>
           </div>
 
-          <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+          <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="biltyType">
             <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty Image:</span>
             <div class="col-65">
               <image-uploader :maxCount="1" @added="imadeAdded($event)" @removed="imadeRemoved($event)" :hideSubmitBtn="true" />
@@ -90,7 +90,7 @@
             <input type="number" name="grNb" class="col-65" placeholder="Tap here" v-model="grNb">
           </div>
 
-          <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+          <div class="row pz-padding-tb-4 pz-padding-lr16">
             <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Freight charges</span>
             <input type="number" name="freightCharges" class="col-65" placeholder="Tap here" v-model="freightCharges">
           </div>
@@ -100,7 +100,7 @@
             <input type="number" name="weight" class="col-65" placeholder="Tap here" v-model="weight">
           </div>
 
-          <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
+          <div class="row pz-padding-tb-4 pz-padding-lr16">
             <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Value of goods</span>
             <input type="number" name="value" class="col-65" placeholder="Tap here" v-model="value">
           </div>
@@ -214,7 +214,6 @@ export default {
   },
   methods: {
     validateBeforeSubmit(e) {
-      debugger;
       this.$validator.validateAll();
       if (!this.errors.any()) {
         this.doUpdate();
@@ -301,8 +300,19 @@ export default {
 
       window.vm.$http.post(`${window._pz.apiEndPt}orders/bilty_details`, params)
         .then(res => {
-          console.log('res: ', res);
-
+          if (res.ok) {
+            let allOrdersFilters;
+            if (window._pz.checkNested(this.$route, 'options', 'context', 'allOrdersFilters')) {
+              allOrdersFilters = this.$route.options.context.allOrdersFilters;
+              console.log('allOrdersFilters: ', allOrdersFilters);
+            }
+            let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            window.vm.$f7.mainView.router.load({
+              url: prevPage,
+              reload: true,
+              context: { comps: allOrdersFilters }
+            });
+          }
         })
         .catch(window._pz.errFunc2.bind(this));
     }

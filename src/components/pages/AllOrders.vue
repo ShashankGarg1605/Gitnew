@@ -55,7 +55,7 @@
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('orderdetail')" class="list-button item-link close-popover">Details</a>
-          <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a>
+          <!-- <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a> -->
         </div>
       </div>
     </f7-popover>
@@ -141,9 +141,7 @@ export default {
 
           var data = res.body.map(order => {
 
-            order.isPartiallyDispatched = order.order_status === 5 &&
-              !order.orderStatus.some(el => el.status_id === 5 && el.bill_t_file_name) &&
-              !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
+            order.isPartiallyDispatched = order.order_status === 5 && !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
 
             // if (typeof order.isPartiallyDispatched !== 'undefined') order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
             // else order.statusText = statusMapping[order.order_status];

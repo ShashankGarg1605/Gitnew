@@ -60,12 +60,12 @@ export default {
         getImage(source) {
             if (!navigator.camera) {
                 // xxx
-                let res = window._pz.imgData;
-                this.images.push({
-                    data: res,
-                    title: ''
-                });
-                this.$emit('added', this.images);
+                // let res = window._pz.imgData;
+                // this.images.push({
+                //     data: res,
+                //     title: ''
+                // });
+                // this.$emit('added', this.images);
                 // xxx
                 return;
             }
@@ -75,6 +75,7 @@ export default {
                         data: res,
                         title: ''
                     });
+                    this.$emit('added', this.images);
                 },
                 err => { throw new Error(err); },
                 {

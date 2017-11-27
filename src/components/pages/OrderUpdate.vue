@@ -20,7 +20,7 @@
         <span class="col-65 ">
           <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
             <select name="carrier" v-model="selectedCarrier">
-              <option v-for="c in carriers" :key="c.carrier.id" :value="c.carrier.id">{{c.carrier.name}}</option>
+              <option v-for="c in carriers" :key="c.id" :value="c.id">{{c.carrier.name}}</option>
             </select>
             <div class="item-content">
               <div class="item-inner">
@@ -203,7 +203,7 @@ export default {
       if (!this.selectedCarrier || !this.carriers) return null;
       else {
         this.initDatePicker();
-        const carrier = this.carriers.find(x => x.carrier.id === this.selectedCarrier);
+        const carrier = this.carriers.find(x => x.id === this.selectedCarrier);
         if (carrier) return carrier.carrier.name;
       }
     },
@@ -246,7 +246,7 @@ export default {
             if (statusObj) {
               this.dispatchDate = [window.vm.moment(statusObj.dispatch_date, 'DD-MM-YYYY HH:mm')._d];
               this.nbCartons = statusObj.cartons_number;
-              this.selectedCarrier = window._pz.checkNested(statusObj, 'carrierTransportationDays', 'carrier', 'id') ? statusObj.carrierTransportationDays.carrier.id : null;
+              this.selectedCarrier = window._pz.checkNested(statusObj, 'carrierTransportationDays', 'carrier', 'id') ? statusObj.carrierTransportationDays.id : null;
             }
 
           }
@@ -286,7 +286,7 @@ export default {
           "order": {
             "id": this.orderDetails.id
           },
-          "bilty_type": this.biltyType,
+          "bilty_type": this.biltyType || 1, // for local transport, set as scanned bilty
           "weight": this.weight,
           "freight_type": this.freightType,
           "gr_no": this.grNb,

@@ -36,7 +36,7 @@
                 <list-item :label="'Device Manufacturer'" :value="data.device_manufacturer" :grayback="true" />
                 <list-item :label="'Operating System'" :value="data.operating_system" />
                 <list-item :label="'Account Type'" :value="$pzGlobalReactiveData.accountTypeMap[data.account_type]" :grayback="true" />
-                <list-item :label="'Bilty Requirements'" :value="$pzGlobalReactiveData.biltyReqMap[data.billt_requirement_code]" />
+                <list-item :label="'Bilty Requirements'" :value="$pzGlobalReactiveData.biltyTypeMap[data.billt_requirement_code]" />
                 <list-item :label="'Credit Period'" :value="data.credit_period + ' days'" :grayback="true" />
                 <list-item :label="'Credit Limit'" :value="data.credit_limit | moneyFormat" />
                 <list-item :label="'Last App Use'" :value="data.last_app_use | dateFormat" :grayback="true" />

@@ -27,11 +27,6 @@ export default new Vue({
       4: "Private Limited Company",
       5: "Trust"
     },
-    biltyReqMap: {
-      1: "Scanned Bilty Required",
-      2: "CC Bilty Required",
-      3: "Physical Bilty Required"
-    },
     accountTypeMap: {
       0: "Not defined",
       1: "Postpaid",

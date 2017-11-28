@@ -38,11 +38,11 @@
             <span class="col-65 ">
               <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
                 <select name="biltyType" v-model="biltyType" v-validate.initial="biltyType" data-vv-rules="required">
-                  <option v-for="(value, key, index) in biltyTypes" :key="index" :value="key">{{value}}</option>
+                  <option v-for="(biltyName, biltyIdx, index) in biltyTypes" :key="biltyIdx" :value="biltyIdx">{{biltyName}}</option>
                 </select>
                 <div class="item-content">
                   <div class="item-inner">
-                    <div class="item-after">{{biltyType || 'Tap here'}}</div>
+                    <div class="item-after">{{biltyTypes[biltyType] || 'Tap here'}}</div>
                   </div>
                 </div>
               </a>
@@ -87,7 +87,7 @@
 
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
             <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">G.R. No.</span>
-            <input type="number" name="grNb" class="col-65" placeholder="Tap here" v-model="grNb">
+            <input type="text" name="grNb" class="col-65" placeholder="Tap here" v-model="grNb">
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16">
@@ -242,6 +242,10 @@ export default {
             this.orderDetails = res.body;
 
             if (window._pz.checkNested(res.body, "address", "city", "id")) this.getCarriers(res.body.address.city.id);
+
+            this.value = this.orderDetails.finalOrderValue; // set default value of goods to be the invoice value
+            this.biltyType = this.orderDetails.user.billt_requirement_code; // set default bilty to be the default bilty value of that user
+
             const statusObj = res.body.orderStatus.find(_ => _.status_id === 5);
             if (statusObj) {
               this.dispatchDate = [window.vm.moment(statusObj.dispatch_date, 'DD-MM-YYYY HH:mm')._d];
@@ -270,7 +274,7 @@ export default {
     doUpdate() {
       // bilty image is mandatory in case of physical and scanned bilty
       // put a hardcoded value in the case of CC bilty
-      if ((this.biltyType === '1' || this.biltyType === '3') && !this.biltyImage)
+      if ((this.biltyType === '1' || this.biltyType === '3') && !this.biltyImage && this.selCrrName.toLowerCase() !== 'local transport')
         return window.f7.addNotification({ message: 'Please add the bilty image', hold: 2000 });
       else if (this.biltyType === '2' && !this.biltyImage) this.biltyImage = 'ccbilty.png';
 
@@ -298,15 +302,15 @@ export default {
       };
 
 
+      window.vm.$f7.showPreloader();
       window.vm.$http.post(`${window._pz.apiEndPt}orders/bilty_details`, params)
         .then(res => {
+          window.vm.$f7.hidePreloader();
           if (res.ok) {
-            let allOrdersFilters;
-            if (window._pz.checkNested(this.$route, 'options', 'context', 'allOrdersFilters')) {
-              allOrdersFilters = this.$route.options.context.allOrdersFilters;
-              console.log('allOrdersFilters: ', allOrdersFilters);
-            }
-            let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            window.f7.addNotification({ message: 'Order successfully updated!', hold: 2000 });
+
+            const allOrdersFilters = window._pz.checkNested(this.$route, 'options', 'context', 'allOrdersFilters') ? this.$route.options.context.allOrdersFilters : null;
+            const prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
             window.vm.$f7.mainView.router.load({
               url: prevPage,
               reload: true,
@@ -314,7 +318,10 @@ export default {
             });
           }
         })
-        .catch(window._pz.errFunc2.bind(this));
+        .catch(_ => {
+          window.vm.$f7.hidePreloader();
+          window._pz.errFunc2.call(this);
+        });
     }
   },
 

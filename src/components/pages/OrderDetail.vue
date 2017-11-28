@@ -17,7 +17,7 @@
       <list-item :label="'Buyer Name'" :value="data.user.buyer_name" />
       <list-item :label="'Invoice Amt'" :value="data.finalOrderValue | moneyFormat" />
       <list-item :label="'Created Date'" :value="data.created_date | dateFormat" />
-      <list-item v-if="dispatchData.carrierTransportationDays" :label="'Carrier'" :value="dispatchData.carrierTransportationDays.carrier.name" />
+      <list-item v-if="dispatchData && dispatchData.carrierTransportationDays" :label="'Carrier'" :value="dispatchData.carrierTransportationDays.carrier.name" />
 
       <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="biltyImage">
         <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
@@ -26,14 +26,16 @@
         </div>
       </div>
 
-      <list-item :label="'# of cartons'" :value="dispatchData.cartons_number" />
+      <list-item v-if="dispatchData && dispatchData.cartons_number" :label="'# of cartons'" :value="dispatchData.cartons_number" />
 
-      <list-item v-if="dispatchData.biltyDetails" :label="'GR Number'" :value="dispatchData.biltyDetails.gr_no" />
-      <list-item v-if="dispatchData.biltyDetails" :label="'Bilty type'" :value="$pzGlobalReactiveData.biltyTypeMap[dispatchData.biltyDetails.bilty_type]" />
-      <list-item v-if="dispatchData.biltyDetails" :label="'Freight Type'" :value="$pzGlobalReactiveData.freightTypeMap[dispatchData.biltyDetails.freight_type]" />
-      <list-item v-if="dispatchData.biltyDetails" :label="'Freight Charges'" :value="dispatchData.biltyDetails.freight_charges | moneyFormat" />
-      <list-item v-if="dispatchData.biltyDetails" :label="'Weight (in kgs)'" :value="dispatchData.biltyDetails.weight" />
-      <list-item v-if="dispatchData.biltyDetails" :label="'Value of goods'" :value="dispatchData.biltyDetails.goods_value | moneyFormat" />
+      <section v-if="dispatchData && dispatchData.biltyDetails && dispatchData.carrierTransportationDays && dispatchData.carrierTransportationDays.carrier.name.toLowerCase() !== 'local transport'">
+        <list-item :label="'GR Number'" :value="dispatchData.biltyDetails.gr_no" />
+        <list-item :label="'Bilty type'" :value="$pzGlobalReactiveData.biltyTypeMap[dispatchData.biltyDetails.bilty_type]" />
+        <list-item :label="'Freight Type'" :value="$pzGlobalReactiveData.freightTypeMap[dispatchData.biltyDetails.freight_type]" />
+        <list-item :label="'Freight Charges'" :value="dispatchData.biltyDetails.freight_charges | moneyFormat" />
+        <list-item :label="'Weight (in kgs)'" :value="dispatchData.biltyDetails.weight" />
+        <list-item :label="'Value of goods'" :value="dispatchData.biltyDetails.goods_value | moneyFormat" />
+      </section>
 
       <button v-if="isPartiallyDispatched" href="#" class="button button-raised color-teal pz-margin-r16 pz-padding-lr32 pz-float-r" @click="openUpdate()">Update order</button>
 

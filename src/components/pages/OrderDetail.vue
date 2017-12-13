@@ -51,7 +51,7 @@
               <th style="width:100px;" class="label-cell">Publisher</th>
               <th class="numeric-cell">MRP</th>
               <th class="numeric-cell pz-padding-0">QTY</th>
-              <th class="numeric-cell pz-padding-0">Buy %</th>
+              <!-- <th class="numeric-cell pz-padding-0">Buy %</th> -->
               <th class="numeric-cell">Discount</th>
               <th class="numeric-cell pz-padding-0">Amount</th>
             </tr>
@@ -63,7 +63,7 @@
               <td class="label-cell">{{p.product.publisher.name}}</td>
               <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
               <td class="numeric-cell">{{p.quantity}}</td>
-              <td class="numeric-cell">{{p.procurement_discount}}%</td>
+              <!-- <td class="numeric-cell">{{p.procurement_discount}}%</td> -->
               <td class="numeric-cell">{{p.discount_percent}}</td>
               <td class="numeric-cell">{{p.amount | moneyFormat}}</td>
             </tr>

@@ -205,7 +205,12 @@ export default {
   beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
   created() {
     console.debug(this.$options.name + ' created');
-    if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
+    if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) {
+      const filter = this.$route.options.context.comps[0];
+      const filterIdx = this.$route.options.context.comps[1];
+      const value = this.$route.options.context.comps[2];
+      this.filters[filter][filterIdx].value = value;
+    }
     this.getAllOrders();
   },
   beforeMount() { console.debug(this.$options.name + ' beforeMount'); },

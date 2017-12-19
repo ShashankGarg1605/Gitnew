@@ -154,10 +154,7 @@
                                         <span style="padding-left: 5px;">Current%</span>
                                     </div>
                                     <div class="color-gray">(Publisher Name)</div>
-                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" 
-                                    :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" 
-                                    :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" 
-                                    :grayback="index%2==0" :leftColWidth="70" :rightColWidth="30" />
+                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" :grayback="index%2==0" :leftColWidth="70" :rightColWidth="30" />
 
                                 </f7-block>
                             </f7-accordion-content>
@@ -228,11 +225,11 @@
 
 <style scoped>
 .message {
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 5px;
-    max-width: 100%;
-    border: 1px solid #F5F5F5;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 5px;
+  max-width: 100%;
+  border: 1px solid #f5f5f5;
 }
 </style>
 
@@ -422,11 +419,10 @@ export default {
                 });
         },
         openOrders() {
-            allOrdersFilters.search[1].value = this.userID;
             window.vm.$f7.mainView.router.load({
                 url: 'allorders',
                 context: {
-                    comps: allOrdersFilters
+                    comps: ['search', 1, this.userID]
                 }
             });
         }
@@ -439,7 +435,7 @@ export default {
     beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
     mounted() {
         console.debug(this.$options.name + ' mounted');
-        setTimeout(function() {
+        setTimeout(function () {
             window.Dom7('.swiper-container')[0].swiper.lockSwipes();
         });
     },
@@ -447,39 +443,5 @@ export default {
     updated() { console.debug(this.$options.name + ' updated'); },
     beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
     destroyed() { console.debug(this.$options.name + ' destroyed'); }
-};
-
-const allOrdersFilters = {
-    date: [
-        {
-            placeholder: 'Chose date range',
-            value: null
-        }
-    ],
-    singleselect: [
-        {
-            placeholder: 'Chose status',
-            value: null,
-            opts: [
-                { label: 'All', value: null },
-                { label: 'Received', value: '101' },
-                { label: 'Confirmed', value: '102' },
-                { label: 'Being Procured', value: '103' },
-                { label: 'Being Packed', value: '104' },
-                { label: 'Partially Dispatched', value: '105' },
-                { label: 'Fully Dispatched', value: '114' },
-                { label: 'Fulfilled', value: '106' },
-                { label: 'Cancelled', value: '107' }
-            ]
-        }
-    ],
-    search: [
-        {
-            placeholder: 'Order ID:'
-        },
-        {
-            placeholder: 'User ID:'
-        }
-    ]
 };
 </script>

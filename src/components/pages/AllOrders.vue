@@ -95,7 +95,8 @@ export default {
               { label: 'Partially Dispatched', value: '105' },
               { label: 'Fully Dispatched', value: '114' },
               { label: 'Fulfilled', value: '106' },
-              { label: 'Cancelled', value: '107' }
+              { label: 'Cancelled', value: '107' },
+              { label: 'Open', value: '113' }
             ]
           }
         ],
@@ -204,7 +205,6 @@ export default {
   beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
   created() {
     console.debug(this.$options.name + ' created');
-
     if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
     this.getAllOrders();
   },

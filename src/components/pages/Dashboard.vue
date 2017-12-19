@@ -13,80 +13,87 @@
     <f7-block-title>Welcome {{$pzGlobalReactiveData.userName}}</f7-block-title>
     <f7-block inner>
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>No. of open orders</span>
-                <span class="value">{{nbOpenOrders}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb" @click="openOrders()">
+            <span class="underline">No. of open orders</span>
+            <span class="value">{{nbOpenOrders}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>Total value of inventory</span>
-                <span class="value">{{totalInventoryValue | moneyFormat}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>Total value of inventory</span>
+            <span class="value">{{totalInventoryValue | moneyFormat}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>Total value of receivables</span>
-                <span class="value">{{totalReceivables | moneyFormat}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>Total value of receivables</span>
+            <span class="value">{{totalReceivables | moneyFormat}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner" style="display: flex; justify-content: space-between; flex-direction: column;">
-                <div>No. of accounts:</div>
-                <div style="display: flex; justify-content: space-between;"><span>Active</span>
-                <span class="value">{{nbActiveUsers}}</span></div>
-                <div style="display: flex; justify-content: space-between;"><span>Inactive</span>
-                <span class="value">{{nbInactiveUsers}}</span></div>
-                <div style="display: flex; justify-content: space-between;"><span>Total</span>
-                <span class="value">{{nbTotalUsers}}</span></div>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner" style="display: flex; justify-content: space-between; flex-direction: column;">
+            <div>No. of accounts:</div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Active</span>
+              <span class="value">{{nbActiveUsers}}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Inactive</span>
+              <span class="value">{{nbInactiveUsers}}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Total</span>
+              <span class="value">{{nbTotalUsers}}</span>
+            </div>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>No. of open returns</span>
-                <span class="value">{{nbOpenReturns}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>No. of open returns</span>
+            <span class="value">{{nbOpenReturns}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>Value of open returns</span>
-                <span class="value">{{openReturnsValue | moneyFormat}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>Value of open returns</span>
+            <span class="value">{{openReturnsValue | moneyFormat}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>No. of un-converted image orders</span>
-                <span class="value">{{nbImageOrdersNotConv}}</span>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>No. of un-converted image orders</span>
+            <span class="value">{{nbImageOrdersNotConv}}</span>
           </div>
+        </div>
       </div>
 
       <div class="card">
-          <div class="card-content">
-              <div class="card-content-inner pz-flex-j-sb">
-                <span>Buyer conversations in last week</span>
-                <span class="value">{{nbBuyerConvosToday}}</span></div>
-              </div>
+        <div class="card-content">
+          <div class="card-content-inner pz-flex-j-sb">
+            <span>Buyer conversations in last week</span>
+            <span class="value">{{nbBuyerConvosToday}}</span>
           </div>
+        </div>
+      </div>
       </div>
 
     </f7-block>
@@ -95,11 +102,15 @@
 
 <style scoped>
 .value {
-    font-weight: bold;
-    color: #419688;
-    flex: 1 0 auto;
-    text-align: right;
-    padding-left: 15px;
+  font-weight: bold;
+  color: #419688;
+  flex: 1 0 auto;
+  text-align: right;
+  padding-left: 15px;
+}
+
+.underline {
+  text-decoration: underline;
 }
 </style>
 
@@ -134,9 +145,9 @@ export default {
       this.getNbUsers();
     },
     getNbOpenOrders() {
-      window.vm.$http.get(window._pz.apiEndPt + 'orders?status=113')
+      window.vm.$http.get(window._pz.apiEndPt + 'orders?status=113&limit=1&offset=0')
         .then(res => {
-            if (res.ok && window._pz.checkNested(res, 'headers', 'map', 'count')) this.nbOpenOrders = res.headers.map.count[0];
+          if (res.ok && window._pz.checkNested(res, 'headers', 'map', 'count')) this.nbOpenOrders = res.headers.map.count[0];
         });
     },
     getTotalInventoryValue() {
@@ -146,7 +157,7 @@ export default {
         });
     },
     getTotalReceivables() {
-        window.vm.$http.get(window._pz.apiEndPt + 'dashboard/collections')
+      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/collections')
         .then(res => {
           if (res.ok && res.body.collectionDue !== undefined) this.totalReceivables = res.body.collectionDue;
         });
@@ -154,7 +165,7 @@ export default {
     getOpenReturns() {
       window.vm.$http.get(window._pz.apiEndPt + 'dashboard/returns')
         .then(res => {
-          if (res.ok && res.body.openReturns !== undefined){
+          if (res.ok && res.body.openReturns !== undefined) {
             this.nbOpenReturns = res.body.openReturns;
             this.openReturnsValue = res.body.openReturnsValue;
           }
@@ -177,17 +188,26 @@ export default {
     getNbUsers() {
       window.vm.$http.get(window._pz.apiEndPt + 'dashboard/users')
         .then(res => {
-          if (res.ok){
+          if (res.ok) {
             this.nbActiveUsers = res.body.totalActiveCount;
             this.nbInactiveUsers = res.body.totalInactiveCount;
             this.nbTotalUsers = res.body.totalUserCount;
           }
         });
+    },
+    openOrders() {
+      allOrdersFilters.singleselect[0].value = '113';
+      window.vm.$f7.mainView.router.load({
+        url: 'allorders',
+        context: {
+          comps: allOrdersFilters
+        }
+      });
     }
   },
   beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
   created() {
-    console.debug(this.$options.name + ' created'); 
+    console.debug(this.$options.name + ' created');
     this.loadAllData();
   },
   beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
@@ -196,5 +216,40 @@ export default {
   updated() { console.debug(this.$options.name + ' updated'); },
   beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
   destroyed() { console.debug(this.$options.name + ' destroyed'); }
+};
+
+const allOrdersFilters = {
+  date: [
+    {
+      placeholder: 'Chose date range',
+      value: null
+    }
+  ],
+  singleselect: [
+    {
+      placeholder: 'Chose status',
+      value: null,
+      opts: [
+        { label: 'All', value: null },
+        { label: 'Received', value: '101' },
+        { label: 'Confirmed', value: '102' },
+        { label: 'Being Procured', value: '103' },
+        { label: 'Being Packed', value: '104' },
+        { label: 'Partially Dispatched', value: '105' },
+        { label: 'Fully Dispatched', value: '114' },
+        { label: 'Fulfilled', value: '106' },
+        { label: 'Cancelled', value: '107' },
+        { label: 'Open', value: '113' }
+      ]
+    }
+  ],
+  search: [
+    {
+      placeholder: 'Order ID:'
+    },
+    {
+      placeholder: 'User ID:'
+    }
+  ]
 };
 </script>

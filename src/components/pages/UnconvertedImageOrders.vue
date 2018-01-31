@@ -105,8 +105,13 @@ export default {
     },
     openPhotoBrowser(images, imageTitles, index) {
       if (!images || images.length < 1) return;
+
       images = images.split(";");
+      images.pop();
+
       imageTitles = (imageTitles && imageTitles.length && imageTitles.split(";")) || [];
+      imageTitles.pop();
+      
       var o = images.map((image, idx) => ({
         url: this.uploadsEndPt + image,
         caption: imageTitles[idx]

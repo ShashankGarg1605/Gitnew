@@ -79,8 +79,8 @@
 
       <div class="card">
         <div class="card-content">
-          <div class="card-content-inner pz-flex-j-sb">
-            <span>No. of un-converted image orders</span>
+          <div class="card-content-inner pz-flex-j-sb" @click="openUnconvertedImageOrders()">
+            <span class="underline">No. of un-converted image orders</span>
             <span class="value">{{nbImageOrdersNotConv}}</span>
           </div>
         </div>
@@ -94,7 +94,7 @@
           </div>
         </div>
       </div>
-      </div>
+      
 
     </f7-block>
   </f7-page>
@@ -145,75 +145,90 @@ export default {
       this.getNbUsers();
     },
     getNbOpenOrders() {
-      window.vm.$http.get(window._pz.apiEndPt + 'orders?status=113&limit=1&offset=0')
-        .then(res => {
-          if (res.ok && window._pz.checkNested(res, 'headers', 'map', 'count')) this.nbOpenOrders = res.headers.map.count[0];
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "orders?status=113&limit=1&offset=0").then(res => {
+        if (res.ok && window._pz.checkNested(res, "headers", "map", "count")) this.nbOpenOrders = res.headers.map.count[0];
+      });
     },
     getTotalInventoryValue() {
-      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/inventory')
-        .then(res => {
-          if (res.ok && res.body.inventoryValue !== undefined) this.totalInventoryValue = res.body.inventoryValue;
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "dashboard/inventory").then(res => {
+        if (res.ok && res.body.inventoryValue !== undefined) this.totalInventoryValue = res.body.inventoryValue;
+      });
     },
     getTotalReceivables() {
-      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/collections')
-        .then(res => {
-          if (res.ok && res.body.collectionDue !== undefined) this.totalReceivables = res.body.collectionDue;
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "dashboard/collections").then(res => {
+        if (res.ok && res.body.collectionDue !== undefined) this.totalReceivables = res.body.collectionDue;
+      });
     },
     getOpenReturns() {
-      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/returns')
-        .then(res => {
-          if (res.ok && res.body.openReturns !== undefined) {
-            this.nbOpenReturns = res.body.openReturns;
-            this.openReturnsValue = res.body.openReturnsValue;
-          }
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "dashboard/returns").then(res => {
+        if (res.ok && res.body.openReturns !== undefined) {
+          this.nbOpenReturns = res.body.openReturns;
+          this.openReturnsValue = res.body.openReturnsValue;
+        }
+      });
     },
     getNbImageOrdersNotConv() {
-      window.vm.$http.get(window._pz.apiEndPt + 'orders/image?view=daily')
-        .then(res => {
-          if (res.ok) this.nbImageOrdersNotConv = res.body.length;
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "orders/image?view=daily").then(res => {
+        if (res.ok) this.nbImageOrdersNotConv = res.body.length;
+      });
     },
     getNbBuyerConvosToday() {
-      const endDate = window.vm.moment().add(1, 'd').format('YYYY-MM-DD');
-      const startDate = window.vm.moment().format('YYYY-MM-DD');
-      window.vm.$http.get(`${window._pz.apiEndPt}communication?startDate=${startDate}&endDate=${endDate}`)
-        .then(res => {
-          if (res.ok) this.nbBuyerConvosToday = res.body.length;
-        });
+      const endDate = window.vm
+        .moment()
+        .add(1, "d")
+        .format("YYYY-MM-DD");
+      const startDate = window.vm.moment().format("YYYY-MM-DD");
+      window.vm.$http.get(`${window._pz.apiEndPt}communication?startDate=${startDate}&endDate=${endDate}`).then(res => {
+        if (res.ok) this.nbBuyerConvosToday = res.body.length;
+      });
     },
     getNbUsers() {
-      window.vm.$http.get(window._pz.apiEndPt + 'dashboard/users')
-        .then(res => {
-          if (res.ok) {
-            this.nbActiveUsers = res.body.totalActiveCount;
-            this.nbInactiveUsers = res.body.totalInactiveCount;
-            this.nbTotalUsers = res.body.totalUserCount;
-          }
-        });
+      window.vm.$http.get(window._pz.apiEndPt + "dashboard/users").then(res => {
+        if (res.ok) {
+          this.nbActiveUsers = res.body.totalActiveCount;
+          this.nbInactiveUsers = res.body.totalInactiveCount;
+          this.nbTotalUsers = res.body.totalUserCount;
+        }
+      });
     },
     openOrders() {
       window.vm.$f7.mainView.router.load({
-        url: 'allorders',
+        url: "allorders",
         context: {
-          comps: ['singleselect', 0, '113']
+          comps: ["singleselect", 0, "113"]
         }
+      });
+    },
+    openUnconvertedImageOrders() {
+      window.vm.$f7.mainView.router.load({
+        url: "UnconvertedImageOrders"
       });
     }
   },
-  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
   created() {
-    console.debug(this.$options.name + ' created');
+    console.debug(this.$options.name + " created");
     this.loadAllData();
   },
-  beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
-  mounted() { console.debug(this.$options.name + ' mounted'); },
-  beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
-  updated() { console.debug(this.$options.name + ' updated'); },
-  beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
-  destroyed() { console.debug(this.$options.name + ' destroyed'); }
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 </script>

@@ -1,73 +1,78 @@
-import Login from './components/pages/Login';
-import Dashboard from './components/pages/Dashboard';
-import AllOrders from './components/pages/AllOrders';
-import Another from './components/pages/Another';
-import OrderDetail from './components/pages/OrderDetail';
-import OrderUpdate from './components/pages/OrderUpdate';
-import PurchaseInvoice from './components/pages/PurchaseInvoice';
-import Filters from './components/pages/Filters';
-import PurchaseInvoiceDetail from './components/pages/PurchaseInvoiceDetail';
-import PlaceImageOrder from './components/pages/PlaceImageOrder';
-import AllImageOrders from './components/pages/AllImageOrders';
-import CommunicationPanel from './components/pages/CommunicationPanel';
-import AllUsers from './components/pages/AllUsers';
-import UserDetail from './components/pages/UserDetail';
+import Login from "./components/pages/Login";
+import Dashboard from "./components/pages/Dashboard";
+import AllOrders from "./components/pages/AllOrders";
+import Another from "./components/pages/Another";
+import OrderDetail from "./components/pages/OrderDetail";
+import OrderUpdate from "./components/pages/OrderUpdate";
+import PurchaseInvoice from "./components/pages/PurchaseInvoice";
+import Filters from "./components/pages/Filters";
+import PurchaseInvoiceDetail from "./components/pages/PurchaseInvoiceDetail";
+import PlaceImageOrder from "./components/pages/PlaceImageOrder";
+import AllImageOrders from "./components/pages/AllImageOrders";
+import CommunicationPanel from "./components/pages/CommunicationPanel";
+import AllUsers from "./components/pages/AllUsers";
+import UserDetail from "./components/pages/UserDetail";
+import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
 
 export default [
   {
-    path: '/',
+    path: "/",
     component: Login
   },
   {
-    path: '/dashboard/',
+    path: "/dashboard/",
     component: Dashboard
   },
   {
-    path: '/allorders/',
+    path: "/allorders/",
     component: AllOrders
   },
   {
-    path: '/about/another/',
+    path: "/about/another/",
     component: Another
   },
   {
-    path: '/orderdetail/',
+    path: "/orderdetail/",
     component: OrderDetail
   },
   {
-    path: '/orderupdate/',
+    path: "/orderupdate/",
     component: OrderUpdate
   },
   {
-    path: '/purchaseinvoice/',
+    path: "/purchaseinvoice/",
     component: PurchaseInvoice
   },
   {
-    path: '/filters/',
+    path: "/filters/",
     component: Filters
   },
   {
-    path: '/PurchaseInvoiceDetail/',
+    path: "/PurchaseInvoiceDetail/",
     component: PurchaseInvoiceDetail
   },
   {
-    path: '/PlaceImageOrder/',
+    path: "/PlaceImageOrder/",
     component: PlaceImageOrder
   },
   {
-    path: '/AllImageOrders/',
+    path: "/AllImageOrders/",
     component: AllImageOrders
   },
   {
-    path: '/CommunicationPanel/',
+    path: "/CommunicationPanel/",
     component: CommunicationPanel
   },
   {
-    path: '/AllUsers/',
+    path: "/AllUsers/",
     component: AllUsers
   },
   {
-    path: '/UserDetail/',
+    path: "/UserDetail/",
     component: UserDetail
+  },
+  {
+    path: "/UnconvertedImageOrders/",
+    component: UnconvertedImageOrders
   }
 ];

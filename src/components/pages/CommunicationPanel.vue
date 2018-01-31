@@ -83,6 +83,30 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
+                        <f7-list-item accordion-item title="Documents" v-if="userDetails">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <list-item :label="'Account opening form'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.account_opening_form">
+                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openForm(userDetails.account_opening_form)">
+                                            <icon name="image"></icon> open
+                                        </span>
+                                    </list-item>
+
+                                    <list-item :label="'PAN card'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.pan_image">
+                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.pan_image, 'pan', userDetails.pan_number)">
+                                            <icon name="image"></icon> open
+                                        </span>
+                                    </list-item>
+                                    
+                                    <list-item :label="'Shop license number'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.shop_licence_image">
+                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.shop_licence_image, 'shopLicense', userDetails.shop_licence_number)">
+                                            <icon name="image"></icon> open
+                                        </span>
+                                    </list-item>
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
                         <f7-list-item accordion-item title="Logistics Details" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
@@ -234,214 +258,243 @@
 </style>
 
 <script>
-import ListItem from '../shared/ListItem';
+import ListItem from "../shared/ListItem";
 
 export default {
-    name: 'CommunicationPanel',
-    data() {
-        return {
-            users: null,
-            userID: null,
-            errMsg: null,
-            autocompleteRef: null,
-            userDetails: null,
-            returnDetails: null,
-            lastPaymentDetails: null,
-            chqBounceDetails: null,
-            businessDetails: null,
-            userDiscountDetails: null,
-            buyerConversations: null,
-            serviceRequests: null,
-            publisherSales: null
-        };
+  name: "CommunicationPanel",
+  data() {
+    return {
+      users: null,
+      userID: null,
+      errMsg: null,
+      autocompleteRef: null,
+      userDetails: null,
+      returnDetails: null,
+      lastPaymentDetails: null,
+      chqBounceDetails: null,
+      businessDetails: null,
+      userDiscountDetails: null,
+      buyerConversations: null,
+      serviceRequests: null,
+      publisherSales: null
+    };
+  },
+  computed: {
+    totalOrderValue() {
+      if (!this.businessDetails || !this.businessDetails.length) return null;
+      else return this.businessDetails.reduce((sum, _) => sum + _.finalOrderValue, 0);
     },
-    computed: {
-        totalOrderValue() {
-            if (!this.businessDetails || !this.businessDetails.length) return null;
-            else return this.businessDetails.reduce((sum, _) => sum + _.finalOrderValue, 0);
+    avgOrderValue() {
+      if (!this.businessDetails || !this.businessDetails.length || !this.totalOrderValue) return null;
+      else return this.totalOrderValue / this.businessDetails.length;
+    },
+    registeredAddr() {
+      if (!this.userDetails) return null;
+      else {
+        const address = this.userDetails.userAddress.find(_ => _.address_type === 1);
+        return address || null;
+      }
+    },
+    shippingAddr() {
+      if (!this.userDetails) return null;
+      else {
+        const shipAddress = this.userDetails.userAddress.find(_ => _.address_type === 2);
+        const regAddress = this.userDetails.userAddress.find(_ => _.address_type === 1);
+        if (shipAddress) return shipAddress;
+        else if (regAddress) return regAddress;
+        else return null;
+      }
+    }
+  },
+  components: {
+    "list-item": ListItem
+  },
+  methods: {
+    clearBuyerData() {
+      this.userID = null;
+      this.userDetails = null;
+      this.returnDetails = null;
+      this.lastPaymentDetails = null;
+      this.chqBounceDetails = null;
+      this.businessDetails = null;
+      this.userDiscountDetails = null;
+      this.buyerConversations = null;
+      this.serviceRequests = null;
+      this.publisherSales = null;
+    },
+    getAllUsers() {
+      window.vm.$http
+        .get(window._pz.apiEndPt + "users/list?type=2")
+        .then(res => {
+          if (res.ok) {
+            this.users = res.body;
+            this.setUserSelection();
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    setUserSelection() {
+      let that = this; // save a ref to this to use inside callbacks
+      this.autocompleteRef = window.vm.$f7.autocomplete({
+        openIn: "popup", //open in popup
+        opener: window.vm.Dom7("#autocomplete-standalone-popup-2"), //link that opens autocomplete
+        backOnSelect: true, //go back after we select something
+        textProperty: "name",
+        autoFocus: true,
+        valueProperty: "id",
+        source(autocomplete, query, render) {
+          if (query.length < 3) return;
+          let results = [];
+          if (query && query.length === 0) {
+            render(results);
+            return;
+          }
+          // Find matched items
+          for (var i = 0; i < that.users.length; i++) {
+            if (that.users[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(that.users[i]);
+          }
+          // Render items by passing array with result items
+          render(results);
         },
-        avgOrderValue() {
-            if (!this.businessDetails || !this.businessDetails.length || !this.totalOrderValue) return null;
-            else return this.totalOrderValue / this.businessDetails.length;
+        onChange(autocomplete, value) {
+          // Add item text value to item-after
+          window.vm
+            .Dom7("#autocomplete-standalone-popup-2")
+            .find(".item-after")
+            .text(value[0].name);
+          // Add item value to input value and clear existing data
+          that.clearBuyerData();
+          that.userID = value[0].id;
+          // unlock swipes now that we are fetching data
+          window.Dom7(".swiper-container")[0].swiper.unlockSwipes();
+          // fetch data
+          that.getUserDetails();
         },
-        registeredAddr() {
-            if (!this.userDetails) return null;
-            else {
-                const address = this.userDetails.userAddress.find(_ => _.address_type === 1);
-                return address || null;
-            }
-        },
-        shippingAddr() {
-            if (!this.userDetails) return null;
-            else {
-                const shipAddress = this.userDetails.userAddress.find(_ => _.address_type === 2);
-                const regAddress = this.userDetails.userAddress.find(_ => _.address_type === 1);
-                if (shipAddress) return shipAddress;
-                else if (regAddress) return regAddress;
-                else return null;
-            }
+        onClose() {
+          window.f7.params.hideNavbarOnPageScroll = true;
         }
+      });
     },
-    components: {
-        'list-item': ListItem
+    openUserSelection() {
+      window.f7.params.hideNavbarOnPageScroll = false;
+      this.autocompleteRef.open();
     },
-    methods: {
-        clearBuyerData() {
-            this.userID = null;
-            this.userDetails = null;
-            this.returnDetails = null;
-            this.lastPaymentDetails = null;
-            this.chqBounceDetails = null;
-            this.businessDetails = null;
-            this.userDiscountDetails = null;
-            this.buyerConversations = null;
-            this.serviceRequests = null;
-            this.publisherSales = null;
-        },
-        getAllUsers() {
-            window.vm.$http.get(window._pz.apiEndPt + 'users/list?type=2')
-                .then(res => {
-                    if (res.ok) {
-                        this.users = res.body;
-                        this.setUserSelection();
-                    }
-                })
-                .catch(window._pz.errFunc2.bind(this));
-        },
-        setUserSelection() {
-            let that = this; // save a ref to this to use inside callbacks
-            this.autocompleteRef = window.vm.$f7.autocomplete({
-                openIn: 'popup', //open in popup
-                opener: window.vm.Dom7('#autocomplete-standalone-popup-2'), //link that opens autocomplete
-                backOnSelect: true, //go back after we select something
-                textProperty: 'name',
-                autoFocus: true,
-                valueProperty: 'id',
-                source(autocomplete, query, render) {
-                    if (query.length < 3) return;
-                    let results = [];
-                    if (query && query.length === 0) {
-                        render(results);
-                        return;
-                    }
-                    // Find matched items
-                    for (var i = 0; i < that.users.length; i++) {
-                        if (that.users[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(that.users[i]);
-                    }
-                    // Render items by passing array with result items
-                    render(results);
-                },
-                onChange(autocomplete, value) {
-                    // Add item text value to item-after
-                    window.vm.Dom7('#autocomplete-standalone-popup-2').find('.item-after').text(value[0].name);
-                    // Add item value to input value and clear existing data
-                    that.clearBuyerData();
-                    that.userID = value[0].id;
-                    // unlock swipes now that we are fetching data
-                    window.Dom7('.swiper-container')[0].swiper.unlockSwipes();
-                    // fetch data
-                    that.getUserDetails();
-                },
-                onClose() {
-                    window.f7.params.hideNavbarOnPageScroll = true;
-                }
-            });
-        },
-        openUserSelection() {
-            window.f7.params.hideNavbarOnPageScroll = false;
-            this.autocompleteRef.open();
-        },
-        getReturnsData() {
-            window.vm.$http.get(window._pz.apiEndPt + 'returns?user=' + this.userID)
-                .then(res => {
-                    if (res.ok) this.returnDetails = res.body;
-                });
-        },
-        getPaymentsData() {
-            window.vm.$http.get(window._pz.apiEndPt + 'users/payments/' + this.userID)
-                .then(res => {
-                    if (res.ok) this.lastPaymentDetails = res.body.length && res.body[0];
-                });
-        },
-        getChqBounceData() {
-            window.vm.$http.get(window._pz.apiEndPt + 'payments/cheque_bounce?user=' + this.userID)
-                .then(res => {
-                    if (res.ok) this.chqBounceDetails = res.body;
-                });
-        },
-        getBusinessData() {
-            window.vm.$http.get(window._pz.apiEndPt + 'orders?userId=' + this.userID)
-                .then(res => {
-                    if (res.ok) this.businessDetails = res.body;
-                });
-        },
-        getUserDiscountDetails() {
-            window.vm.$http.get(window._pz.apiEndPt + 'users/discounts/' + this.userID)
-                .then(res => {
-                    if (res.ok) this.userDiscountDetails = res.body;
-                });
-        },
-        getBuyerConversations() {
-            window.vm.$http.get(window._pz.apiEndPt + 'communication/' + this.userID)
-                .then(res => {
-                    if (res.ok) this.buyerConversations = res.body.slice(0, 10);
-                });
-        },
-        getServiceRequests() {
-            window.vm.$http.get(window._pz.apiEndPt + 'sr?user=' + this.userID)
-                .then(res => {
-                    if (res.ok) this.serviceRequests = res.body;
-                });
-        },
-        getPublisherSales() {
-            const toDate = window.vm.moment().format('YYYY-MM-DD');
-            const startDate = window.vm.moment().subtract(1, 'y').format('YYYY-MM-DD');
+    getReturnsData() {
+      window.vm.$http.get(window._pz.apiEndPt + "returns?user=" + this.userID).then(res => {
+        if (res.ok) this.returnDetails = res.body;
+      });
+    },
+    getPaymentsData() {
+      window.vm.$http.get(window._pz.apiEndPt + "users/payments/" + this.userID).then(res => {
+        if (res.ok) this.lastPaymentDetails = res.body.length && res.body[0];
+      });
+    },
+    getChqBounceData() {
+      window.vm.$http.get(window._pz.apiEndPt + "payments/cheque_bounce?user=" + this.userID).then(res => {
+        if (res.ok) this.chqBounceDetails = res.body;
+      });
+    },
+    getBusinessData() {
+      window.vm.$http.get(window._pz.apiEndPt + "orders?userId=" + this.userID).then(res => {
+        if (res.ok) this.businessDetails = res.body;
+      });
+    },
+    getUserDiscountDetails() {
+      window.vm.$http.get(window._pz.apiEndPt + "users/discounts/" + this.userID).then(res => {
+        if (res.ok) this.userDiscountDetails = res.body;
+      });
+    },
+    getBuyerConversations() {
+      window.vm.$http.get(window._pz.apiEndPt + "communication/" + this.userID).then(res => {
+        if (res.ok) this.buyerConversations = res.body.slice(0, 10);
+      });
+    },
+    getServiceRequests() {
+      window.vm.$http.get(window._pz.apiEndPt + "sr?user=" + this.userID).then(res => {
+        if (res.ok) this.serviceRequests = res.body;
+      });
+    },
+    getPublisherSales() {
+      const toDate = window.vm.moment().format("YYYY-MM-DD");
+      const startDate = window.vm
+        .moment()
+        .subtract(1, "y")
+        .format("YYYY-MM-DD");
 
-            window.vm.$http.get(`${window._pz.apiEndPt}reporting/sales/buyer_wise_publisher_wise?user=${this.userID}&startDate=${startDate}&toDate=${toDate}`)
-                .then(res => {
-                    if (res.ok) this.publisherSales = res.body.slice(0, 10);
-                });
-        },
-        getUserDetails() {
-            window.vm.$http.get(window._pz.apiEndPt + 'users/' + this.userID)
-                .then(res => {
-                    if (res.ok) {
-                        this.userDetails = res.body;
-                        this.getReturnsData();
-                        this.getPaymentsData();
-                        this.getChqBounceData();
-                        this.getBusinessData();
-                        this.getUserDiscountDetails();
-                        this.getBuyerConversations();
-                        this.getServiceRequests();
-                        this.getPublisherSales();
-                    }
-                });
-        },
-        openOrders() {
-            window.vm.$f7.mainView.router.load({
-                url: 'allorders',
-                context: {
-                    comps: ['search', 1, this.userID]
-                }
-            });
+      window.vm.$http.get(`${window._pz.apiEndPt}reporting/sales/buyer_wise_publisher_wise?user=${this.userID}&startDate=${startDate}&toDate=${toDate}`).then(res => {
+        if (res.ok) this.publisherSales = res.body.slice(0, 10);
+      });
+    },
+    getUserDetails() {
+      window.vm.$http.get(window._pz.apiEndPt + "users/" + this.userID).then(res => {
+        if (res.ok) {
+          this.userDetails = res.body;
+          this.getReturnsData();
+          this.getPaymentsData();
+          this.getChqBounceData();
+          this.getBusinessData();
+          this.getUserDiscountDetails();
+          this.getBuyerConversations();
+          this.getServiceRequests();
+          this.getPublisherSales();
         }
+      });
     },
-    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
-    created() {
-        console.debug(this.$options.name + ' created');
-        this.getAllUsers();
+    openOrders() {
+      window.vm.$f7.mainView.router.load({
+        url: "allorders",
+        context: {
+          comps: ["search", 1, this.userID]
+        }
+      });
     },
-    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
-    mounted() {
-        console.debug(this.$options.name + ' mounted');
-        setTimeout(function () {
-            window.Dom7('.swiper-container')[0].swiper.lockSwipes();
-        });
+    openPhotoBrowser(image, type, caption) {
+      if (!image || image.length < 1) return;
+      window.vm.$f7
+        .photoBrowser({
+          type: "popup",
+          theme: "dark",
+          photos: [
+            {
+              url: `${window._pz.uploadsEndPt}userdocs/${type}/${image}`,
+              caption: caption
+            }
+          ]
+        })
+        .open();
     },
-    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
-    updated() { console.debug(this.$options.name + ' updated'); },
-    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
-    destroyed() { console.debug(this.$options.name + ' destroyed'); }
+    openForm(filename) {
+      if (window._pz.checkNested(window, "cordova", "InAppBrowser"))
+        window.cordova.InAppBrowser.open(`${window._pz.uploadsEndPt}userdocs/accountopeningform/${filename}`, '_system');
+    }
+  },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
+  created() {
+    console.debug(this.$options.name + " created");
+    this.getAllUsers();
+  },
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+    setTimeout(function() {
+      window.Dom7(".swiper-container")[0].swiper.lockSwipes();
+    });
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 </script>

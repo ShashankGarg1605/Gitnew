@@ -65,7 +65,7 @@
 
 <script>
 export default {
-  name: 'AllOrders',
+  name: "AllOrders",
   data() {
     return {
       allOrders: [],
@@ -74,38 +74,40 @@ export default {
       hasReachedEnd: false,
       totalCount: null,
       clickedOrder: null,
-      randomID: Math.random().toString(36).substr(2, 10),
+      randomID: Math.random()
+        .toString(36)
+        .substr(2, 10),
       filters: {
         date: [
           {
-            placeholder: 'Chose date range',
+            placeholder: "Chose date range",
             value: null
           }
         ],
         singleselect: [
           {
-            placeholder: 'Chose status',
+            placeholder: "Chose status",
             value: null,
             opts: [
-              { label: 'All', value: null },
-              { label: 'Received', value: '101' },
-              { label: 'Confirmed', value: '102' },
-              { label: 'Being Procured', value: '103' },
-              { label: 'Being Packed', value: '104' },
-              { label: 'Partially Dispatched', value: '105' },
-              { label: 'Fully Dispatched', value: '114' },
-              { label: 'Fulfilled', value: '106' },
-              { label: 'Cancelled', value: '107' },
-              { label: 'Open', value: '113' }
+              { label: "All", value: null },
+              { label: "Received", value: "101" },
+              { label: "Confirmed", value: "102" },
+              { label: "Being Procured", value: "103" },
+              { label: "Being Packed", value: "104" },
+              { label: "Partially Dispatched", value: "105" },
+              { label: "Fully Dispatched", value: "114" },
+              { label: "Fulfilled", value: "106" },
+              { label: "Cancelled", value: "107" },
+              { label: "Open", value: "113" }
             ]
           }
         ],
         search: [
           {
-            placeholder: 'Order ID:'
+            placeholder: "Order ID:"
           },
           {
-            placeholder: 'User ID:'
+            placeholder: "User ID:"
           }
         ]
       }
@@ -113,14 +115,14 @@ export default {
   },
   computed: {
     filterQuery() {
-      let filterQuery = '';
+      let filterQuery = "";
 
       let { value: status = null } = this.filters.singleselect[0];
       if (status !== null) filterQuery += `&status=${status}`;
 
       let { value: dateRange = null } = this.filters.date[0];
-      if (dateRange !== null) filterQuery += '&startDate=' + window.vm.moment(dateRange[0]).format('YYYY-MM-DD');
-      if (dateRange !== null && dateRange.length) filterQuery += '&endDate=' + window.vm.moment(dateRange[1]).format('YYYY-MM-DD');
+      if (dateRange !== null) filterQuery += "&startDate=" + window.vm.moment(dateRange[0]).format("YYYY-MM-DD");
+      if (dateRange !== null && dateRange.length) filterQuery += "&endDate=" + window.vm.moment(dateRange[1]).format("YYYY-MM-DD");
 
       let { value: orderID = null } = this.filters.search[0];
       if (orderID !== null) filterQuery += `&order_id=${orderID}`;
@@ -133,15 +135,14 @@ export default {
   },
   methods: {
     getAllOrders() {
-
       window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
       let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
-      window.vm.$http.get(url)
+      window.vm.$http
+        .get(url)
         .then(res => {
           this.totalCount = res.headers.map.count && res.headers.map.count[0];
 
           var data = res.body.map(order => {
-
             order.isPartiallyDispatched = order.order_status === 5 && !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
 
             // if (typeof order.isPartiallyDispatched !== 'undefined') order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
@@ -158,7 +159,7 @@ export default {
             this.removeInfiniteScroll();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.removeInfiniteScroll();
           window._pz.errFunc2.call(this, err);
         });
@@ -179,54 +180,75 @@ export default {
     },
     openPopover(order, e) {
       this.clickedOrder = order;
-      const popupID = '#' + this.randomID;
+      const popupID = "#" + this.randomID;
       window.vm.$f7.popover(window.Dom7(popupID), e.target);
     },
     // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
     addInfiniteScroll() {
-      window.vm.$f7.attachInfiniteScroll(window.Dom7('.infinite-scroll'));
-      window.Dom7('.infinite-scroll-preloader').show();
+      window.vm.$f7.attachInfiniteScroll(window.Dom7(".infinite-scroll"));
+      window.Dom7(".infinite-scroll-preloader").show();
       this.hasReachedEnd = false;
     },
     removeInfiniteScroll() {
-      window.vm.$f7.detachInfiniteScroll(window.Dom7('.infinite-scroll'));
-      window.Dom7('.infinite-scroll-preloader').hide();
+      window.vm.$f7.detachInfiniteScroll(window.Dom7(".infinite-scroll"));
+      window.Dom7(".infinite-scroll-preloader").hide();
       this.hasReachedEnd = true;
     },
     openFilters() {
       window.vm.$f7.mainView.router.load({
-        url: 'filters',
+        url: "filters",
         // send over a clone of the filters object to avoid mutating it directly from the filters page
         context: { comps: JSON.parse(JSON.stringify(this.filters)) }
       });
     }
   },
 
-  beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
   created() {
-    console.debug(this.$options.name + ' created');
-    if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) {
-      const filter = this.$route.options.context.comps[0];
-      const filterIdx = this.$route.options.context.comps[1];
-      const value = this.$route.options.context.comps[2];
-      this.filters[filter][filterIdx].value = value;
+    console.debug(this.$options.name + " created");
+    if (window._pz.checkNested(this, "$route", "options", "context", "comps")) {
+      console.log("this.$route.options.context.comps: ", JSON.stringify(this.$route.options.context.comps));
+      if (this.$route.options.context.comps instanceof Array) {
+        // if selected filters are passed, like linking from dashboard page to only show the "open orders"
+        const filter = this.$route.options.context.comps[0];
+        const filterIdx = this.$route.options.context.comps[1];
+        const value = this.$route.options.context.comps[2];
+        this.filters[filter][filterIdx].value = value;
+      } else {
+        // if all filters are passed, like when coming from filters page
+        this.filters = this.$route.options.context.comps;
+      }
     }
     this.getAllOrders();
   },
-  beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
-  mounted() { console.debug(this.$options.name + ' mounted'); },
-  beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
-  updated() { console.debug(this.$options.name + ' updated'); },
-  beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
-  destroyed() { console.debug(this.$options.name + ' destroyed'); }
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 
 const statusMapping = {
-  1: 'Received',
-  2: 'Received',
-  3: 'Being procured',
-  4: 'Ready to dispatch',
-  5: 'Dispatched',
-  6: 'Fulfilled'
+  1: "Received",
+  2: "Received",
+  3: "Being procured",
+  4: "Ready to dispatch",
+  5: "Dispatched",
+  6: "Fulfilled"
 };
 </script>

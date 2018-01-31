@@ -27,69 +27,85 @@
 
 <style scoped>
 #date::placeholder {
-    color: inherit;
+  color: inherit;
 }
 
 .bottom {
-    display: flex;
-    justify-content: flex-end;
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 65px;
-    align-items: center;
-    box-shadow: 0px 0px 1px 3px lightgrey;
-    background: white;
-    z-index: 15;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 65px;
+  align-items: center;
+  box-shadow: 0px 0px 1px 3px lightgrey;
+  background: white;
+  z-index: 15;
 }
 </style>
 
 
 <script>
-import FilterDateRange from '../FilterDateRange';
-import FilterSingleSelect from '../FilterSingleSelect';
-import FilterSearch from '../FilterSearch';
+import FilterDateRange from "../FilterDateRange";
+import FilterSingleSelect from "../FilterSingleSelect";
+import FilterSearch from "../FilterSearch";
 
 export default {
-    name: 'Filters',
-    data() {
-        return {
-            comps: null
-        };
+  name: "Filters",
+  data() {
+    return {
+      comps: null
+    };
+  },
+  components: {
+    "pz-filter-date-range": FilterDateRange,
+    "pz-filter-single-select": FilterSingleSelect,
+    "pz-filter-search": FilterSearch
+  },
+  methods: {
+    applyFilters() {
+      console.log("this.comps: ", JSON.stringify(this.comps));
+      let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+      window.vm.$f7.mainView.router.load({
+        url: prevPage,
+        reload: true,
+        context: { comps: this.comps }
+      });
     },
-    components: {
-        'pz-filter-date-range': FilterDateRange,
-        'pz-filter-single-select': FilterSingleSelect,
-        'pz-filter-search': FilterSearch
-    },
-    methods: {
-        applyFilters() {
-            let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
-            window.vm.$f7.mainView.router.load({
-                url: prevPage,
-                reload: true,
-                context: { comps: this.comps }
-            });
-        },
-        resetFilters() {
-            for (let filterType of Object.keys(this.comps)) {
-                for (let filter of this.comps[filterType]) { //eg first date type filter, then second date type filter
-                    filter.value = null;
-                }
-            }
-            this.applyFilters();
+    resetFilters() {
+      for (let filterType of Object.keys(this.comps)) {
+        for (let filter of this.comps[filterType]) {
+          //eg first date type filter, then second date type filter
+          filter.value = null;
         }
-    },
-    beforeCreate() { console.debug(this.$options.name + ' beforeCreate'); },
-    created() {
-        console.debug(this.$options.name + ' created');
-        this.comps = this.$route.options.context && this.$route.options.context.comps;
-    },
-    beforeMount() { console.debug(this.$options.name + ' beforeMount'); },
-    mounted() { console.debug(this.$options.name + ' mounted'); },
-    beforeUpdate() { console.debug(this.$options.name + ' beforeUpdate'); },
-    updated() { console.debug(this.$options.name + ' updated'); },
-    beforeDestroy() { console.debug(this.$options.name + ' beforeDestroy'); },
-    destroyed() { console.debug(this.$options.name + ' destroyed'); }
+      }
+      this.applyFilters();
+    }
+  },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
+  created() {
+    console.debug(this.$options.name + " created");
+    this.comps = this.$route.options.context && this.$route.options.context.comps;
+  },
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 </script>

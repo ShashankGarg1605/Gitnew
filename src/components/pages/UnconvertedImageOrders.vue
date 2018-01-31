@@ -1,8 +1,8 @@
 <template>
     <f7-page name="UnconvertedImageOrders" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
 
-        <f7-navbar>
-            <f7-nav-left>
+        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
+            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>
             <f7-nav-center>
@@ -36,7 +36,7 @@
                                 <div class="col-70">{{order.created_date | dateFormat}}</div>
                             </div>
                             <div v-if="order.img_path && order.img_path.length" style="width:100%;">
-                                <span v-for="(image, index) in order.img_path.split(';')" :key="index" 
+                                <span v-for="(image, index) in order.img_path.split(';').slice(0,order.img_path.split(';').length-1) " :key="index" 
                                 @click="openPhotoBrowser(order.img_path, order.img_title, index)" 
                                 class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" 
                                 style="float: left; margin-bottom: 10px;">

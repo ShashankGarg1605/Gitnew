@@ -13,6 +13,7 @@
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
             <menu-item :icon="'users'" :url="'/AllUsers'" :label="'All Users'"></menu-item>
             <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
+            <menu-item :icon="'bug'" :url="'/PlaceServiceRequest'" :label="'Place Service Request'"></menu-item>
           </ul>
         </div>
 

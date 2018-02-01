@@ -13,6 +13,7 @@ import CommunicationPanel from "./components/pages/CommunicationPanel";
 import AllUsers from "./components/pages/AllUsers";
 import UserDetail from "./components/pages/UserDetail";
 import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
+import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
 
 export default [
   {
@@ -74,5 +75,9 @@ export default [
   {
     path: "/UnconvertedImageOrders/",
     component: UnconvertedImageOrders
+  },
+  {
+    path: "/PlaceServiceRequest/",
+    component: PlaceServiceRequest
   }
 ];

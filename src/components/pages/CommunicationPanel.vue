@@ -86,20 +86,22 @@
                         <f7-list-item accordion-item title="Documents" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <list-item :label="'Account opening form'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.account_opening_form">
+                                    <list-item :label="'Account opening form'" :leftColWidth="60" :rightColWidth="40" v-if="userDetails.account_opening_form">
                                         <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openForm(userDetails.account_opening_form)">
                                             <icon name="image"></icon> open
                                         </span>
                                     </list-item>
 
-                                    <list-item :label="'PAN card'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.pan_image">
-                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.pan_image, 'pan', userDetails.pan_number)">
+                                    <list-item :label="'PAN card'" :leftColWidth="60" :rightColWidth="40">
+                                        <span v-if="userDetails.pan_number && !userDetails.pan_image">{{userDetails.pan_number}}</span>
+                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.pan_image, 'pan', userDetails.pan_number)" v-if="userDetails.pan_image">
                                             <icon name="image"></icon> open
                                         </span>
                                     </list-item>
                                     
-                                    <list-item :label="'Shop license number'" :leftColWidth="70" :rightColWidth="30" v-if="userDetails.shop_licence_image">
-                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.shop_licence_image, 'shopLicense', userDetails.shop_licence_number)">
+                                    <list-item :label="'Shop license number'" :leftColWidth="60" :rightColWidth="40">
+                                        <span v-if="userDetails.shop_licence_number && !userDetails.shop_licence_image">{{userDetails.shop_licence_number}}</span>
+                                        <span class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;" @click="openPhotoBrowser(userDetails.shop_licence_image, 'shopLicense', userDetails.shop_licence_number)" v-if="userDetails.shop_licence_image">
                                             <icon name="image"></icon> open
                                         </span>
                                     </list-item>
@@ -449,7 +451,7 @@ export default {
       });
     },
     openPhotoBrowser(image, type, caption) {
-      if (!image || image.length < 1) return;
+      //   if (!image || image.length < 1) return;
       window.vm.$f7
         .photoBrowser({
           type: "popup",
@@ -464,8 +466,7 @@ export default {
         .open();
     },
     openForm(filename) {
-      if (window._pz.checkNested(window, "cordova", "InAppBrowser"))
-        window.cordova.InAppBrowser.open(`${window._pz.uploadsEndPt}userdocs/accountopeningform/${filename}`, '_system');
+      if (window._pz.checkNested(window, "cordova", "InAppBrowser")) window.cordova.InAppBrowser.open(`${window._pz.uploadsEndPt}userdocs/accountopeningform/${filename}`, "_system");
     }
   },
   beforeCreate() {

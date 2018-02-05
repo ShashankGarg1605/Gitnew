@@ -10,10 +10,6 @@
             </f7-nav-center>
         </f7-navbar>
 
-        <f7-fab color="pink" href="/PlaceImageOrder">
-            <f7-icon icon="icon-plus"></f7-icon>
-        </f7-fab>
-
         <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
             Found {{totalCount}} results
         </div>
@@ -111,7 +107,7 @@ export default {
 
       imageTitles = (imageTitles && imageTitles.length && imageTitles.split(";")) || [];
       imageTitles.pop();
-      
+
       var o = images.map((image, idx) => ({
         url: this.uploadsEndPt + image,
         caption: imageTitles[idx]

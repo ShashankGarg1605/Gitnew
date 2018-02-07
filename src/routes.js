@@ -14,6 +14,7 @@ import AllUsers from "./components/pages/AllUsers";
 import UserDetail from "./components/pages/UserDetail";
 import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
 import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
+import InitiateReturn from "./components/pages/InitiateReturn";
 
 export default [
   {
@@ -79,5 +80,9 @@ export default [
   {
     path: "/PlaceServiceRequest/",
     component: PlaceServiceRequest
+  },
+  {
+    path: "/InitiateReturn/",
+    component: InitiateReturn
   }
 ];

@@ -245,10 +245,10 @@ export default {
             });
           }
         })
-        .catch(_ => {
+        .catch(err => {
           window.vm.$f7.hidePreloader();
           this.images = null;
-          window._pz.errFunc2.call(this);
+          window._pz.errFunc2.call(this, err);
         });
     }
   },

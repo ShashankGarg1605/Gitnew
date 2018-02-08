@@ -38,7 +38,7 @@
             <span class="col-65 ">
               <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
                 <select name="biltyType" v-model="biltyType" v-validate.initial="biltyType" data-vv-rules="required">
-                  <option v-for="(biltyName, biltyIdx, index) in biltyTypes" :key="biltyIdx" :value="biltyIdx">{{biltyName}}</option>
+                  <option v-for="(biltyName, biltyIdx) in biltyTypes" :key="biltyIdx" :value="biltyIdx">{{biltyName}}</option>
                 </select>
                 <div class="item-content">
                   <div class="item-inner">

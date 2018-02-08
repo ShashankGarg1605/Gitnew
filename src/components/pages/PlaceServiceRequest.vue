@@ -1,87 +1,64 @@
 <template>
-    <f7-page name="PlaceServiceRequest">
+  <f7-page name="PlaceServiceRequest">
 
-        <f7-navbar>
-            <f7-nav-left>
-                <f7-link icon="icon-bars" open-panel="left"></f7-link>
-            </f7-nav-left>
-            <f7-nav-center>
-                Place Service Request
-            </f7-nav-center>
-        </f7-navbar>
+    <f7-navbar>
+      <f7-nav-left>
+        <f7-link icon="icon-bars" open-panel="left"></f7-link>
+      </f7-nav-left>
+      <f7-nav-center>
+        Place Service Request
+      </f7-nav-center>
+    </f7-navbar>
 
-        <section v-if="users">
-            <div class="list-block pz-margin-top0">
-                <a href="#" id="autocomplete-standalone-popup-2" class="item-link item-content autocomplete-opener" @click="openUserSelection()">
-                    <input type="hidden" v-model="userID">
-                    <div class="item-inner">
-                        <div class="item-title" v-if="!userID">Select User</div>
-                        <div class="item-after" :class="{'pz-max-width100': userID, 'pz-width100': userID}"></div>
-                    </div>
-                </a>
+    <section v-if="users">
+      <div class="list-block pz-margin-top0">
+        <a href="#" id="autocomplete-standalone-popup-2" class="item-link item-content autocomplete-opener" @click="openUserSelection()">
+          <input type="hidden" v-model="userID">
+          <div class="item-inner">
+            <div class="item-title" v-if="!userID">Select User</div>
+            <div class="item-after" :class="{'pz-max-width100': userID, 'pz-width100': userID}"></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section v-if="users && userID">
+
+      <div class="list-block">
+        <ul>
+
+          <single-select :value.sync="selectedReason" :placeholder="'Select Reason'" :opts="reasons" />
+
+          <li class="item-content pz-colr-inherit pz-cap">
+            <div class="item-media">
+              <icon name="pencil"></icon>
             </div>
-        </section>
-
-        <section v-if="users && userID">
-
-            <div class="list-block">
-                <ul>
-
-                    <li class="item-content button pz-colr-inherit pz-cap">
-                        <div class="item-media">
-                            <icon name="dot-circle-o"></icon>
-                        </div>
-                        <div class="item-inner pz-margin-l0">
-                            <a href="#" class="item-link smart-select pz-width100" data-back-on-select="true">
-                                <select v-model="selectedReason_id">
-                                    <option v-for="(r, i) in reasons" :key="i" :value="r.id">{{r.text}}</option>
-                                </select>
-                                <div class="item-content pz-padding-l0 pz-size-normal text-container">
-                                    <div>
-                                        <span>Select Reason</span>
-                                    </div>
-                                    <span v-if="selectedReason_id" class="selected-values">{{selectedReason_text}}</span>
-                                </div>
-                            </a>
-                            <div class="item-after">
-                                <span>
-                                    <icon name="chevron-right"></icon>
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="item-content pz-colr-inherit pz-cap">
-                        <div class="item-media">
-                            <icon name="pencil"></icon>
-                        </div>
-                        <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-                            <span class="pz-size-normal">
-                                Enter description
-                            </span>
-                            <textarea type="text" placeholder="Please enter as much detail as possible" v-model="description"></textarea>
-                        </div>
-                    </li>
-
-                    <li class="item-content pz-colr-inherit pz-cap" style="padding-right: 20px;     margin-top: 20px;">
-                        <div class="item-media">
-                            <icon name="image"></icon>
-                        </div>
-                        <image-uploader :maxCount="3" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imadeAdded($event)" @removed="imadeRemoved($event)" />
-                    </li>
-                    
-                </ul>
-                <div class="bottom">
-                    <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!selectedReason_id || !description">Submit</button>
-                </div>
+            <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
+              <span class="pz-size-normal">
+                Enter description
+              </span>
+              <textarea type="text" placeholder="Please enter as much detail as possible" v-model="description"></textarea>
             </div>
+          </li>
 
-            
-        </section>
+          <li class="item-content pz-colr-inherit pz-cap" style="padding-right: 20px;     margin-top: 20px;">
+            <div class="item-media">
+              <icon name="image"></icon>
+            </div>
+            <image-uploader :maxCount="3" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imadeAdded($event)" @removed="imadeRemoved($event)" />
+          </li>
 
-        <div class="color-gray pz-page-err" v-if="!users && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+        </ul>
+        <div class="bottom">
+          <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!selectedReason || !description">Submit</button>
+        </div>
+      </div>
 
-    </f7-page>
+    </section>
+
+    <div class="color-gray pz-page-err" v-if="!users && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+
+  </f7-page>
 </template>
 
 <style scoped>
@@ -118,6 +95,7 @@ textarea {
 
 <script>
 import ImageUploader from "../shared/ImageUploader";
+import FilterSingleSelect from "../FilterSingleSelect";
 
 export default {
   name: "PlaceServiceRequest",
@@ -128,19 +106,14 @@ export default {
       errMsg: null,
       autocompleteRef: null,
       reasons: [],
-      selectedReason_id: null,
+      selectedReason: null,
       description: null,
       images: []
     };
   },
   components: {
-    "image-uploader": ImageUploader
-  },
-  computed: {
-    selectedReason_text() {
-      let selectedReason = this.reasons.find(r => r.id === this.selectedReason_id);
-      return selectedReason && selectedReason.text;
-    }
+    "image-uploader": ImageUploader,
+    "single-select": FilterSingleSelect
   },
   methods: {
     getAllUsers() {
@@ -202,7 +175,10 @@ export default {
         .then(res => {
           console.log("res: ", res);
           if (res.ok) {
-            this.reasons = res.body;
+            this.reasons = res.body.map(r => ({
+              label: r.text,
+              value: r.id
+            }));
           }
         })
         .catch(window._pz.errFunc2.bind(this));
@@ -221,7 +197,7 @@ export default {
 
       var params = {
         reasonMaster: {
-          id: this.selectedReason_id
+          id: this.selectedReason
         },
         description: this.description,
         user: {
@@ -238,7 +214,6 @@ export default {
           window.vm.$f7.hidePreloader();
           if (res.ok) {
             window.vm.$f7.addNotification({ message: `Service request has been placed.`, hold: 5000 });
-            this.images = null;
             window.vm.$f7.mainView.router.load({
               url: "dashboard",
               reload: true
@@ -247,7 +222,6 @@ export default {
         })
         .catch(err => {
           window.vm.$f7.hidePreloader();
-          this.images = null;
           window._pz.errFunc2.call(this, err);
         });
     }
@@ -277,6 +251,7 @@ export default {
   },
   destroyed() {
     console.debug(this.$options.name + " destroyed");
+    this.images = null;
   }
 };
 </script>

@@ -258,8 +258,6 @@ export default {
                     window.vm.$f7.hidePreloader();
                     if (res.ok) {
                         window.vm.$f7.addNotification({ message: `Return has been initiated has been placed.`, hold: 5000 });
-                        this.biltyImage = null;
-                        this.debitNoteImage = null;
                         window.vm.$f7.mainView.router.load({
                             url: "dashboard",
                             reload: true
@@ -268,7 +266,6 @@ export default {
                 })
                 .catch(err => {
                     window.vm.$f7.hidePreloader();
-                    this.images = null;
                     window._pz.errFunc2.call(this, err);
                 });
         }
@@ -298,6 +295,8 @@ export default {
     },
     destroyed() {
         console.debug(this.$options.name + " destroyed");
+        this.biltyImage = null;
+        this.debitNoteImage = null;
     }
 };
 </script>

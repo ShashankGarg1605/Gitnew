@@ -2,7 +2,7 @@
   <f7-panel left :reveal="isiOS" :cover="isMaterial">
 
     <div class="page pz-padding-0 pz-margin-0">
-      <f7-navbar title="Menu"></f7-navbar>
+      <f7-navbar :title="$pzGlobalReactiveData.userName"></f7-navbar>
       <div class="page-content pz-width100 pz-padding-t44" style="display: flex; flex-direction: column; ">
 
         <div class="list-block">

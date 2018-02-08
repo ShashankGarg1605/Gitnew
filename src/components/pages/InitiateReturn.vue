@@ -27,7 +27,7 @@
             <div class="list-block">
                 <ul>
                     <single-select :value.sync="selectedWarehouse" :placeholder="'Select warehouse'" :opts="warehouses" />
-                    <date-range v-model="dates" :placeholder="'date range'" />
+                    <date-range v-model="dates" :placeholder="'Start date'" :range="false" :maxDateToday="true" />
                     <single-select :value.sync="selectedMethod" :placeholder="'Return method'" :opts="methods" />
 
                     <text-search :value.sync="biltyNb" :placeholder="'Bilty Number'" v-if="selectedMethod===1" />
@@ -145,7 +145,7 @@ export default {
             if (!this.selectedMethod ||
                 !this.selectedWarehouse ||
                 !this.debitNoteImage || !this.debitNoteImage.length ||
-                !this.dates || !this.dates.length || this.dates.length < 2 ||
+                !this.dates || !this.dates.length ||
                 !this.notes) return false;
             else if (this.selectedMethod === 1 &&
                 (!this.biltyImage || !this.biltyImage.length || !this.biltyNb)) return false;
@@ -227,33 +227,39 @@ export default {
                 .catch(window._pz.errFunc2.bind(this));
         },
         imageAdded(images, type) {
-            console.log("imageAdded: ", images);
             // just refer to the image uploader component's image array. Removing will happen automatically then.
             this[type] = images;
         },
-        submit(images) {
+        submit() {
             window.vm.$f7.showPreloader();
 
             var params = {
-                reasonMaster: {
-                    id: this.selectedWH_id
-                },
-                description: this.description,
                 user: {
                     id: this.userID
                 },
-                status: 0
+                warehouse: {
+                    id: this.selectedWarehouse
+                },
+                return_method: this.selectedMethod,
+                start_date: window.vm.moment(this.dates[0]).format('YYYY-MM-DD'),
+                description: this.notes,
+                debit_note: this.debitNoteImage[0].data
             };
 
-            if (this.images && this.images.length) params.images = this.images.map(image => ({ name: "", stringValue: image.data }));
+            if (this.selectedMethod === 1) {
+                params.billty_number = this.biltyNb;
+                params.billty = this.biltyImage[0].data;
+            }
+            console.log('params: ', params);
 
             window.vm.$http
-                .post(window._pz.apiEndPt + "sr", params)
+                .post(window._pz.apiEndPt + "returns", params)
                 .then(res => {
                     window.vm.$f7.hidePreloader();
                     if (res.ok) {
-                        window.vm.$f7.addNotification({ message: `Service request has been placed.`, hold: 5000 });
-                        this.images = null;
+                        window.vm.$f7.addNotification({ message: `Return has been initiated has been placed.`, hold: 5000 });
+                        this.biltyImage = null;
+                        this.debitNoteImage = null;
                         window.vm.$f7.mainView.router.load({
                             url: "dashboard",
                             reload: true

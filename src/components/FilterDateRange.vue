@@ -63,7 +63,19 @@ window.FilterComponents = {
             }
         }
     },
-    props: ['placeholder', 'value'],
+    // props: ['placeholder', 'value', 'range'],
+
+    props: {
+        placeholder: String,
+        range: {
+            default: true
+        },
+        maxDateToday: {
+            default: false
+        },
+        value: Array
+    },
+
     watch: {
         compvalue() {
             this.$emit('input', this.compvalue);
@@ -81,8 +93,9 @@ window.FilterComponents = {
         console.debug(this.$options.name + ' mounted');
         window.calendarInstance = window.f7.calendar({
             input: '#datepick',
-            rangePicker: true,
+            rangePicker: this.range === true || this.range === "true",
             dateFormat: 'd-M-yy',
+            maxDate: (this.maxDateToday === "true" || this.maxDateToday === true) ? new Date() : null,
             onChange: (p, values, displayValues) => {
                 this.compvalue = values;
             }

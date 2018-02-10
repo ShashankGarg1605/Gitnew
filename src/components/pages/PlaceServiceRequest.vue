@@ -35,7 +35,7 @@
             <div class="item-media">
               <icon name="image"></icon>
             </div>
-            <image-uploader :maxCount="3" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imadeAdded($event)" @removed="imadeRemoved($event)" />
+            <image-uploader :maxCount="3" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imadeAdded($event)" />
           </li>
 
         </ul>

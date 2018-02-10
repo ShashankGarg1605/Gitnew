@@ -27,7 +27,7 @@
                         </div>
                         <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
                             <span class="pz-size-normal">
-                                Enter Bilty Image
+                                Bilty Image
                             </span>
                             <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'biltyImage')" />
                         </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
                             <span class="pz-size-normal">
-                                Upload debit note
+                                Debit note
                             </span>
                             <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'debitNoteImage')" />
                         </div>
@@ -66,7 +66,7 @@
 
         </section>
 
-        <div class="color-gray pz-page-err" v-if="!users && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+        <div class="color-gray pz-page-err" v-if="!$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
 
     </f7-page>
 </template>
@@ -99,7 +99,6 @@ export default {
     name: "InitiateReturn",
     data() {
         return {
-            users: null,
             userID: null,
             errMsg: null,
             autocompleteRef: null,

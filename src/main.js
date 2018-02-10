@@ -77,14 +77,16 @@ Vue.http.interceptors.push(function(request, next) {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-// hide the side menu on the login page
 window.vm.$f7.onPageBeforeInit("*", page => {
   console.debug("onPageBeforeInit: ", page.name);
+
   // if we have created a cycle of pages, remove the pages in between
   // for eg. Q-A-X-Y-Z-A, then on opening this last A, it will become Q-A
   var his = window.vm.$f7.mainView.history;
   var idx = his.findIndex(page => page === his[his.length - 1]);
   if (idx >= 0) his.splice(idx, his.length - idx - 1);
+
+  // hide the side menu on the login page
   window.vm.$f7.params.swipePanel = page.name === "login" ? false : "left";
 });
 
@@ -140,7 +142,7 @@ function handleBackButton() {
   if (document.querySelector(".modal-in")) {
     return f7.closeModal();
   }
-  // If we have a back button, we want it to go back
+  // If we have a back view, we want it to go back
   if (window.vm.$f7.mainView.history.length > 1) {
     return window.vm.$f7.mainView.router.back();
   } else if (BackButton === 0) {
@@ -167,6 +169,7 @@ document.addEventListener("deviceready", () => {
 // window._pz.domain = "http://admin.prozo.com";
 window._pz.domain = "http://staging.prozo.com";
 // window._pz.domain = "http://192.168.1.11:8091";
+// window._pz.domain = "http://192.168.0.104:8091";
 window._pz.apiEndPt = window._pz.domain + "/api/v3/";
 if (localStorage.tenantData) {
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;
@@ -184,14 +187,6 @@ window._pz.err = {
   ERR_NET: "Please check your internet connection and try again.",
   ERR_CREDS: "You have entered an incorrect username and/or password",
   ERR_404: "No results found"
-};
-
-window._pz.errFunc = function(err) {
-  let errMsg;
-  if (err.status === 404) errMsg = window._pz.err.ERR_404;
-  else if (err.status === 0) errMsg = window._pz.err.ERR_NET;
-  else errMsg = `Uh oh! Something went wrong (Error ${err.status})`;
-  return errMsg;
 };
 
 window._pz.errFunc2 = function(err) {

@@ -20,18 +20,20 @@
                     <date-range v-model="dates" :placeholder="'Start date'" :range="false" :maxDateToday="true" />
                     <single-select :value.sync="selectedMethod" :placeholder="'Return method'" :opts="methods" />
 
-                    <text-search :value.sync="biltyNb" :placeholder="'Bilty Number'" v-if="selectedMethod===1" />
-                    <li class="item-content pz-colr-inherit pz-cap" v-if="selectedMethod===1">
-                        <div class="item-media">
-                            <icon name="image"></icon>
-                        </div>
-                        <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-                            <span class="pz-size-normal">
-                                Bilty Image
-                            </span>
-                            <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'biltyImage')" />
-                        </div>
-                    </li>
+                    <template v-if="selectedMethod === 1">
+                        <text-search :value.sync="biltyNb" :placeholder="'Bilty Number'" />
+                        <li class="item-content pz-colr-inherit pz-cap">
+                            <div class="item-media">
+                                <icon name="image"></icon>
+                            </div>
+                            <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
+                                <span class="pz-size-normal">
+                                    Bilty Image
+                                </span>
+                                <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'biltyImage')" />
+                            </div>
+                        </li>
+                    </template>
 
                     <li class="item-content pz-colr-inherit pz-cap">
                         <div class="item-media">

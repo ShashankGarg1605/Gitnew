@@ -10,7 +10,7 @@
     <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderDetails">
 
       <list-item :label="'Order ID'" :value="orderDetails.order_id" />
-      <list-item :label="'Buyer'" :value="orderDetails.user.buyer_name" :grayback="true" />
+      <list-item :label="'Buyer'" :value="orderDetails.user.buyer_name" />
       <list-item :label="'Mobile No'">
         <a @click="$pzGlobalReactiveData.phone(orderDetails.user.mobile)">{{orderDetails.user.mobile}}</a>
       </list-item>

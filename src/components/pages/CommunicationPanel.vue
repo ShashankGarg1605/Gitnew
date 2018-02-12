@@ -31,19 +31,19 @@
                         <f7-list-item accordion-item title="Basic Details" v-if="userDetails">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <list-item :label="'Name'" :value="userDetails.name" :grayback="true" />
+                                    <list-item :label="'Name'" :value="userDetails.name" />
                                     <list-item :label="'Owner Name'" :value="userDetails.owner_name" />
-                                    <list-item :label="'Account since'" :value="userDetails.created_date | dateFormat" :grayback="true" />
+                                    <list-item :label="'Account since'" :value="userDetails.created_date | dateFormat" />
                                     <list-item :label="'Mobile'">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.mobile)">{{userDetails.mobile}}</a>
                                     </list-item>
-                                    <list-item :label="'2nd Mobile'" :grayback="true">
+                                    <list-item :label="'2nd Mobile'">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.alternate_mobile)">{{userDetails.alternate_mobile}}</a>
                                     </list-item>
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
-                                    <list-item :label="'Email'" :value="userDetails.email" :grayback="true" />
+                                    <list-item :label="'Email'" :value="userDetails.email" />
                                     <list-item :label="'Last app use'" :value="userDetails.last_app_use | dateFormat" />
-                                    <list-item :label="'App version'" :value="userDetails.app_version" :grayback="true" />
+                                    <list-item :label="'App version'" :value="userDetails.app_version" />
                                     <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" />
                                     <!-- <list-item :label="'Account opening form'" :value="userDetails.account_opening_form" /> -->
                                 </f7-block>
@@ -62,7 +62,7 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Mgr name'" :value="userDetails.rm_name" />
-                                    <list-item :label="'Mgr mobile'" :grayback="true">
+                                    <list-item :label="'Mgr mobile'">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.rm_mobile)">{{userDetails.rm_mobile}}</a>
                                     </list-item>
                                 </f7-block>
@@ -75,7 +75,7 @@
                                     <list-item :label="'Total business till date'">
                                         <span>{{totalOrderValue | moneyFormat}}</span>
                                     </list-item>
-                                    <list-item :label="'Avg order value'" :grayback="true">
+                                    <list-item :label="'Avg order value'">
                                         <span>{{avgOrderValue | moneyFormat}}</span>
                                     </list-item>
                                     <list-item :label="'Total Orders till date'" :value="businessDetails && businessDetails.length" />
@@ -113,11 +113,11 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'Goods carrier'" :value="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.name" />
-                                    <list-item :label="'Carrier mobile'" :grayback="true" v-if="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile">
+                                    <list-item :label="'Carrier mobile'" v-if="userDetails.carrier_info && userDetails.carrier_info.carrier && userDetails.carrier_info.carrier.mobile">
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.carrier_info.carrier.mobile)">{{userDetails.carrier_info.carrier.mobile}}</a>
                                     </list-item>
                                     <list-item :label="'Avg duration of goods delivery'" :value="userDetails.carrier_info && userDetails.carrier_info.transporting_days + ' days'" />
-                                    <list-item :label="'Logistics paid by'" :value="userDetails.logisticStatus" :grayback="true" />
+                                    <list-item :label="'Logistics paid by'" :value="userDetails.logisticStatus" />
                                     <list-item :label="'Bilty reqments'" :value="userDetails.billty_code" />
                                 </f7-block>
                             </f7-accordion-content>
@@ -128,19 +128,19 @@
                                 <f7-block>
                                     <div v-if="registeredAddr" style="border: 1px dashed lightgrey;">
                                         <list-item :label="'Address type'" :value="'Registered'" />
-                                        <list-item :label="'Name'" :value="registeredAddr.name" :grayback="true" />
+                                        <list-item :label="'Name'" :value="registeredAddr.name" />
                                         <list-item :label="'Address'" :value="registeredAddr.address" />
-                                        <list-item :label="'Landmark'" :value="registeredAddr.landmark" :grayback="true" />
+                                        <list-item :label="'Landmark'" :value="registeredAddr.landmark" />
                                         <list-item :label="'City (state)'" :value="registeredAddr.city.name + ' (' + registeredAddr.city.state.name + ')'" />
-                                        <list-item :label="'Pincode'" :value="registeredAddr.pincode" :grayback="true" />
+                                        <list-item :label="'Pincode'" :value="registeredAddr.pincode" />
                                     </div>
                                     <div v-if="shippingAddr" style="border: 1px dashed lightgrey; margin-top: 8px;">
                                         <list-item :label="'Address type'" :value="'Shipping'" />
-                                        <list-item :label="'Name'" :value="shippingAddr.name" :grayback="true" />
+                                        <list-item :label="'Name'" :value="shippingAddr.name" />
                                         <list-item :label="'Address'" :value="shippingAddr.address" />
-                                        <list-item :label="'Landmark'" :value="shippingAddr.landmark" :grayback="true" />
+                                        <list-item :label="'Landmark'" :value="shippingAddr.landmark" />
                                         <list-item :label="'City (state)'" :value="shippingAddr.city.name + ' (' + shippingAddr.city.state.name + ')'" />
-                                        <list-item :label="'Pincode'" :value="shippingAddr.pincode" :grayback="true" />
+                                        <list-item :label="'Pincode'" :value="shippingAddr.pincode" />
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
@@ -150,7 +150,7 @@
                             <f7-accordion-content>
                                 <f7-block>
                                     <list-item :label="'No. of returns'" :value="returnDetails.length" />
-                                    <list-item :label="'Total value till date'" :value="returnDetails.reduce((sum,v)=>sum+v.approved_value, 0) | moneyFormat" :grayback="true" />
+                                    <list-item :label="'Total value till date'" :value="returnDetails.reduce((sum,v)=>sum+v.approved_value, 0) | moneyFormat" />
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
@@ -160,13 +160,13 @@
                                 <f7-block>
                                     <template v-if="lastPaymentDetails">
                                         <list-item :label="'Last paid amount'" :value="lastPaymentDetails.amount | moneyFormat" />
-                                        <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" :grayback="true" />
+                                        <list-item :label="'Mode of last payment'" :value="lastPaymentDetails.method" />
                                         <list-item :label="'Date of last payment'" :value="lastPaymentDetails.recieved_date | dateFormat" />
                                     </template>
                                     <template v-if="userDetails">
                                         <list-item :label="'Overall outstanding'" :value="userDetails.payment_due | moneyFormat" />
-                                        <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" :grayback="true" />
-                                        <list-item :label="'Credit days'" :value="userDetails.credit_period + ' days'" :grayback="true" />
+                                        <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat" />
+                                        <list-item :label="'Credit days'" :value="userDetails.credit_period + ' days'" />
                                         <list-item :label="'Credit limit'" :value="userDetails.credit_limit | moneyFormat" />
                                         <list-item :label="'Due after last payment'" :value="userDetails.collection_due | moneyFormat" />
                                     </template>
@@ -184,53 +184,53 @@
                                         <span style="padding-left: 5px;">Current%</span>
                                     </div>
                                     <div class="color-gray">(Publisher Name)</div>
-                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" :grayback="index%2==0" :leftColWidth="70" :rightColWidth="30" />
+                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" 2==0 " :leftColWidth="70 " :rightColWidth="30 " />
 
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="Conversation with Buyer" v-if="buyerConversations">
+                        <f7-list-item accordion-item title="Conversation with Buyer " v-if="buyerConversations ">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
-                                    <div v-for="(msg, index) in buyerConversations" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
-                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                    <span class="color-gray pz-size-small ">Only latest 10 results are shown</span>
+                                    <div v-for="(msg, index) in buyerConversations " :key="index " class="message " :class="{ 'pz-bg-gray-lightest': index%2==0} ">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold; ">
                                             <span>{{msg.message_datetime | dateFormat}}</span>
                                             <span>{{msg.caller.buyer_name}}</span>
                                         </div>
                                         <div>{{msg.reason.text}}</div>
-                                        <div style="font-size: smaller;" v-html="msg.message"></div>
+                                        <div style="font-size: smaller; " v-html="msg.message "></div>
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="Recent Service Requests" v-if="serviceRequests">
+                        <f7-list-item accordion-item title="Recent Service Requests " v-if="serviceRequests ">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <div v-for="(sr, index) in serviceRequests" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
-                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                    <div v-for="(sr, index) in serviceRequests " :key="index " class="message " :class="{ 'pz-bg-gray-lightest': index%2==0} ">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold; ">
                                             <span>{{sr.created_date | dateFormat}}</span>
                                             <span>{{$pzGlobalReactiveData.serviceReqMap[sr.status]}}</span>
                                         </div>
                                         <div>{{sr.reasonMaster.text}}</div>
-                                        <div style="font-size: smaller;" v-html="sr.description"></div>
+                                        <div style="font-size: smaller; " v-html="sr.description "></div>
                                     </div>
                                 </f7-block>
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="Publisher Wise Sales (last 1 year)" v-if="publisherSales">
+                        <f7-list-item accordion-item title="Publisher Wise Sales (last 1 year) " v-if="publisherSales ">
                             <f7-accordion-content>
                                 <f7-block>
-                                    <span class="color-gray pz-size-small">Only latest 10 results are shown</span>
-                                    <div v-for="(o, index) in publisherSales" :key="index" class="message" :class="{'pz-bg-gray-lightest': index%2==0}">
-                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold;">
+                                    <span class="color-gray pz-size-small ">Only latest 10 results are shown</span>
+                                    <div v-for="(o, index) in publisherSales " :key="index " class="message " :class="{ 'pz-bg-gray-lightest': index%2==0} ">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold; ">
                                             <span>{{o.sales_value | moneyFormat}}</span>
                                             <span>{{o.quantity}} books</span>
                                         </div>
-                                        <div style="display: flex; justify-content: space-between; font-size: smaller;">
+                                        <div style="display: flex; justify-content: space-between; font-size: smaller; ">
                                             <span>{{o.publisher.name}}</span>
                                             <span>({{o.publisher.code}})</span>
                                         </div>
@@ -239,7 +239,7 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="View Orders" @click="openOrders()">
+                        <f7-list-item accordion-item title="View Orders " @click="openOrders() ">
                             <f7-accordion-content />
                         </f7-list-item>
 
@@ -247,7 +247,7 @@
                 </section>
 
             </f7-page-content>
-            <!-- <f7-page-content tab id="tab-2">Under construction...</f7-page-content> -->
+            <!-- <f7-page-content tab id="tab-2 ">Under construction...</f7-page-content> -->
         </f7-tabs>
 
     </f7-page>

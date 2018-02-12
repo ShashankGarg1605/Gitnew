@@ -1,5 +1,5 @@
 <template>
-    <div class="row pz-padding-tb-4 pz-padding-l16 pz-word-wrap-brk" v-bind:class="{ 'pz-bg-gray-lightest': grayback}">
+    <div class="list-item row pz-padding-tb-4 pz-padding-l16 pz-word-wrap-brk">
         <span class="color-gray pz-weight-thin" :class="'col-'+leftColWidth" style="text-transform: capitalize;" v-html="label"></span>
         <span :class="'col-'+rightColWidth">
             <span v-if="!hasCustomValueSlot">{{value}}</span>
@@ -10,6 +10,12 @@
     </div>
 </template>
 
+<style scoped>
+.list-item:nth-child(even) {
+  background: #fafafa;
+}
+</style>
+
 <script>
 export default {
     props: {
@@ -17,7 +23,6 @@ export default {
         value: {
             default: '(Not available)'
         },
-        grayback: Boolean,
         leftColWidth: {
             default: 35
         },

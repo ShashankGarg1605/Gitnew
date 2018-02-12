@@ -23,6 +23,7 @@
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.1.0",
     "cordova-plugin-console": "^1.0.7",
+    "cordova-plugin-inappbrowser": "^2.0.2",
     "cordova-plugin-splashscreen": "^3.1.0",
     "cordova-plugin-statusbar": "^2.2.3",
     "cordova-plugin-whitelist": "^1.2.2",
@@ -128,7 +129,8 @@
         "CAMERA_USAGE_DESCRIPTION": "upload an order bill using camera",
         "PHOTOLIBRARY_USAGE_DESCRIPTION": "upload an order bill using photo library"
       },
-      "call-number": {}
+      "call-number": {},
+      "cordova-plugin-inappbrowser": {}
     }
   }
 }

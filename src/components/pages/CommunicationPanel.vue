@@ -184,7 +184,7 @@
                                         <span style="padding-left: 5px;">Current%</span>
                                     </div>
                                     <div class="color-gray">(Publisher Name)</div>
-                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" 2==0 " :leftColWidth="70 " :rightColWidth="30 " />
+                                    <list-item v-for="(d, index) in userDiscountDetails" :key="index" :label="d.publisherCategory.category_name + ' <br>(' + d.publisher.name + ')'" :value=" '('+d.discount+') '+d.publisherCategory.distributor_discount" :leftColWidth="70" :rightColWidth="30" />
 
                                 </f7-block>
                             </f7-accordion-content>

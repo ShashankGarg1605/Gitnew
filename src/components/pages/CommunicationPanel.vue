@@ -470,7 +470,9 @@ export default {
                 .open();
         },
         openForm(filename) {
-            if (window._pz.checkNested(window, "cordova", "InAppBrowser")) window.cordova.InAppBrowser.open(`${window._pz.uploadsEndPt}userdocs/accountopeningform/${filename}`, "_system");
+            const url = `${window._pz.uploadsEndPt}userdocs/accountopeningform/${filename}`;
+            if (window._pz.checkNested(window, "cordova", "InAppBrowser")) window.cordova.InAppBrowser.open(url, "_system");
+            else window.open(url, '_newtab');
         }
     },
     beforeCreate() {

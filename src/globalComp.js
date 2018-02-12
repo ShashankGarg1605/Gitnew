@@ -70,8 +70,8 @@ export default new Vue({
       a.open();
     },
     phone(mob) {
-      if (window.plugins && window.plugins.CallNumber)
-        window.plugins.CallNumber.callNumber(() => {}, () => {}, mob, true);
+      if (window.plugins && window.plugins.CallNumber) window.plugins.CallNumber.callNumber(() => {}, () => {}, mob, true);
+      else document.location.href = "tel:" + mob;
     },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();

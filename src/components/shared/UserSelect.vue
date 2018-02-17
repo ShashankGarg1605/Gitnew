@@ -1,6 +1,6 @@
 <template>
     <div class="list-block pz-margin-top0">
-        <a href="#" id="autocomplete-standalone-popup-2" class="item-link item-content autocomplete-opener" @click="openUserSelection()">
+        <a href="#" id="autocomplete-standalone-popup-2" class="item-link item-content autocomplete-opener" @click="openUserSelection()" :disabled="!users || !users.length">
             <input type="hidden" v-model="userID">
             <div class="item-inner">
                 <div class="item-title" v-if="!userID">Select User</div>

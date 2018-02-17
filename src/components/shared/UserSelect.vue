@@ -75,6 +75,8 @@ export default {
             });
         },
         openUserSelection() {
+            if (!this.users) return this.getAllUsers();
+
             window.f7.params.hideNavbarOnPageScroll = false;
             this.autocompleteRef.open();
         }

@@ -46,7 +46,7 @@
 
     </section>
 
-    <div class="color-gray pz-page-err" v-if="!$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+    <div class="color-gray pz-page-err" v-if="errMsg && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
 
   </f7-page>
 </template>

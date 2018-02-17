@@ -134,11 +134,7 @@ export default {
     },
     computed: {
         canSubmit() {
-            if (!this.selectedMethod ||
-                !this.selectedWarehouse ||
-                !this.debitNoteImage || !this.debitNoteImage.length ||
-                !this.dates || !this.dates.length ||
-                !this.notes) return false;
+            if (!this.selectedMethod || !this.selectedWarehouse || !this.notes) return false;
             else if (this.selectedMethod === 1 &&
                 (!this.biltyImage || !this.biltyImage.length || !this.biltyNb)) return false;
             else return true;

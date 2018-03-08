@@ -40,7 +40,7 @@
 
         </ul>
         <div class="bottom">
-          <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!selectedReason || !description">Submit</button>
+          <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!selectedReason">Submit</button>
         </div>
       </div>
 

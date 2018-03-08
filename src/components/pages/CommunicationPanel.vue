@@ -41,7 +41,10 @@
                                         <a @click="$pzGlobalReactiveData.phone(userDetails.alternate_mobile)">{{userDetails.alternate_mobile}}</a>
                                     </list-item>
                                     <list-item :label="'Type'" :value="userDetails.buyerType" />
-                                    <list-item :label="'Email'" :value="userDetails.email" />
+                                    <list-item :label="'Email'" :value="userDetails.email">
+                                        <a @click="$pzGlobalReactiveData.email(userDetails.email)">{{userDetails.email}}</a>
+                                        <!-- <a :href="'mailto:'+userDetails.email">{{userDetails.email}}</a> -->
+                                    </list-item>
                                     <list-item :label="'Last app use'" :value="userDetails.last_app_use | dateFormat" />
                                     <list-item :label="'App version'" :value="userDetails.app_version" />
                                     <list-item :label="'Account type'" :value="$pzGlobalReactiveData.accountTypeMap[userDetails.account_type]" />

@@ -73,6 +73,11 @@ export default new Vue({
       if (window.plugins && window.plugins.CallNumber) window.plugins.CallNumber.callNumber(() => {}, () => {}, mob, true);
       else document.location.href = "tel:" + mob;
     },
+    email(email, subject) {
+      var url = `mailto:${email}`;
+      if (subject) url += `?subject=${subject}`;
+      window.location.href = url;
+    },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();
     }

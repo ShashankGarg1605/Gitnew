@@ -76,7 +76,9 @@ export default new Vue({
     email(email, subject) {
       var url = `mailto:${email}`;
       if (subject) url += `?subject=${subject}`;
-      window.location.href = url;
+      // window.location.href = url;
+
+      window.open(url, '_system');
     },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();

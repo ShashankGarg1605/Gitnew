@@ -19,6 +19,7 @@ export default {
             userID: null
         };
     },
+    props: ['default'],
     watch: {
         userID() {
             this.$emit('update:value', this.userID);
@@ -33,6 +34,10 @@ export default {
                     if (res.ok) {
                         this.users = res.body;
                         this.setUserSelection();
+                        if (this.default) {
+                            const selectedUser = this.users.find(user => user.id === this.default);
+                            if (selectedUser) this.showSelectedValue(null, [selectedUser]);
+                        }
                     }
                 })
                 .catch(window._pz.errFunc2.bind(this));
@@ -47,28 +52,13 @@ export default {
                 autoFocus: true,
                 valueProperty: "id",
                 source(autocomplete, query, render) {
-                    if (query.length < 3) return;
-                    let results = [];
-                    if (query && query.length === 0) {
-                        render(results);
-                        return;
-                    }
-                    // Find matched items
-                    for (var i = 0; i < that.users.length; i++) {
-                        if (that.users[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) results.push(that.users[i]);
-                    }
-                    // Render items by passing array with result items
+                    if (!query || !query.length || query.length < 3) return;
+
+                    query = query.toLowerCase();
+                    const results = that.users.filter(user => user.name.toLowerCase().indexOf(query) !== -1);
                     render(results);
                 },
-                onChange(autocomplete, value) {
-                    // Add item text value to item-after
-                    window.vm
-                        .Dom7("#autocomplete-standalone-popup-2")
-                        .find(".item-after")
-                        .text(value[0].name);
-                    // Add item value to input value
-                    that.userID = value[0].id;
-                },
+                onChange: this.showSelectedValue.bind(that),
                 onClose() {
                     window.f7.params.hideNavbarOnPageScroll = true;
                 }
@@ -79,6 +69,15 @@ export default {
 
             window.f7.params.hideNavbarOnPageScroll = false;
             this.autocompleteRef.open();
+        },
+        showSelectedValue(autocomplete, value) {
+            // Add item text value to item-after
+            window.vm
+                .Dom7("#autocomplete-standalone-popup-2")
+                .find(".item-after")
+                .text(value[0].name);
+            // Add item value to input value
+            this.userID = value[0].id;
         }
     },
     beforeCreate() {

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     defaultPage() {
-      return window.localStorage.authToken ? 'dashboard' : '/';
+      return window.localStorage.authToken ? 'LandingPage' : '/';
     }
   },
   computed: {

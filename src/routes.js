@@ -15,11 +15,16 @@ import UserDetail from "./components/pages/UserDetail";
 import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
 import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
 import InitiateReturn from "./components/pages/InitiateReturn";
+import LandingPage from "./components/pages/LandingPage";
 
 export default [
   {
     path: "/",
     component: Login
+  },
+  {
+    path: "/LandingPage/",
+    component: LandingPage
   },
   {
     path: "/dashboard/",
@@ -85,4 +90,5 @@ export default [
     path: "/InitiateReturn/",
     component: InitiateReturn
   }
+
 ];

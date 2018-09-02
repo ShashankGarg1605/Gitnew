@@ -18,12 +18,12 @@
     <section class="links">
       <div class="left">
         <div><button @click="openPage('allorders')">ISBN Orders</button></div>
-        <div><button @click="openPage('AllUsers')">Buyers</button></div>
-        <div><button @click="openPage('CommunicationPanel')">Communication Panel</button></div>
+        <div><button @click="openPage('AllUsers')">Buyer Management</button></div>
+        <div><button @click="openPage('CommunicationPanel')">Communications Panel</button></div>
       </div>
       <div class="right">
         <div><button @click="openPage('AllImageOrders')">Image Orders</button></div>
-        <div><button @click="comingSoon()">Inventory</button></div>
+        <div><button @click="comingSoon()">Live Inventory</button></div>
         <div><button @click="openPage('PlaceServiceRequest')">Place Service Request</button></div>
       </div>      
     </section>
@@ -64,7 +64,7 @@
 .links button {
   background: #009688;
   outline: none;
-  padding: 15px;
+  /* padding: 15px; */
   border-radius: 15px;
   margin: 10px;
   font-size: 1rem;
@@ -74,10 +74,11 @@
   text-shadow: 0px 1px 1px black;
   width: 140px;
   transition: all 0.3s ease;
+  height: 70px;
 }
 .hero button:active {
   box-shadow: none;
-  background: #E0E0E0;
+  background: #e0e0e0;
 }
 .links button:active {
   box-shadow: none;

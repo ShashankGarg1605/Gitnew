@@ -196,7 +196,7 @@ export default {
             window.localStorage.userName = res.body.buyer_name;
             window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
 
-            window.vm.$f7.mainView.router.loadPage("dashboard");
+            window.vm.$f7.mainView.router.loadPage("LandingPage");
           } else return Promise.reject('You are not an admin.');
         })
 

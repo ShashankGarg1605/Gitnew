@@ -1,8 +1,8 @@
 <template>
     <f7-page name="AllImageOrders" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
 
-        <f7-navbar>
-            <f7-nav-left>
+        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
+            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>
             <f7-nav-center>
@@ -47,11 +47,8 @@
                                 <div class="col-70">{{order.created_date | dateFormat}}</div>
                             </div>
                             <div v-if="order.listOfImages && order.listOfImages.length" style="width:100%;">
-                             <!-- style="display: flex; width: 100%; justify-content: flex-start;"> -->
-                                <span v-for="(image, index) in order.listOfImages" :key="index" 
-                                @click="openPhotoBrowser(order.listOfImages, index)" 
-                                class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" 
-                                style="float: left; margin-bottom: 10px;">
+                                <!-- style="display: flex; width: 100%; justify-content: flex-start;"> -->
+                                <span v-for="(image, index) in order.listOfImages" :key="index" @click="openPhotoBrowser(order.listOfImages, index)" class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" style="float: left; margin-bottom: 10px;">
                                     <icon name="image"></icon>#{{index+1}}
                                     <!-- <img :src="uploadsEndPt + image.name" class="pz-margin-r16 image"> -->
                                 </span>

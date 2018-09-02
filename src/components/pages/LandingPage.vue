@@ -12,19 +12,19 @@
     <!-- Scrollable page content-->
     <section class="hero">
       <div>
-        <button>Dashboard</button>
+        <button @click="openPage('dashboard')">Dashboard</button>
       </div>
     </section>
     <section class="links">
       <div class="left">
-        <div><button>ISBN Orders</button></div>
-        <div><button>Buyers</button></div>
-        <div><button>Communication Panel</button></div>
+        <div><button @click="openPage('allorders')">ISBN Orders</button></div>
+        <div><button @click="openPage('AllUsers')">Buyers</button></div>
+        <div><button @click="openPage('CommunicationPanel')">Communication Panel</button></div>
       </div>
       <div class="right">
-        <div><button>Image Orders</button></div>
-        <div><button>Inventory</button></div>
-        <div><button>Place Service Request</button></div>
+        <div><button @click="openPage('AllImageOrders')">Image Orders</button></div>
+        <div><button @click="comingSoon()">Inventory</button></div>
+        <div><button @click="openPage('PlaceServiceRequest')">Place Service Request</button></div>
       </div>      
     </section>
   </f7-page>
@@ -74,7 +74,14 @@ export default {
       title: "LandingPage Page"
     };
   },
-  methods: {},
+  methods: {
+    openPage(page) {
+      window.vm.$f7.mainView.router.loadPage(page);
+    },
+    comingSoon(){
+      window.vm.$f7.addNotification({ message: 'This feature is coming soon!', hold: 2000 });
+    }
+  },
   beforeCreate() {
     console.debug(this.$options.name + " beforeCreate");
   },

@@ -5,7 +5,7 @@
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
       <f7-nav-center style="display: flex;align-items: center;">
-        <span>LandingPage</span>
+        <span>Home</span>
         <img style="height: 30px;padding-left: 30px;" :src="tenantImage" />
       </f7-nav-center>
     </f7-navbar>

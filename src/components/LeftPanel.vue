@@ -16,6 +16,7 @@
             <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
             <menu-item :icon="'bug'" :url="'/PlaceServiceRequest'" :label="'Place Service Request'"></menu-item>
             <menu-item :icon="'backward'" :url="'/InitiateReturn'" :label="'Initiate Return'"></menu-item>
+	    <menu-item :icon="'backward'" :url="'/OrderVerification'" :label="'Order Verification'"></menu-item>
           </ul>
         </div>
 

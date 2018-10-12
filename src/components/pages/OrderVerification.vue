@@ -32,7 +32,16 @@ export default {
     return {
       title: "Dashboard Page",
       orderId: null,
-      orders: null
+      orders: [
+        {
+          id: "xxx",
+          city: "delhi"
+        },
+        {
+          id: "yyy",
+          city: "w delhi"
+        }
+      ]
     };
   },
   methods: {
@@ -52,7 +61,7 @@ export default {
       window.vm.$f7.mainView.router.load({
         url: "OrderSelect",
         reload: true,
-        context: { comps: this.orders }
+        context: { orders: this.orders }
       });
     }
   },

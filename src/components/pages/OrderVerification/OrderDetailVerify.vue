@@ -14,13 +14,56 @@
                 <list-item :label="'Order ID'" :value="orderData.id" />
                 <list-item :label="'City'" :value="city" />
                 <list-item :label="'Total Books'" :value="nbTotalBooks" />
-                <list-item :label="'Total Books'" :value="nbUniqueTitles" />
+                <list-item :label="'Unique Titles'" :value="nbUniqueTitles" />
+                <div class="btn-container">
+                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray">Scan to verify</button>
+                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray">Search to verify</button>
+                    <button v-if="verifiedPct >= VERIFICATION_THRESHOLD" submit class="button button-fill button-raised color-teal">Complete verification</button>
+                </div>
             </section>
+            <div class="verified-pct">
+                <span class="text">Verification %</span>
+                <span class="pct">{{this.verifiedPct}}</span>
+                <!-- <div class="progress"></div> -->
+                <f7-progressbar :progress="this.verifiedPct" :color="this.progressBarColor"></f7-progressbar>
+            </div>
+
         </main>
     </f7-page>
 </template>
 
 <style scoped>
+.btn-container {
+  display: flex;
+  flex-direction: column;
+}
+.btn-container button {
+  margin: 10px 40px;
+}
+.verified-pct {
+  box-sizing: border-box;
+  background: antiquewhite;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.verified-pct .text {
+  color: white;
+  z-index: 1;
+}
+.verified-pct .pct {
+  color: white;
+  z-index: 1;
+}
+.progressbar {
+  position: absolute;
+  height: -webkit-fill-available;
+  top: 0;
+  left: 0;
+}
 </style>
 
 <script>
@@ -35,7 +78,8 @@ export default {
     data() {
         return {
             title: "OrderDetailVerify",
-            orderData: null
+            orderData: null,
+            VERIFICATION_THRESHOLD: 70
         };
     },
     computed: {
@@ -49,10 +93,14 @@ export default {
             return window._pz.checkNested(this, "orderData", "orderProduct") ? this.orderData.orderProduct.length : null;
         },
         verifiedPct() {
+            // return 70;
             if (!window._pz.checkNested(this, "orderData", "orderProduct")) return null;
 
             const verifiedQty = this.orderData.orderProduct.reduce((sum, book) => sum + book.verified_quantity, 0);
             return verifiedQty / this.nbUniqueTitles * 100;
+        },
+        progressBarColor() {
+            return this.verifiedPct < this.VERIFICATION_THRESHOLD ? 'red' : 'green';
         }
     },
     methods: {

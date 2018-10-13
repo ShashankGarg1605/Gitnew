@@ -13,13 +13,17 @@
       <form @submit.prevent="onSubmit">
         <label for="order-id">Enter Order ID:</label>
         <input type="number" v-model="orderId" name="order-id" placeholder="just last 4 digits">
-        <button submit class="button button-big button-fill button-raised color-teal pz-width100">Search</button>
+        <button submit class="button button-fill button-raised color-teal ">Search</button>
       </form>
     </main>
   </f7-page>
 </template>
 
 <style scoped>
+button {
+  margin: 0 auto;
+  padding: 0px 40px;
+}
 </style>
 
 <script>

@@ -91,9 +91,9 @@ export default {
             opts: [
               { label: "All", value: null },
               { label: "Received", value: "101" },
-              { label: "Confirmed", value: "102" },
-              { label: "Being Procured", value: "103" },
-              { label: "Being Packed", value: "104" },
+              // { label: "Confirmed", value: "102" },
+              { label: "Being Procured", value: "102" },
+              { label: "Being Packed", value: "103" },
               { label: "Partially Dispatched", value: "105" },
               { label: "Fully Dispatched", value: "114" },
               { label: "Fulfilled", value: "106" },

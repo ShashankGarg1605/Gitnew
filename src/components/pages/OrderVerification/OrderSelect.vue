@@ -28,7 +28,7 @@
                                     <div class="col-70">{{$pzGlobalReactiveData.verificationStatusMap[order.verification_status]}}</div>
                                 </div>
                             </div>
-                            <i class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
+                            <i v-if="order && order.verification_status !== 2" class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
                         </li>
                     </ul>
                 </div>
@@ -36,8 +36,11 @@
             </f7-list>
             <f7-popover :id="randomID">
                 <div class="popover-inner">
-                    <div class="list-block">
-                        <a @click="getOrderDetails()" class="list-button item-link close-popover">Select</a>
+                    <div v-if="clickedOrder && clickedOrder.verification_status === 0" class="list-block">
+                        <a @click="startVerification()" class="list-button item-link close-popover">Start verification</a>
+                    </div>
+                    <div v-if="clickedOrder && clickedOrder.verification_status === 1" class="list-block">
+                        <a @click="getOrderDetails()" class="list-button item-link close-popover">Resume verification</a>
                     </div>
                 </div>
             </f7-popover>
@@ -69,12 +72,19 @@ export default {
             window.vm.$f7.popover(window.Dom7(popupID), e.target);
             // window.Dom7(this.randomID).data('pz-id', id);
         },
+        startVerification() {
+            window.vm.$http
+                .patch(`${window._pz.apiEndPt}orders?updateType=verification&id=${this.clickedOrder.id}&verification_status=1`)
+                .then(res => {
+                    if (res.ok) this.getOrderDetails();
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         getOrderDetails() {
             window.vm.$http
                 .get(`${window._pz.apiEndPt}orders/${this.clickedOrder.id}`)
                 .then(res => {
                     if (res.ok) {
-                        console.log("res.body: ", res.body);
                         const orderData = res.body;
                         window.vm.$f7.mainView.router.load({
                             url: "OrderDetailVerify",

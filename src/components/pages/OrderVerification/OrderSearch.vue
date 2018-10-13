@@ -12,7 +12,7 @@
     <main>
       <form @submit.prevent="onSubmit">
         <label for="order-id">Enter Order ID:</label>
-        <input type="number" v-model="orderId" name="order-id" placeholder="just last 4 digits">
+        <input type="number" v-model="orderId" name="order-id" placeholder="just last few digits">
         <button submit class="button button-fill button-raised color-teal ">Search</button>
       </form>
     </main>
@@ -20,8 +20,19 @@
 </template>
 
 <style scoped>
+form {
+  padding: 50px 20px;
+}
+
+input {
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 5px;
+}
+
 button {
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 0px 40px;
 }
 </style>

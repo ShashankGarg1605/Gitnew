@@ -20,13 +20,13 @@
         <div><button @click="openPage('allorders')">ISBN Orders</button></div>
         <div><button @click="openPage('AllUsers')">Buyer Management</button></div>
         <div><button @click="openPage('CommunicationPanel')">Communications Panel</button></div>
-	<div><button @click="openPage('OrderVerification')">Order Verification</button></div>
       </div>
       <div class="right">
         <div><button @click="openPage('AllImageOrders')">Image Orders</button></div>
-        <div><button @click="comingSoon()">Live Inventory</button></div>
+        <!-- <div><button @click="comingSoon()">Live Inventory</button></div> -->
         <div><button @click="openPage('PlaceServiceRequest')">Place Service Request</button></div>
-      </div>      
+        <div><button @click="openPage('OrderSearch')">Order Verification</button></div>
+      </div>
     </section>
   </f7-page>
 </template>

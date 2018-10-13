@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="Dashboard">
+  <f7-page name="OrderSearch">
     <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
@@ -13,10 +13,7 @@
       <form @submit.prevent="onSubmit">
         <label for="order-id">Enter Order ID:</label>
         <input type="number" v-model="orderId" name="order-id" placeholder="just last 4 digits">
-        <button
-          submit
-          class="button button-big button-fill button-raised color-teal pz-width100"
-        >Search</button>
+        <button submit class="button button-big button-fill button-raised color-teal pz-width100">Search</button>
       </form>
     </main>
   </f7-page>
@@ -27,21 +24,21 @@
 
 <script>
 export default {
-  name: "OrderVerification",
+  name: "OrderSearch",
   data() {
     return {
-      title: "Dashboard Page",
-      orderId: null,
-      orders: [
-        {
-          id: "xxx",
-          city: "delhi"
-        },
-        {
-          id: "yyy",
-          city: "w delhi"
-        }
-      ]
+      title: "OrderSearch",
+      orderId: null
+      // orders: [
+      //   {
+      //     id: "xxx",
+      //     city: "delhi"
+      //   },
+      //   {
+      //     id: "yyy",
+      //     city: "w delhi"
+      //   }
+      // ]
     };
   },
   methods: {
@@ -50,19 +47,21 @@ export default {
       if (this.orderId) this.fetchOrders();
     },
     fetchOrders() {
-      // window.vm.$http
-      //   .get(`${window._pz.apiEndPt}orders/${this.orderId}`)
-      //   .then(res => {
-      //     if (res.ok) {
-      //       console.log("res.body: ", res.body);
-      //     }
-      //   })
-      //   .catch(window._pz.errFunc2.bind(this));
-      window.vm.$f7.mainView.router.load({
-        url: "OrderSelect",
-        reload: true,
-        context: { orders: this.orders }
-      });
+      window.vm.$http
+        .get(`${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=20&offset=0&status=103&order_id=${this.orderId}`)
+        .then(res => {
+          if (res.ok) {
+            console.log("res.body: ", res.body);
+            const orders = res.body;
+            window.vm.$f7.mainView.router.load({
+              url: "OrderSelect",
+              reload: true,
+              context: { orders }
+            });
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+
     }
   },
   beforeCreate() {

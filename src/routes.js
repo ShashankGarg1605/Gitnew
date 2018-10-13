@@ -16,8 +16,9 @@ import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
 import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
 import InitiateReturn from "./components/pages/InitiateReturn";
 import LandingPage from "./components/pages/LandingPage";
-import OrderVerification from "./components/pages/OrderVerification";
+import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
+import OrderDetailVerify from "./components/pages/OrderVerification/OrderDetailVerify";
 
 export default [
   {
@@ -93,11 +94,15 @@ export default [
     component: InitiateReturn
   },
   {
-    path: "/OrderVerification/",
-    component: OrderVerification
+    path: "/OrderSearch/",
+    component: OrderSearch
   },
   {
     path: "/OrderSelect/",
     component: OrderSelect
+  },
+  {
+    path: "/OrderDetailVerify/",
+    component: OrderDetailVerify
   }
 ];

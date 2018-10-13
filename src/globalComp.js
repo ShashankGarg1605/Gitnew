@@ -52,6 +52,11 @@ export default new Vue({
       1: "To pay",
       2: "Paid"
     },
+    verificationStatusMap: {
+      0: "Verification not started",
+      1: "Partially verified",
+      2: "Verification complete"
+    },
     navHistory: window.f7.mainView.history
   },
   computed: {
@@ -78,7 +83,7 @@ export default new Vue({
       if (subject) url += `?subject=${subject}`;
       // window.location.href = url;
 
-      window.open(url, '_system');
+      window.open(url, "_system");
     },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();

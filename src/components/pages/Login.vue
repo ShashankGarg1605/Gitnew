@@ -13,7 +13,7 @@
             <p class="vald-msg" v-else>&nbsp;</p>
           </div>
           <div class="pz-width100">
-            <input type="text" autocapitalize="false" class="input" placeholder="Password" v-model="password" v-validate.initial="password" data-vv-rules="required|min:8">
+            <input type="text" autocapitalize="false" class="input" placeholder="Password" v-model="password" v-validate.initial="password" data-vv-rules="required|min:1">
             <p class="vald-msg" v-if="errors.has('password')">{{ errors.first('password') }}</p>
             <p class="vald-msg" v-else>&nbsp;</p>
           </div>
@@ -121,7 +121,7 @@ export default {
 
         // ask user to select a tenant
         .then(res => {
-          if (res.length === 1){
+          if (res.length === 1) {
             tempTenant = res[0].tenants;
             return Promise.resolve(res[0].tenants);
           }
@@ -149,29 +149,29 @@ export default {
 
         // auth with password
         .then(tenant => window.vm.$http.post(
-            window._pz.apiEndPt + "auth",
-            {
-              username: this.username,
-              password: this.password
-            },
-            {
-              headers: {
-                tenant: "tenant_" + tenant.id,
-                source: "3",
-                "Content-type": "application/json;charset=UTF-8; charset=UTF-8"
-              }
+          window._pz.apiEndPt + "auth",
+          {
+            username: this.username,
+            password: this.password
+          },
+          {
+            headers: {
+              tenant: "tenant_" + tenant.id,
+              source: "3",
+              "Content-type": "application/json;charset=UTF-8; charset=UTF-8"
             }
-          )
+          }
+        )
         )
 
 
         // check status and get user details
         .then(
           res => {
-            if (res.ok){
+            if (res.ok) {
               authToken = res.body.token;
               return window.vm.$http.get(
-                window._pz.apiEndPt + "users/" + res.body.id, 
+                window._pz.apiEndPt + "users/" + res.body.id,
                 {
                   headers: {
                     tenant: "tenant_" + tempTenant.id,
@@ -188,7 +188,7 @@ export default {
         // check if its an admin
         .then(res => {
           if (!res.ok) return Promise.reject(res.status);
-          if (res.body.user_type === 1){
+          if (res.body.user_type === 1) {
 
             setGlobals(authToken, tempTenant, res.body.id);
             clearAllHistory();
@@ -200,8 +200,8 @@ export default {
           } else return Promise.reject('You are not an admin.');
         })
 
-        
-        .catch(function(err) {
+
+        .catch(function (err) {
           console.log("err: ", err);
           var msg;
           if (typeof err === "string") msg = window._pz.err[err] || err;

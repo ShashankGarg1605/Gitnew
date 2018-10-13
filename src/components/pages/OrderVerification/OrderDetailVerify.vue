@@ -16,7 +16,7 @@
                 <list-item :label="'Total Books'" :value="nbTotalBooks" />
                 <list-item :label="'Unique Titles'" :value="nbUniqueTitles" />
                 <div class="btn-container">
-                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray">Scan to verify</button>
+                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray" @click="scanBook()">Scan to verify</button>
                     <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray">Search to verify</button>
                     <button v-if="verifiedPct >= VERIFICATION_THRESHOLD" submit class="button button-fill button-raised color-teal">Complete verification</button>
                 </div>
@@ -104,7 +104,22 @@ export default {
         }
     },
     methods: {
-
+        scanBook() {
+            window.vm.$pzGlobalReactiveData.scanCode()
+                .then(res => {
+                    console.log('res: ', res);
+                    const scannedProductIsbn = res.text;
+                    if (scannedProductIsbn) {
+                        const scannedProductData = this.orderData.orderProduct.find(p => p.product.isbn === scannedProductIsbn);
+                        if (scannedProductData) window.vm.$f7.mainView.router.load({
+                            url: "VerifyBook",
+                            context: { bookData: scannedProductData }
+                        }); else window.vm.$f7.addNotification({ message: "This book is not a part of the order", hold: 2000 });
+                    } else window.vm.$f7.addNotification({ message: "Could not scan the code", hold: 2000 });
+                }
+                )
+                .catch(err => { console.log(err); });
+        }
     },
     beforeCreate() {
         console.debug(this.$options.name + " beforeCreate");

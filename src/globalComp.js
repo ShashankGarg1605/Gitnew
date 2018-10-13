@@ -87,6 +87,35 @@ export default new Vue({
     },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();
+    },
+    scanCode() {
+      return new Promise((resolve, reject) => {
+        if (typeof window.cordova !== "undefined" && window.cordova && window.cordova.plugins.barcodeScanner) {
+          var success = function(result) {
+            if (result.cancelled) reject("User rejected");
+            else resolve(result);
+          };
+          var failure = function(error) {
+            reject(error);
+          };
+          var config = {
+            preferFrontCamera: false, // iOS and Android
+            showFlipCameraButton: false, // iOS and Android
+            showTorchButton: true, // iOS and Android
+            torchOn: false, // Android, launch with the torch switched on (if available)
+            prompt: "Place a barcode inside the scan area", // Android
+            resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+            // formats: "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+            // orientation: "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+            disableAnimations: true // iOS
+          };
+
+          window.cordova.plugins.barcodeScanner.scan(success, failure, config);
+        } else {
+          if (location.hostname === "localhost") resolve({ text: "9789383182497" });
+          else reject("Plugin or Cordova not available");
+        }
+      });
     }
   }
 });

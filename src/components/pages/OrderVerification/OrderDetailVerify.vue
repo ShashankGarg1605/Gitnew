@@ -107,17 +107,15 @@ export default {
         scanBook() {
             window.vm.$pzGlobalReactiveData.scanCode()
                 .then(res => {
-                    console.log('res: ', res);
                     const scannedProductIsbn = res.text;
                     if (scannedProductIsbn) {
                         const scannedProductData = this.orderData.orderProduct.find(p => p.product.isbn === scannedProductIsbn);
                         if (scannedProductData) window.vm.$f7.mainView.router.load({
-                            url: "VerifyBook",
+                            url: "VerifyProduct",
                             context: { bookData: scannedProductData }
                         }); else window.vm.$f7.addNotification({ message: "This book is not a part of the order", hold: 2000 });
                     } else window.vm.$f7.addNotification({ message: "Could not scan the code", hold: 2000 });
-                }
-                )
+                })
                 .catch(err => { console.log(err); });
         }
     },

@@ -19,6 +19,7 @@ import LandingPage from "./components/pages/LandingPage";
 import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
 import OrderDetailVerify from "./components/pages/OrderVerification/OrderDetailVerify";
+import VerifyProduct from "./components/pages/OrderVerification/VerifyProduct";
 
 export default [
   {
@@ -104,5 +105,9 @@ export default [
   {
     path: "/OrderDetailVerify/",
     component: OrderDetailVerify
+  },
+  {
+    path: "/VerifyProduct/",
+    component: VerifyProduct
   }
 ];

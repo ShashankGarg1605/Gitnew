@@ -112,7 +112,8 @@ export default new Vue({
 
           window.cordova.plugins.barcodeScanner.scan(success, failure, config);
         } else {
-          if (location.hostname === "localhost") resolve({ text: "9789383182497" });
+          // if (location.hostname === "localhost") resolve({ text: "9789383182497" });
+          if (location.hostname === "localhost") resolve({ text: "9789387504929" });
           else reject("Plugin or Cordova not available");
         }
       });

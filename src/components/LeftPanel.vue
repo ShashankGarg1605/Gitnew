@@ -1,10 +1,11 @@
 <template>
   <f7-panel left :reveal="isiOS" :cover="isMaterial">
-
     <div class="page pz-padding-0 pz-margin-0">
       <f7-navbar title="Menu"></f7-navbar>
-      <div class="page-content pz-width100 pz-padding-t44" style="display: flex; flex-direction: column; ">
-
+      <div
+        class="page-content pz-width100 pz-padding-t44"
+        style="display: flex; flex-direction: column; "
+      >
         <div class="list-block">
           <ul>
             <menu-item :icon="'home'" :url="'/LandingPage'" :label="'Home'"></menu-item>
@@ -16,14 +17,16 @@
             <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
             <menu-item :icon="'bug'" :url="'/PlaceServiceRequest'" :label="'Place Service Request'"></menu-item>
             <menu-item :icon="'backward'" :url="'/InitiateReturn'" :label="'Initiate Return'"></menu-item>
-            <menu-item :icon="'backward'" :url="'/OrderSearch'" :label="'Order Verification'"></menu-item>
+            <menu-item :icon="'check'" :url="'/OrderSearch'" :label="'Order Verification'"></menu-item>
           </ul>
         </div>
-
         <div class="pz-height100 pz-flex-c-e pz-margin-b30">
-          <a href="#" class="button button-raised close-panel pz-padding-lr16" @click="signOut()">Sign Out</a>
+          <a
+            href="#"
+            class="button button-raised close-panel pz-padding-lr16"
+            @click="signOut()"
+          >Sign Out</a>
         </div>
-
       </div>
     </div>
   </f7-panel>

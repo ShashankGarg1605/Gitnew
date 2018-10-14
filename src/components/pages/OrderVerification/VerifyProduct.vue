@@ -13,15 +13,32 @@
             <section>
                 <img :src="bookData.product.listOfImages[0].link" alt="product">
                 <ul>
-                    <list-item :label="'Order ID'" :value="bookData.id" />
-                    <list-item :label="'MRP'" :value="bookData.selling_price" />
-                    <list-item :label="'Publisher'" :value="bookData.product.publisher.name" />
+                    <list-item :label="'Order ID'" :value="bookData.id"/>
+                    <list-item :label="'MRP'" :value="bookData.selling_price"/>
+                    <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
                 </ul>
             </section>
-            <form @submit.prevent="onSubmit">
+            <form @submit.prevent="validateBeforeSubmit">
                 <label for="qty">Qty to verify:</label>
-                <input type="number" v-model="verificationQty" name="verification-qty" :placeholder="`max ${bookData.quantity}`">
-                <button submit class="button button-fill button-raised color-teal ">Submit</button>
+                <input
+                    type="number"
+                    v-model="verificationQty"
+                    name="verification-qty"
+                    :placeholder="`max ${maxQtyToVerify}`"
+                >
+                <p
+                    class="vald-msg"
+                    v-if="verificationQty>maxQtyToVerify"
+                >Max quantity can be {{maxQtyToVerify}}</p>
+                <p
+                    class="vald-msg"
+                    v-if="verificationQty && verificationQty<maxQtyToVerify"
+                >There will still be {{maxQtyToVerify - parseInt(verificationQty)}} qty left to verify. Are you sure you want to continue?</p>
+                <button
+                    submit
+                    class="button button-fill button-raised color-teal"
+                    :disabled="!isFormValid"
+                >Submit</button>
             </form>
         </main>
     </f7-page>
@@ -40,16 +57,22 @@ form {
   padding: 50px 20px;
 }
 
-input {
+form input {
   border: 1px solid lightgrey;
   border-radius: 5px;
   padding: 5px 10px;
   margin-left: 5px;
 }
 
-button {
+form button {
   margin: 20px auto;
   padding: 0px 40px;
+}
+
+form .vald-msg {
+  font-size: 12px;
+  margin-top: 0px;
+  color: red;
 }
 </style>
 
@@ -68,9 +91,36 @@ export default {
             verificationQty: null
         };
     },
+    computed: {
+        maxQtyToVerify() {
+            return this.bookData.quantity - this.bookData.verified_quantity;
+        },
+        isFormValid() {
+            return this.verificationQty && this.verificationQty < this.maxQtyToVerify;
+        }
+    },
     methods: {
+        validateBeforeSubmit(e) {
+            if (this.isFormValid) this.onSubmit();
+        },
         onSubmit() {
-            if (this.verificationQty) console.log('do it');
+            window.vm.$http
+                .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
+                    "id": this.bookData.id,
+                    "verified_quantity": this.verificationQty
+                })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("res.body: ", res.body);
+                        // const orders = res.body;
+                        // window.vm.$f7.mainView.router.load({
+                        //   url: "OrderSelect",
+                        //   reload: true,
+                        //   context: { orders }
+                        // });
+                    }
+                })
+                .catch(window._pz.errFunc2.bind(this));
         }
     },
     beforeCreate() {

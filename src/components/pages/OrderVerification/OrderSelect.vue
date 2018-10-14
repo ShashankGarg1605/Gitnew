@@ -1,13 +1,17 @@
 <template>
     <f7-page name="OrderSelect">
-        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
+        <f7-navbar back-link="Back" sliding>
+            <f7-nav-center>Select order to verify</f7-nav-center>
+        </f7-navbar>
+        <!-- <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
             <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>
             <f7-nav-center style="display: flex;align-items: center;">
                 <span>Select order to verify</span>
             </f7-nav-center>
-        </f7-navbar>
+        </f7-navbar>-->
+
         <!-- Scrollable page content-->
         <main>
             <f7-list>

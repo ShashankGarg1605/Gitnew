@@ -1,14 +1,8 @@
 <template>
     <f7-page name="VerifyProduct">
-        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
-            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
-                <f7-link icon="icon-bars" open-panel="left"></f7-link>
-            </f7-nav-left>
-            <f7-nav-center style="display: flex;align-items: center;">
-                <span>Verification quantity</span>
-            </f7-nav-center>
+        <f7-navbar back-link="Back" sliding>
+            <f7-nav-center>Verification quantity</f7-nav-center>
         </f7-navbar>
-        <!-- Scrollable page content-->
         <main>
             <section>
                 <img :src="bookData.product.listOfImages[0].link" alt="product">
@@ -113,12 +107,13 @@ export default {
                 .then(res => {
                     if (res.ok) {
                         console.log("res.body: ", res.body);
-                        // window.vm.$f7.mainView.router.back();
-                        window.vm.$f7.mainView.router.load({
-                            url: "OrderDetailVerify",
-                            reload: true,
-                            context: { orderId: this.orderId }
-                        });
+                        window.vm.$f7.mainView.router.back();
+                        window.vm.$f7.mainView.router.refreshPage();
+                        // window.vm.$f7.mainView.router.load({
+                        //     url: "OrderDetailVerify",
+                        //     reload: true,
+                        //     context: { orderId: this.orderId }
+                        // });
                     }
                 })
                 .catch(window._pz.errFunc2.bind(this));

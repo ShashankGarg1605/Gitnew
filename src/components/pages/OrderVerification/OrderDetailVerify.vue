@@ -1,14 +1,8 @@
 <template>
     <f7-page name="OrderDetailVerify">
-        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
-            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
-                <f7-link icon="icon-bars" open-panel="left"></f7-link>
-            </f7-nav-left>
-            <f7-nav-center style="display: flex;align-items: center;">
-                <span>Verify Order</span>
-            </f7-nav-center>
+        <f7-navbar back-link="Back" sliding>
+            <f7-nav-center>Verify Order</f7-nav-center>
         </f7-navbar>
-        <!-- Scrollable page content-->
         <main>
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
                 <list-item :label="'Order ID'" :value="orderData.id"/>

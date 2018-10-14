@@ -81,65 +81,67 @@
 
 <script>
 export default {
-    name: "OrderSelect",
-    data() {
-        return {
-            title: "OrderSelect",
-            orders: null,
-            clickedOrder: null,
-            randomID: Math.random()
-                .toString(36)
-                .substr(2, 10)
-        };
+  name: "OrderSelect",
+  data() {
+    return {
+      title: "OrderSelect",
+      orders: null,
+      clickedOrder: null,
+      randomID: Math.random()
+        .toString(36)
+        .substr(2, 10)
+    };
+  },
+  methods: {
+    openPopover(order, e) {
+      this.clickedOrder = order;
+      const popupID = "#" + this.randomID;
+      window.vm.$f7.popover(window.Dom7(popupID), e.target);
     },
-    methods: {
-        openPopover(order, e) {
-            this.clickedOrder = order;
-            console.log('this.clickedOrder : ', this.clickedOrder);
-            const popupID = "#" + this.randomID;
-            window.vm.$f7.popover(window.Dom7(popupID), e.target);
-            // window.Dom7(this.randomID).data('pz-id', id);
-        },
-        startVerification() {
-            window.vm.$http
-                .patch(`${window._pz.apiEndPt}orders?updateType=verification&id=${this.clickedOrder.id}&verification_status=1`)
-                .then(res => {
-                    if (res.ok) this.goToOrderDetails();
-                })
-                .catch(window._pz.errFunc2.bind(this));
-        },
-        goToOrderDetails() {
-            window.vm.$f7.mainView.router.load({
-                url: "OrderDetailVerify",
-                context: { orderId: this.clickedOrder.id }
-            });
-        }
+    startVerification() {
+      window.vm.$http
+        .patch(
+          `${window._pz.apiEndPt}orders?updateType=verification&id=${
+            this.clickedOrder.id
+          }&verification_status=1`
+        )
+        .then(res => {
+          if (res.ok) this.goToOrderDetails();
+        })
+        .catch(window._pz.errFunc2.bind(this));
     },
-    beforeCreate() {
-        console.debug(this.$options.name + " beforeCreate");
-    },
-    created() {
-        console.debug(this.$options.name + " created");
-        if (window._pz.checkNested(this, "$route", "options", "context", "orders"))
-            this.orders = this.$route.options.context.orders;
-    },
-    beforeMount() {
-        console.debug(this.$options.name + " beforeMount");
-    },
-    mounted() {
-        console.debug(this.$options.name + " mounted");
-    },
-    beforeUpdate() {
-        console.debug(this.$options.name + " beforeUpdate");
-    },
-    updated() {
-        console.debug(this.$options.name + " updated");
-    },
-    beforeDestroy() {
-        console.debug(this.$options.name + " beforeDestroy");
-    },
-    destroyed() {
-        console.debug(this.$options.name + " destroyed");
+    goToOrderDetails() {
+      window.vm.$f7.mainView.router.load({
+        url: "OrderDetailVerify",
+        context: { orderId: this.clickedOrder.id }
+      });
     }
+  },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
+  created() {
+    console.debug(this.$options.name + " created");
+    if (window._pz.checkNested(this, "$route", "options", "context", "orders"))
+      this.orders = this.$route.options.context.orders;
+  },
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 </script>

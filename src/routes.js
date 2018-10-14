@@ -20,6 +20,7 @@ import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
 import OrderDetailVerify from "./components/pages/OrderVerification/OrderDetailVerify";
 import VerifyProduct from "./components/pages/OrderVerification/VerifyProduct";
+import VerifiedTitles from "./components/pages/OrderVerification/VerifiedTitles";
 
 export default [
   {
@@ -109,5 +110,9 @@ export default [
   {
     path: "/VerifyProduct/",
     component: VerifyProduct
+  },
+  {
+    path: "/VerifiedTitles/",
+    component: VerifiedTitles
   }
 ];

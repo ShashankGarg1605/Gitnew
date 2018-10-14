@@ -74,79 +74,77 @@ form .vald-msg {
 import ListItem from "../../shared/ListItem";
 
 export default {
-    name: "VerifyProduct",
-    components: {
-        "list-item": ListItem
+  name: "VerifyProduct",
+  components: {
+    "list-item": ListItem
+  },
+  data() {
+    return {
+      title: "VerifyProduct",
+      bookData: null,
+      orderId: null,
+      verificationQty: null
+    };
+  },
+  computed: {
+    maxQtyToVerify() {
+      return this.bookData.quantity;
     },
-    data() {
-        return {
-            title: "VerifyProduct",
-            bookData: null,
-            orderId: null,
-            verificationQty: null
-        };
-    },
-    computed: {
-        maxQtyToVerify() {
-            return this.bookData.quantity;
-        },
-        isFormValid() {
-            return this.verificationQty && this.verificationQty <= this.maxQtyToVerify;
-        }
-    },
-    methods: {
-        validateBeforeSubmit(e) {
-            if (this.isFormValid) this.onSubmit();
-        },
-        onSubmit() {
-            window.vm.$http
-                .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
-                    "id": this.bookData.id,
-                    "verified_quantity": this.verificationQty
-                })
-                .then(res => {
-                    if (res.ok) {
-                        console.log("res.body: ", res.body);
-                        window.vm.$f7.mainView.router.back();
-                        window.vm.$f7.mainView.router.refreshPage();
-                        // window.vm.$f7.mainView.router.load({
-                        //     url: "OrderDetailVerify",
-                        //     reload: true,
-                        //     context: { orderId: this.orderId }
-                        // });
-                    }
-                })
-                .catch(window._pz.errFunc2.bind(this));
-        }
-    },
-    beforeCreate() {
-        console.debug(this.$options.name + " beforeCreate");
-    },
-    created() {
-        console.debug(this.$options.name + " created");
-        if (window._pz.checkNested(this, "$route", "options", "context", "bookData"))
-            this.bookData = this.$route.options.context.bookData;
-        if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
-            this.orderId = this.$route.options.context.orderId;
-        console.log('this.$route.options.context: ', this.$route.options.context);
-    },
-    beforeMount() {
-        console.debug(this.$options.name + " beforeMount");
-    },
-    mounted() {
-        console.debug(this.$options.name + " mounted");
-    },
-    beforeUpdate() {
-        console.debug(this.$options.name + " beforeUpdate");
-    },
-    updated() {
-        console.debug(this.$options.name + " updated");
-    },
-    beforeDestroy() {
-        console.debug(this.$options.name + " beforeDestroy");
-    },
-    destroyed() {
-        console.debug(this.$options.name + " destroyed");
+    isFormValid() {
+      return (
+        this.verificationQty && this.verificationQty <= this.maxQtyToVerify
+      );
     }
+  },
+  methods: {
+    validateBeforeSubmit(e) {
+      if (this.isFormValid) this.onSubmit();
+    },
+    onSubmit() {
+      window.vm.$http
+        .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
+          id: this.bookData.id,
+          verified_quantity: this.verificationQty
+        })
+        .then(res => {
+          if (res.ok) {
+            window.vm.$f7.mainView.router.back();
+            window.vm.$f7.mainView.router.refreshPage();
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    }
+  },
+  beforeCreate() {
+    console.debug(this.$options.name + " beforeCreate");
+  },
+  created() {
+    console.debug(this.$options.name + " created");
+    if (
+      window._pz.checkNested(this, "$route", "options", "context", "bookData")
+    )
+      this.bookData = this.$route.options.context.bookData;
+    if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
+      this.orderId = this.$route.options.context.orderId;
+    console.log("this.$route.options.context: ", this.$route.options.context);
+  },
+  beforeMount() {
+    console.debug(this.$options.name + " beforeMount");
+  },
+  mounted() {
+    console.debug(this.$options.name + " mounted");
+  },
+  beforeUpdate() {
+    console.debug(this.$options.name + " beforeUpdate");
+  },
+  updated() {
+    console.debug(this.$options.name + " updated");
+  },
+  beforeDestroy() {
+    console.debug(this.$options.name + " beforeDestroy");
+  },
+  destroyed() {
+    console.debug(this.$options.name + " destroyed");
+  }
 };
 </script>

@@ -96,7 +96,7 @@ export default {
             return this.bookData.quantity - this.bookData.verified_quantity;
         },
         isFormValid() {
-            return this.verificationQty && this.verificationQty < this.maxQtyToVerify;
+            return this.verificationQty && this.verificationQty <= this.maxQtyToVerify;
         }
     },
     methods: {

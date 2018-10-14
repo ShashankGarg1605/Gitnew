@@ -20,7 +20,7 @@
             <menu-item :icon="'check'" :url="'/OrderSearch'" :label="'Order Verification'"></menu-item>
           </ul>
         </div>
-        <div class="pz-height100 pz-flex-c-e pz-margin-b30">
+        <div class="sign-out pz-height100 pz-flex-c-e">
           <a
             href="#"
             class="button button-raised close-panel pz-padding-lr16"
@@ -31,6 +31,13 @@
     </div>
   </f7-panel>
 </template>
+
+<style  scoped>
+.sign-out {
+  margin: 40px 0px;
+}
+</style>
+
 
 <script>
 var menuItem = {

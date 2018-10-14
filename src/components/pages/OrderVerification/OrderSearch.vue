@@ -13,7 +13,7 @@
       <form @submit.prevent="onSubmit">
         <label for="order-id">Enter Order ID:</label>
         <input type="number" v-model="orderId" name="order-id" placeholder="just last few digits">
-        <button submit class="button button-fill button-raised color-teal ">Search</button>
+        <button submit class="button button-fill button-raised color-teal">Search</button>
       </form>
     </main>
   </f7-page>
@@ -70,7 +70,6 @@ export default {
             const orders = res.body;
             window.vm.$f7.mainView.router.load({
               url: "OrderSelect",
-              reload: true,
               context: { orders }
             });
           }

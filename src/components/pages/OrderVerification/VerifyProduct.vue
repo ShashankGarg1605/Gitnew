@@ -88,12 +88,13 @@ export default {
         return {
             title: "VerifyProduct",
             bookData: null,
+            orderId: null,
             verificationQty: null
         };
     },
     computed: {
         maxQtyToVerify() {
-            return this.bookData.quantity - this.bookData.verified_quantity;
+            return this.bookData.quantity;
         },
         isFormValid() {
             return this.verificationQty && this.verificationQty <= this.maxQtyToVerify;
@@ -112,12 +113,12 @@ export default {
                 .then(res => {
                     if (res.ok) {
                         console.log("res.body: ", res.body);
-                        // const orders = res.body;
-                        // window.vm.$f7.mainView.router.load({
-                        //   url: "OrderSelect",
-                        //   reload: true,
-                        //   context: { orders }
-                        // });
+                        // window.vm.$f7.mainView.router.back();
+                        window.vm.$f7.mainView.router.load({
+                            url: "OrderDetailVerify",
+                            reload: true,
+                            context: { orderId: this.orderId }
+                        });
                     }
                 })
                 .catch(window._pz.errFunc2.bind(this));
@@ -130,6 +131,9 @@ export default {
         console.debug(this.$options.name + " created");
         if (window._pz.checkNested(this, "$route", "options", "context", "bookData"))
             this.bookData = this.$route.options.context.bookData;
+        if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
+            this.orderId = this.$route.options.context.orderId;
+        console.log('this.$route.options.context: ', this.$route.options.context);
     },
     beforeMount() {
         console.debug(this.$options.name + " beforeMount");

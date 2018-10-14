@@ -21,26 +21,50 @@
                                 </div>
                                 <div class="row pz-width100">
                                     <div class="col-30 color-gray pz-weight-thin">City:</div>
-                                    <div class="col-70">{{order.user.userAddress.find(_=>_.address_type===1).city.name}}</div>
+                                    <div
+                                        class="col-70"
+                                    >{{order.user.userAddress.find(_=>_.address_type===1).city.name}}</div>
                                 </div>
                                 <div class="row pz-width100">
                                     <div class="col-30 color-gray pz-weight-thin">Status:</div>
-                                    <div class="col-70">{{$pzGlobalReactiveData.verificationStatusMap[order.verification_status]}}</div>
+                                    <div
+                                        class="col-70"
+                                    >{{$pzGlobalReactiveData.verificationStatusMap[order.verification_status]}}</div>
                                 </div>
                             </div>
-                            <i v-if="order && order.verification_status !== 2" class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
+                            <i
+                                v-if="order && order.verification_status !== 2"
+                                class="f7-icons pz-popover"
+                                @click="openPopover(order, $event)"
+                            >more_horiz</i>
                         </li>
                     </ul>
                 </div>
-                <div class="color-gray" style="text-align: center; font-style: italic;" v-if="(!orders || !orders.length) && !$pzGlobalReactiveData.pendingReq">No results found</div>
+                <div
+                    class="color-gray"
+                    style="text-align: center; font-style: italic;"
+                    v-if="(!orders || !orders.length) && !$pzGlobalReactiveData.pendingReq"
+                >No results found</div>
             </f7-list>
             <f7-popover :id="randomID">
                 <div class="popover-inner">
-                    <div v-if="clickedOrder && clickedOrder.verification_status === 0" class="list-block">
-                        <a @click="startVerification()" class="list-button item-link close-popover">Start verification</a>
+                    <div
+                        v-if="clickedOrder && clickedOrder.verification_status === 0"
+                        class="list-block"
+                    >
+                        <a
+                            @click="startVerification()"
+                            class="list-button item-link close-popover"
+                        >Start verification</a>
                     </div>
-                    <div v-if="clickedOrder && clickedOrder.verification_status === 1" class="list-block">
-                        <a @click="getOrderDetails()" class="list-button item-link close-popover">Resume verification</a>
+                    <div
+                        v-if="clickedOrder && clickedOrder.verification_status === 1"
+                        class="list-block"
+                    >
+                        <a
+                            @click="goToOrderDetails()"
+                            class="list-button item-link close-popover"
+                        >Resume verification</a>
                     </div>
                 </div>
             </f7-popover>
@@ -76,23 +100,15 @@ export default {
             window.vm.$http
                 .patch(`${window._pz.apiEndPt}orders?updateType=verification&id=${this.clickedOrder.id}&verification_status=1`)
                 .then(res => {
-                    if (res.ok) this.getOrderDetails();
+                    if (res.ok) this.goToOrderDetails();
                 })
                 .catch(window._pz.errFunc2.bind(this));
         },
-        getOrderDetails() {
-            window.vm.$http
-                .get(`${window._pz.apiEndPt}orders/${this.clickedOrder.id}`)
-                .then(res => {
-                    if (res.ok) {
-                        const orderData = res.body;
-                        window.vm.$f7.mainView.router.load({
-                            url: "OrderDetailVerify",
-                            context: { orderData }
-                        });
-                    }
-                })
-                .catch(window._pz.errFunc2.bind(this));
+        goToOrderDetails() {
+            window.vm.$f7.mainView.router.load({
+                url: "OrderDetailVerify",
+                context: { orderId: this.clickedOrder.id }
+            });
         }
     },
     beforeCreate() {

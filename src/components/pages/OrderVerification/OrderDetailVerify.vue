@@ -11,14 +11,27 @@
         <!-- Scrollable page content-->
         <main>
             <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
-                <list-item :label="'Order ID'" :value="orderData.id" />
-                <list-item :label="'City'" :value="city" />
-                <list-item :label="'Total Books'" :value="nbTotalBooks" />
-                <list-item :label="'Unique Titles'" :value="nbUniqueTitles" />
+                <list-item :label="'Order ID'" :value="orderData.id"/>
+                <list-item :label="'City'" :value="city"/>
+                <list-item :label="'Total Books'" :value="nbTotalBooks"/>
+                <list-item :label="'Unique Titles'" :value="nbUniqueTitles"/>
                 <div class="btn-container">
-                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray" @click="scanBook()">Scan to verify</button>
-                    <button v-if="verifiedPct < 100" submit class="button button-fill button-raised color-bluegray">Search to verify</button>
-                    <button v-if="verifiedPct >= VERIFICATION_THRESHOLD" submit class="button button-fill button-raised color-teal">Complete verification</button>
+                    <button
+                        v-if="verifiedPct < 100"
+                        submit
+                        class="button button-fill button-raised color-bluegray"
+                        @click="scanBook()"
+                    >Scan to verify</button>
+                    <button
+                        v-if="verifiedPct < 100"
+                        submit
+                        class="button button-fill button-raised color-bluegray"
+                    >Search to verify</button>
+                    <button
+                        v-if="verifiedPct >= VERIFICATION_THRESHOLD"
+                        submit
+                        class="button button-fill button-raised color-teal"
+                    >Complete verification</button>
                 </div>
             </section>
             <div class="verified-pct">
@@ -27,7 +40,6 @@
                 <!-- <div class="progress"></div> -->
                 <f7-progressbar :progress="this.verifiedPct" :color="this.progressBarColor"></f7-progressbar>
             </div>
-
         </main>
     </f7-page>
 </template>
@@ -97,13 +109,24 @@ export default {
             if (!window._pz.checkNested(this, "orderData", "orderProduct")) return null;
 
             const verifiedQty = this.orderData.orderProduct.reduce((sum, book) => sum + book.verified_quantity, 0);
-            return verifiedQty / this.nbUniqueTitles * 100;
+            const verifiedpct = parseInt(verifiedQty / this.nbTotalBooks * 100);
+            return verifiedpct;
         },
         progressBarColor() {
             return this.verifiedPct < this.VERIFICATION_THRESHOLD ? 'red' : 'green';
         }
     },
     methods: {
+        getOrderDetails() {
+            window.vm.$http
+                .get(`${window._pz.apiEndPt}orders/${this.orderId}`)
+                .then(res => {
+                    if (res.ok) {
+                        this.orderData = res.body;
+                    }
+                })
+                .catch(window._pz.errFunc2.bind(this));
+        },
         scanBook() {
             window.vm.$pzGlobalReactiveData.scanCode()
                 .then(res => {
@@ -112,7 +135,10 @@ export default {
                         const scannedProductData = this.orderData.orderProduct.find(p => p.product.isbn === scannedProductIsbn);
                         if (scannedProductData) window.vm.$f7.mainView.router.load({
                             url: "VerifyProduct",
-                            context: { bookData: scannedProductData }
+                            context: {
+                                bookData: scannedProductData,
+                                orderId: this.orderId
+                            }
                         }); else window.vm.$f7.addNotification({ message: "This book is not a part of the order", hold: 2000 });
                     } else window.vm.$f7.addNotification({ message: "Could not scan the code", hold: 2000 });
                 })
@@ -124,8 +150,9 @@ export default {
     },
     created() {
         console.debug(this.$options.name + " created");
-        if (window._pz.checkNested(this, "$route", "options", "context", "orderData"))
-            this.orderData = this.$route.options.context.orderData;
+        if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
+            this.orderId = this.$route.options.context.orderId;
+        this.getOrderDetails();
     },
     beforeMount() {
         console.debug(this.$options.name + " beforeMount");

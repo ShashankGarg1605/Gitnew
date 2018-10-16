@@ -13,14 +13,13 @@
         <div class="btn-container">
           <button
             v-if="verifiedPct < 100"
-            submit
             class="button button-fill button-raised color-bluegray"
             @click="scanBook()"
           >Scan to verify</button>
           <button
             v-if="verifiedPct < 100"
-            submit
             class="button button-fill button-raised color-bluegray"
+            @click="searchBook()"
           >Search to verify</button>
           <button
             v-if="verifiedPct >= VERIFICATION_THRESHOLD"
@@ -177,6 +176,9 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    searchBook() {
+      
     },
     openVerifiedTitles() {
       window.vm.$f7.mainView.router.load({

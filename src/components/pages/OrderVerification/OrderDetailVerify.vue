@@ -1,42 +1,43 @@
 <template>
-    <f7-page name="OrderDetailVerify">
-        <f7-navbar back-link="Back" sliding>
-            <f7-nav-center>Verify Order</f7-nav-center>
-        </f7-navbar>
-        <main>
-            <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
-                <list-item :label="'Order ID'" :value="orderData.id"/>
-                <list-item :label="'City'" :value="city"/>
-                <list-item :label="'Total Books'" :value="nbTotalBooks"/>
-                <list-item :label="'Unique Titles'" :value="nbUniqueTitles"/>
-                <button class="view-verified" @click="openVerifiedTitles()">View verified titles</button>
-                <div class="btn-container">
-                    <button
-                        v-if="verifiedPct < 100"
-                        submit
-                        class="button button-fill button-raised color-bluegray"
-                        @click="scanBook()"
-                    >Scan to verify</button>
-                    <button
-                        v-if="verifiedPct < 100"
-                        submit
-                        class="button button-fill button-raised color-bluegray"
-                    >Search to verify</button>
-                    <button
-                        v-if="verifiedPct >= VERIFICATION_THRESHOLD"
-                        submit
-                        class="button button-fill button-raised color-teal"
-                    >Complete verification</button>
-                </div>
-            </section>
-            <div class="verified-pct">
-                <span class="text">Verification %</span>
-                <span class="pct">{{this.verifiedPct}}</span>
-                <!-- <div class="progress"></div> -->
-                <f7-progressbar :progress="this.verifiedPct" :color="this.progressBarColor"></f7-progressbar>
-            </div>
-        </main>
-    </f7-page>
+  <f7-page name="OrderDetailVerify">
+    <f7-navbar back-link="Back" sliding>
+      <f7-nav-center>Verify Order</f7-nav-center>
+    </f7-navbar>
+    <main>
+      <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
+        <list-item :label="'Order ID'" :value="orderData.id"/>
+        <list-item :label="'City'" :value="city"/>
+        <list-item :label="'Total Books'" :value="nbTotalBooks"/>
+        <list-item :label="'Unique Titles'" :value="nbUniqueTitles"/>
+        <button class="view-verified" @click="openVerifiedTitles()">View verified titles</button>
+        <div class="btn-container">
+          <button
+            v-if="verifiedPct < 100"
+            submit
+            class="button button-fill button-raised color-bluegray"
+            @click="scanBook()"
+          >Scan to verify</button>
+          <button
+            v-if="verifiedPct < 100"
+            submit
+            class="button button-fill button-raised color-bluegray"
+          >Search to verify</button>
+          <button
+            v-if="verifiedPct >= VERIFICATION_THRESHOLD"
+            submit
+            class="button button-fill button-raised color-teal"
+            @click="completeVerification()"
+          >Complete verification</button>
+        </div>
+      </section>
+      <div class="verified-pct">
+        <span class="text">Verification %</span>
+        <span class="pct">{{this.verifiedPct}}</span>
+        <!-- <div class="progress"></div> -->
+        <f7-progressbar :progress="this.verifiedPct" :color="this.progressBarColor"></f7-progressbar>
+      </div>
+    </main>
+  </f7-page>
 </template>
 
 <style scoped>
@@ -184,7 +185,26 @@ export default {
           orderData: this.orderData
         }
       });
-    }
+    },
+completeVerification() {
+  window.vm.$http
+    .patch(
+      `${window._pz.apiEndPt}orders?updateType=verification&id=${
+        this.orderData.id
+      }&verification_status=2`
+    )
+    .then(res => {
+      if (res.ok){
+        window.vm.$f7.mainView.router.back();
+        window.vm.$f7.mainView.router.refreshPage();
+        window.vm.$f7.addNotification({
+          message: "Order successfully verified!",
+          hold: 3000
+        });
+      } 
+    })
+    .catch(window._pz.errFunc2.bind(this));
+}
   },
   beforeCreate() {
     console.debug(this.$options.name + " beforeCreate");

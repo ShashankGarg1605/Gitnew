@@ -1,56 +1,57 @@
 <template>
-    <f7-page name="VerifiedTitles">
-        <f7-navbar back-link="Back" sliding>
-            <f7-nav-center>Verified Titles</f7-nav-center>
-        </f7-navbar>
-        <main>
-            <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
-                <list-item :label="'Order ID'" :value="orderData.id"/>
-            </section>
-            <f7-list>
-                <div v-if="verifiedTitles" class="list-block">
-                    <ul>
-                        <li class="item-content" v-for="title in verifiedTitles" :key="title.id">
-                            <div class="item-inner" style="flex-direction: column;">
-                                <div class="row pz-width100">
-                                    <div>
-                                        {{title.product.title}}
-                                        <span
-                                            class="money"
-                                        >(MRP: {{title.product.mrp | moneyFormat}})</span>
-                                    </div>
-                                    <div class="verification-status">
-                                        Verified
-                                        <span>{{title.verified_quantity}}</span>qty out of
-                                        <span>{{title.quantity}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <i
-                                class="f7-icons pz-popover"
-                                @click="openPopover(title, $event)"
-                            >more_horiz</i>
-                        </li>
-                    </ul>
+  <f7-page name="VerifiedTitles">
+    <f7-navbar back-link="Back" sliding>
+      <f7-nav-center>Verified Titles</f7-nav-center>
+    </f7-navbar>
+    <main>
+      <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
+        <list-item :label="'Order ID'" :value="orderData.id"/>
+      </section>
+      <f7-list>
+        <div v-if="verifiedTitles" class="list-block">
+          <ul>
+            <li class="item-content" v-for="title in verifiedTitles" :key="title.id">
+              <div class="item-inner">
+                <div class="row pz-width100">
+                  <div>
+                    {{title.product.title}}
+                    <span
+                      class="money"
+                    >(MRP: {{title.product.mrp | moneyFormat}})</span>
+                  </div>
+                  <div class="verification-status">
+                    Verified
+                    <span>{{title.verified_quantity}}</span>qty out of
+                    <span>{{title.quantity}}</span>
+                  </div>
                 </div>
-                <div
-                    class="color-gray"
-                    style="text-align: center; font-style: italic;"
-                    v-if="!verifiedTitles && !$pzGlobalReactiveData.pendingReq"
-                >No title has been verified yet</div>
-            </f7-list>
-            <f7-popover :id="randomID">
-                <div class="popover-inner">
-                    <div class="list-block">
-                        <a @click="reverify()" class="list-button item-link close-popover">Re-verify</a>
-                    </div>
-                </div>
-            </f7-popover>
-        </main>
-    </f7-page>
+              </div>
+              <i class="f7-icons pz-popover" @click="openPopover(title, $event)">more_horiz</i>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="color-gray"
+          style="text-align: center; font-style: italic;"
+          v-if="!verifiedTitles && !$pzGlobalReactiveData.pendingReq"
+        >No title has been verified yet</div>
+      </f7-list>
+      <f7-popover :id="randomID">
+        <div class="popover-inner">
+          <div class="list-block">
+            <a @click="reverify()" class="list-button item-link close-popover">Re-verify</a>
+          </div>
+        </div>
+      </f7-popover>
+    </main>
+  </f7-page>
 </template>
 
 <style scoped>
+.item-inner {
+  flex-direction: column;
+  padding-right: 40px;
+}
 .money {
   font-weight: bold;
   color: #757575;
@@ -107,6 +108,7 @@ export default {
           if (res.ok) {
             window.vm.$f7.mainView.router.load({
               url: "VerifyProduct",
+              reload: true,
               context: {
                 bookData: this.clickedTitle,
                 orderId: this.orderData.id

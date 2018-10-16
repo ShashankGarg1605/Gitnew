@@ -1,41 +1,41 @@
 <template>
-    <f7-page name="VerifyProduct">
-        <f7-navbar back-link="Back" sliding>
-            <f7-nav-center>Verification quantity</f7-nav-center>
-        </f7-navbar>
-        <main>
-            <section>
-                <img :src="bookData.product.listOfImages[0].link" alt="product">
-                <ul>
-                    <list-item :label="'Order ID'" :value="bookData.id"/>
-                    <list-item :label="'MRP'" :value="bookData.selling_price"/>
-                    <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
-                </ul>
-            </section>
-            <form @submit.prevent="validateBeforeSubmit">
-                <label for="qty">Qty to verify:</label>
-                <input
-                    type="number"
-                    v-model="verificationQty"
-                    name="verification-qty"
-                    :placeholder="`max ${maxQtyToVerify}`"
-                >
-                <p
-                    class="vald-msg"
-                    v-if="verificationQty>maxQtyToVerify"
-                >Max quantity can be {{maxQtyToVerify}}</p>
-                <p
-                    class="vald-msg"
-                    v-if="verificationQty && verificationQty<maxQtyToVerify"
-                >There will still be {{maxQtyToVerify - parseInt(verificationQty)}} qty left to verify. Are you sure you want to continue?</p>
-                <button
-                    submit
-                    class="button button-fill button-raised color-teal"
-                    :disabled="!isFormValid"
-                >Submit</button>
-            </form>
-        </main>
-    </f7-page>
+  <f7-page name="VerifyProduct">
+    <f7-navbar back-link="Back" sliding>
+      <f7-nav-center>Verification quantity</f7-nav-center>
+    </f7-navbar>
+    <main>
+      <section>
+        <img :src="bookData.product.listOfImages[0].link" alt="product">
+        <ul>
+          <list-item :label="'Order ID'" :value="bookData.id"/>
+          <list-item :label="'MRP'" :value="bookData.selling_price"/>
+          <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
+        </ul>
+      </section>
+      <form @submit.prevent="validateBeforeSubmit">
+        <label for="qty">Qty to verify:</label>
+        <input
+          type="number"
+          v-model="verificationQty"
+          name="verification-qty"
+          :placeholder="`max ${maxQtyToVerify}`"
+        >
+        <p
+          class="vald-msg"
+          v-if="verificationQty>maxQtyToVerify"
+        >Max quantity can be {{maxQtyToVerify}}</p>
+        <p
+          class="vald-msg"
+          v-if="verificationQty && verificationQty<maxQtyToVerify"
+        >There will still be {{maxQtyToVerify - parseInt(verificationQty)}} qty left to verify. Are you sure you want to continue?</p>
+        <button
+          submit
+          class="button button-fill button-raised color-teal"
+          :disabled="!isFormValid"
+        >Submit</button>
+      </form>
+    </main>
+  </f7-page>
 </template>
 
 <style scoped>

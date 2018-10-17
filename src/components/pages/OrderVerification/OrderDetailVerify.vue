@@ -178,7 +178,13 @@ export default {
         });
     },
     searchBook() {
-      
+      window.vm.$f7.mainView.router.load({
+        url: "TitleSearch",
+        context: {
+          products: this.orderData.orderProduct,
+          orderId: this.orderId
+        }
+      });
     },
     openVerifiedTitles() {
       window.vm.$f7.mainView.router.load({

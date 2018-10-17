@@ -15,7 +15,7 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-input">
-                    <input type="text" v-model="keyword" placeholder="title, author or publisher">
+                    <input type="text" v-model="keyword" placeholder="title, ISBN or publisher">
                   </div>
                 </div>
                 <div v-if="keyword" class="item-media" @click="keyword=null">
@@ -71,9 +71,9 @@ export default {
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;
       const k = this.keyword.toLowerCase();
-      return this.products.filter(p => p.product.title.toLowerCase().includes(k) || p.product.author.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k));
+      return this.products.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k));
     }
-  },  
+  },
   methods: {
     selectBook(title) {
       window.vm.$f7.mainView.router.load({
@@ -94,7 +94,7 @@ export default {
     if (window._pz.checkNested(this, "$route", "options", "context", "products"))
       this.products = this.$route.options.context.products;
 
-      if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
+    if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
       this.orderId = this.$route.options.context.orderId;
   },
   beforeMount() {

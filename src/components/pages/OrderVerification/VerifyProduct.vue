@@ -108,8 +108,8 @@ export default {
         })
         .then(res => {
           if (res.ok) {
+            window._pz.refreshOnBack = true;
             window.vm.$f7.mainView.router.back();
-            window.vm.$f7.mainView.router.refreshPage();
           }
         })
         .catch(window._pz.errFunc2.bind(this));

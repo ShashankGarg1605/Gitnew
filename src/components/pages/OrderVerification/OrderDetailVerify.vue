@@ -102,15 +102,15 @@ export default {
     city() {
       return window._pz.checkNested(this, "orderData", "user", "userAddress")
         ? this.orderData.user.userAddress.find(_ => _.address_type === 1).city
-            .name
+          .name
         : null;
     },
     nbTotalBooks() {
       return window._pz.checkNested(this, "orderData", "orderProduct")
         ? this.orderData.orderProduct.reduce(
-            (sum, book) => sum + book.quantity,
-            0
-          )
+          (sum, book) => sum + book.quantity,
+          0
+        )
         : null;
     },
     nbUniqueTitles() {
@@ -194,33 +194,32 @@ export default {
         }
       });
     },
-completeVerification() {
-  window.vm.$http
-    .patch(
-      `${window._pz.apiEndPt}orders?updateType=verification&id=${
-        this.orderData.id
-      }&verification_status=2`
-    )
-    .then(res => {
-      if (res.ok){
-        window.vm.$f7.mainView.router.back();
-        window.vm.$f7.mainView.router.refreshPage();
-        window.vm.$f7.addNotification({
-          message: "Order successfully verified!",
-          hold: 3000
-        });
-      } 
-    })
-    .catch(window._pz.errFunc2.bind(this));
-}
+    completeVerification() {
+      window.vm.$http
+        .patch(
+          `${window._pz.apiEndPt}orders?updateType=verification&id=${
+          this.orderData.id
+          }&verification_status=2`
+        )
+        .then(res => {
+          if (res.ok) {
+            window.vm.$f7.mainView.router.back();
+            window.vm.$f7.mainView.router.refreshPage();
+            window.vm.$f7.addNotification({
+              message: "Order successfully verified!",
+              hold: 3000
+            });
+          }
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    }
   },
   beforeCreate() {
     console.debug(this.$options.name + " beforeCreate");
   },
   created() {
     console.debug(this.$options.name + " created");
-    if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
-      this.orderId = this.$route.options.context.orderId;
+    this.orderId = this.$route.query && this.$route.query.orderId;
     this.getOrderDetails();
   },
   beforeMount() {

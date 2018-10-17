@@ -203,12 +203,14 @@ export default {
         )
         .then(res => {
           if (res.ok) {
-            window.vm.$f7.mainView.router.back();
-            window.vm.$f7.mainView.router.refreshPage();
-            window.vm.$f7.addNotification({
-              message: "Order successfully verified!",
-              hold: 3000
-            });
+            window.vm.$f7.mainView.router.loadPage('LandingPage');
+
+            // window.vm.$f7.mainView.router.back();
+            // window.vm.$f7.mainView.router.refreshPage();
+            // window.vm.$f7.addNotification({
+            //   message: "Order successfully verified!",
+            //   hold: 3000
+            // });
           }
         })
         .catch(window._pz.errFunc2.bind(this));

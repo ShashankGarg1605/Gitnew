@@ -11,8 +11,10 @@
     <!-- Scrollable page content-->
     <main>
       <form @submit.prevent="onSubmit">
-        <label for="order-id">Enter Order ID:</label>
-        <input type="number" v-model="orderId" name="order-id" placeholder="Last few digits">
+        <div>
+          <label for="order-id">Enter Order ID:</label>
+          <input type="number" v-model="orderId" name="order-id" placeholder="Last few digits">
+        </div>
         <button submit class="button button-fill button-raised color-teal">Search</button>
       </form>
     </main>
@@ -24,11 +26,18 @@ form {
   padding: 50px 20px;
 }
 
+form > div {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 input {
   border: 1px solid lightgrey;
-  border-radius: 5px;
-  padding: 5px 10px;
+  border-radius: 3px;
+  padding: 10px;
   margin-left: 5px;
+  font-size: 1em;
 }
 
 button {

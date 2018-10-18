@@ -5,11 +5,20 @@
     </f7-navbar>
     <main>
       <section>
-        <img :src="bookData.product.listOfImages[0].link" alt="product">
+        <img
+          v-if="bookData.product.listOfImages && bookData.product.listOfImages.length"
+          :src="bookData.product.listOfImages[0].link"
+          alt="product"
+        >
         <ul>
-          <list-item :label="'Order ID'" :value="bookData.id"/>
+          <!-- <list-item :label="'Title'" :value="bookData.product.title"/> -->
           <list-item :label="'MRP'" :value="bookData.selling_price"/>
           <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
+          <list-item
+            v-if="bookData.product.author"
+            :label="'Author'"
+            :value="bookData.product.author"
+          />
         </ul>
       </section>
       <form @submit.prevent="validateBeforeSubmit">
@@ -39,6 +48,9 @@
 section {
   display: flex;
   padding: 12px;
+}
+section img {
+  height: fit-content;
 }
 section ul {
   padding: 0;

@@ -5,7 +5,7 @@
     </f7-navbar>
     <main>
       <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
-        <list-item :label="'Order ID'" :value="orderData.id"/>
+        <list-item :label="'Order ID'" :value="orderData.order_id"/>
         <list-item :label="'City'" :value="city"/>
         <list-item :label="'Total Books'" :value="nbTotalBooks"/>
         <list-item :label="'Unique Titles'" :value="nbUniqueTitles"/>

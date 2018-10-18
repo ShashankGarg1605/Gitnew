@@ -32,7 +32,7 @@
                                 <div class="row pz-width100">
                                     <div class="col-30 color-gray pz-weight-thin">Status:</div>
                                     <div
-                                        class="col-70"
+                                        :class="`col-70 color-${order.verification_status}`"
                                     >{{$pzGlobalReactiveData.verificationStatusMap[order.verification_status]}}</div>
                                 </div>
                             </div>
@@ -77,6 +77,15 @@
 </template>
 
 <style scoped>
+.color-0 {
+  color: #f44336;
+}
+.color-1 {
+  color: #3f51b5;
+}
+.color-2 {
+  color: #4caf50;
+}
 </style>
 
 <script>

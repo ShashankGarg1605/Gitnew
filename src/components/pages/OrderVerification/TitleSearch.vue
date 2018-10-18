@@ -73,10 +73,13 @@ export default {
   },
   
   computed: {
+    searchableProducts() {
+      return this.products.filter(p => !p.product.is_added_by_user && p.verified_quantity < p.quantity);
+    },
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;
       const k = this.keyword.toLowerCase();
-      return this.products.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k));
+      return this.searchableProducts.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k));
     }
   },
   methods: {

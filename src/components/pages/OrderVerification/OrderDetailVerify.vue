@@ -124,7 +124,7 @@ export default {
         return null;
 
       const verifiedQty = this.orderData.orderProduct.reduce(
-        (sum, book) => sum + book.verified_quantity,
+        (sum, book) => sum + book.verified_quantity || 0,
         0
       );
       const verifiedpct = parseInt((verifiedQty / this.nbTotalBooks) * 100);

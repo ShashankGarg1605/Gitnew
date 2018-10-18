@@ -1,7 +1,7 @@
 <template>
   <f7-page name="VerifyProduct">
     <f7-navbar back-link="Back" sliding>
-      <f7-nav-center>Verification quantity</f7-nav-center>
+      <f7-nav-center>Enter quantity</f7-nav-center>
     </f7-navbar>
     <main>
       <section>
@@ -20,14 +20,11 @@
           name="verification-qty"
           :placeholder="`max ${maxQtyToVerify}`"
         >
-        <p
-          class="vald-msg"
-          v-if="verificationQty>maxQtyToVerify"
-        >Max quantity can be {{maxQtyToVerify}}</p>
+        <p class="vald-msg" v-if="verificationQty>maxQtyToVerify">Invalid quantity entered</p>
         <p
           class="vald-msg"
           v-if="verificationQty && verificationQty<maxQtyToVerify"
-        >There will still be {{maxQtyToVerify - parseInt(verificationQty)}} qty left to verify. Are you sure you want to continue?</p>
+        >The quantity entered doesn't match the invoice. Do you still want to continue?</p>
         <button
           submit
           class="button button-fill button-raised color-teal"

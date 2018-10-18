@@ -12,7 +12,7 @@
     <main>
       <form @submit.prevent="onSubmit">
         <label for="order-id">Enter Order ID:</label>
-        <input type="number" v-model="orderId" name="order-id" placeholder="just last few digits">
+        <input type="number" v-model="orderId" name="order-id" placeholder="Last few digits">
         <button submit class="button button-fill button-raised color-teal">Search</button>
       </form>
     </main>

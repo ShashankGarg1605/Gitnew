@@ -15,7 +15,11 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-input">
-                    <input type="text" v-model="keyword" placeholder="title, ISBN or publisher">
+                    <input
+                      type="text"
+                      v-model="keyword"
+                      placeholder="Title, ISBN, publisher or code"
+                    >
                   </div>
                 </div>
                 <div v-if="keyword" class="item-media" @click="keyword=null">
@@ -67,6 +71,7 @@ export default {
       orderId: null
     };
   },
+  
   computed: {
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;

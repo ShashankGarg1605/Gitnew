@@ -79,7 +79,7 @@ export default {
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;
       const k = this.keyword.toLowerCase();
-      return this.searchableProducts.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k) || (p.product.additional_code && p.product.additional_code.includes(k)) );
+      return this.searchableProducts.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k) || (p.product.additional_code && p.product.additional_code.includes(k)));
     }
   },
   methods: {

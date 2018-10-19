@@ -23,12 +23,7 @@
       </section>
       <form @submit.prevent="validateBeforeSubmit">
         <label for="qty">Qty to verify:</label>
-        <input
-          type="number"
-          v-model="verificationQty"
-          name="verification-qty"
-          :placeholder="`max ${maxQtyToVerify}`"
-        >
+        <input type="number" v-model="verificationQty" name="verification-qty">
         <p class="vald-msg" v-if="verificationQty>maxQtyToVerify">Invalid quantity entered</p>
         <p
           class="vald-msg"
@@ -97,7 +92,7 @@ export default {
   },
   computed: {
     maxQtyToVerify() {
-      return this.bookData.quantity - this.bookData.verified_quantity;
+      return parseInt(this.bookData.quantity) - parseInt(this.bookData.verified_quantity);
     },
     isFormValid() {
       return (
@@ -113,7 +108,7 @@ export default {
       window.vm.$http
         .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
           id: this.bookData.id,
-          verified_quantity: this.verificationQty + this.bookData.verified_quantity
+          verified_quantity: parseInt(this.verificationQty) + parseInt(this.bookData.verified_quantity)
         })
         .then(res => {
           if (res.ok) {

@@ -97,7 +97,7 @@ export default {
   },
   computed: {
     maxQtyToVerify() {
-      return this.bookData.quantity;
+      return this.bookData.quantity - this.bookData.verified_quantity;
     },
     isFormValid() {
       return (
@@ -113,7 +113,7 @@ export default {
       window.vm.$http
         .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
           id: this.bookData.id,
-          verified_quantity: this.verificationQty
+          verified_quantity: this.verificationQty + this.bookData.verified_quantity
         })
         .then(res => {
           if (res.ok) {

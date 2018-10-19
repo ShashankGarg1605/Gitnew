@@ -12,7 +12,7 @@
     <main>
       <form @submit.prevent="onSubmit">
         <div>
-          <div class="content-block-title">You can apply multiple filters at once</div>
+          <!-- <div class="content-block-title">You can apply multiple filters at once</div> -->
           <label for="order-id">Enter Order ID:</label>
           <input type="number" v-model="orderId" name="order-id" placeholder="Last few digits">
         </div>

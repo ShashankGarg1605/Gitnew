@@ -1,26 +1,28 @@
 <template>
-  <f7-page name="AllOrders" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
-
+  <f7-page
+    name="AllOrders"
+    infinite-scroll
+    @infinite="onInfiniteScroll"
+    pull-to-refresh
+    @ptr:refresh="onPullToRefresh"
+  >
     <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-center>
-        All Orders
-      </f7-nav-center>
+      <f7-nav-center>All Orders</f7-nav-center>
     </f7-navbar>
-
-    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
-      Found {{totalCount}} results
-    </div>
-
+    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">Found {{totalCount}} results</div>
     <div style="overflow: hidden; margin: 16px 16px 16px;">
-      <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
+      <a
+        href="#"
+        class="button button-fill button-raised pz-flex-c-c pz-float-r"
+        @click="openFilters()"
+      >
         <icon name="filter"></icon>
         <span class="pz-padding-l16">Filter</span>
       </a>
     </div>
-
     <f7-list>
       <div v-if="allOrders.length" class="list-block">
         <ul>
@@ -32,7 +34,9 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
-                <div class="col-70">{{order.user.buyer_name}} ({{order.user.userAddress.find(c=>c.address_type===1).city.name}})</div>
+                <div
+                  class="col-70"
+                >{{order.user.buyer_name}} ({{order.user.userAddress.find(c=>c.address_type===1).city.name}})</div>
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Value:</div>
@@ -42,24 +46,35 @@
                 <div class="col-30 color-gray pz-weight-thin">Status:</div>
                 <div class="col-70">{{order.statusText}}</div>
               </div>
-              <i class="f7-icons pz-popover" @click='openPopover(order, $event)'>more_horiz</i>
+              <i class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
             </div>
           </li>
         </ul>
       </div>
-      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
-      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
+      <div
+        class="color-gray"
+        style="text-align: center; font-style: italic;"
+        v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq"
+      >Thats all folks!</div>
+      <div
+        class="color-gray"
+        style="text-align: center; font-style: italic;"
+        v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq"
+      >No results found</div>
     </f7-list>
-
     <f7-popover :id="randomID">
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('orderdetail')" class="list-button item-link close-popover">Details</a>
+          <a
+            @click="openAssignOrderPage()"
+            class="list-button item-link close-popover"
+            v-if="clickedOrder && clickedOrder.order_status === 3"
+          >Assign Order</a>
           <!-- <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a> -->
         </div>
       </div>
     </f7-popover>
-
   </f7-page>
 </template>
 
@@ -180,6 +195,13 @@ export default {
       window.vm.$f7.mainView.router.load({
         url: url,
         context: { allOrdersFilters: this.filters } // send currently applied filters to the next page
+      });
+    },
+    openAssignOrderPage() {
+      const id = this.clickedOrder.id;
+      const url = `AssignOrder?id=${id}`;
+      window.vm.$f7.mainView.router.load({
+        url: url
       });
     },
     openPopover(order, e) {

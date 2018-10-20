@@ -22,6 +22,7 @@ import OrderDetailVerify from "./components/pages/OrderVerification/OrderDetailV
 import VerifyProduct from "./components/pages/OrderVerification/VerifyProduct";
 import VerifiedTitles from "./components/pages/OrderVerification/VerifiedTitles";
 import TitleSearch from "./components/pages/OrderVerification/TitleSearch";
+import AssignOrder from "./components/pages/OrderVerification/AssignOrder";
 
 export default [
   {
@@ -119,5 +120,9 @@ export default [
   {
     path: "/TitleSearch/",
     component: TitleSearch
+  },
+  {
+    path: "/AssignOrder/",
+    component: AssignOrder
   }
 ];

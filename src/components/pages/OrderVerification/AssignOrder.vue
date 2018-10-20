@@ -92,7 +92,7 @@ export default {
                 .text(value[0].name);
             // Add item value to input value
             this.selectedUser = value[0];
-            window.vm.$f7.confirm(`Do you want to assign order ${this.orderId} to ${this.selectedUser.name}`, this.assignOrder);
+            window.vm.$f7.confirm(`Do you want to assign order ${this.orderId} to ${this.selectedUser.name}`, 'Confirm', this.assignOrder);
         },
         assignOrder() {
             window.vm.$http

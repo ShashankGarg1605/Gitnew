@@ -203,14 +203,30 @@ export default {
         )
         .then(res => {
           if (res.ok) {
-            window.vm.$f7.mainView.router.loadPage('LandingPage');
+            // window.vm.$f7.addNotification({
+            //   message: `Thank you! The picklist for order ID ${this.orderData.order_id} has been verified successfully`,
+            //   hold: 3000
+            // });
 
-            window.vm.$f7.addNotification({
-              message: `Thank you! The picklist for order ID ${this.orderData.order_id} has been verified successfully`,
-              hold: 3000
-            });
-            // window.vm.$f7.mainView.router.back();
-            // window.vm.$f7.mainView.router.refreshPage();
+            const buttons = [
+              {
+                text: `Thank you! The picklist for order ID ${this.orderData.order_id} has been verified successfully. You can now:`,
+                label: true
+              },
+              {
+                text: 'Verify another order',
+                onClick: function () {
+                  window.vm.$f7.mainView.router.loadPage('OrderSearch');
+                }
+              },
+              {
+                text: 'Go home',
+                onClick: function () {
+                  window.vm.$f7.mainView.router.loadPage('LandingPage');
+                }
+              }
+            ];
+            window.vm.$f7.actions(buttons);
           }
         })
         .catch(window._pz.errFunc2.bind(this));

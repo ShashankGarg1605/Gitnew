@@ -164,7 +164,7 @@ export default {
               });
             else
               window.vm.$f7.addNotification({
-                message: "This book is not a part of the order",
+                message: "Oops! This product is not in the pick list. Please recheck barcode and product details as per picklist",
                 hold: 2000
               });
           } else
@@ -205,12 +205,12 @@ export default {
           if (res.ok) {
             window.vm.$f7.mainView.router.loadPage('LandingPage');
 
+            window.vm.$f7.addNotification({
+              message: `Thank you! The picklist for order ID ${this.orderData.order_id} has been verified successfully`,
+              hold: 3000
+            });
             // window.vm.$f7.mainView.router.back();
             // window.vm.$f7.mainView.router.refreshPage();
-            // window.vm.$f7.addNotification({
-            //   message: "Order successfully verified!",
-            //   hold: 3000
-            // });
           }
         })
         .catch(window._pz.errFunc2.bind(this));

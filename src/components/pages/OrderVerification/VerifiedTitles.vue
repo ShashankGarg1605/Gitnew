@@ -106,6 +106,7 @@ export default {
         })
         .then(res => {
           if (res.ok) {
+            this.clickedTitle.verified_quantity = 0;
             window.vm.$f7.mainView.router.load({
               url: "VerifyProduct",
               reload: true,

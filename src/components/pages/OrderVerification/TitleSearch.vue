@@ -18,6 +18,7 @@
                     <input
                       type="text"
                       v-model="keyword"
+                      autofocus
                       placeholder="Title, ISBN, publisher or code"
                     >
                   </div>
@@ -71,7 +72,7 @@ export default {
       orderId: null
     };
   },
-  
+
   computed: {
     searchableProducts() {
       return this.products.filter(p => !p.product.is_added_by_user && p.verified_quantity < p.quantity);

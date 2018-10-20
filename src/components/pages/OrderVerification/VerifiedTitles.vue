@@ -5,7 +5,36 @@
     </f7-navbar>
     <main>
       <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderData">
-        <list-item :label="'Order ID'" :value="orderData.id"/>
+        <list-item
+          :label="'Order ID'"
+          :value="orderData.id"
+          :leftColWidth="60"
+          :rightColWidth="40"
+        />
+        <list-item
+          :label="'Total verified qty'"
+          :value="nbTotalVerifiedTitles"
+          :leftColWidth="60"
+          :rightColWidth="40"
+        />
+        <list-item
+          :label="'Total actual qty'"
+          :value="nbTotalTitles"
+          :leftColWidth="60"
+          :rightColWidth="40"
+        />
+        <list-item
+          :label="'Total unique verified titles'"
+          :value="nbUniqueVerifiedTitles"
+          :leftColWidth="60"
+          :rightColWidth="40"
+        />
+        <list-item
+          :label="'Total unique actual ttles'"
+          :value="nbUniqueTitles"
+          :leftColWidth="60"
+          :rightColWidth="40"
+        />
       </section>
       <f7-list>
         <div v-if="verifiedTitles" class="list-block">
@@ -85,6 +114,30 @@ export default {
     };
   },
   computed: {
+    nbTotalTitles() {
+      return window._pz.checkNested(this, "orderData", "orderProduct")
+        ? this.orderData.orderProduct.reduce(
+          (sum, book) => sum + book.quantity,
+          0
+        )
+        : null;
+    },
+    nbUniqueTitles() {
+      return window._pz.checkNested(this, "orderData", "orderProduct")
+        ? this.orderData.orderProduct.length
+        : null;
+    },
+    nbTotalVerifiedTitles() {
+      return window._pz.checkNested(this, "orderData", "orderProduct")
+        ? this.orderData.orderProduct.reduce(
+          (sum, book) => sum + book.verified_quantity,
+          0
+        )
+        : null;
+    },
+    nbUniqueVerifiedTitles() {
+      return this.verifiedTitles.length;
+    },
     verifiedTitles() {
       return (
         window._pz.checkNested(this, "orderData", "orderProduct") &&

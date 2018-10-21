@@ -75,7 +75,7 @@ export default {
 
   computed: {
     searchableProducts() {
-      return this.products.filter(p => !p.product.is_added_by_user && p.verified_quantity < p.quantity);
+      return this.products.filter(p => p.product && !p.product.is_added_by_user && p.verified_quantity < p.quantity);
     },
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;

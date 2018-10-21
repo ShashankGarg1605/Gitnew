@@ -152,7 +152,7 @@ export default {
           const scannedProductIsbn = res.text;
           if (scannedProductIsbn) {
             const scannedProductData = this.orderData.orderProduct.find(
-              p => p.product.isbn === scannedProductIsbn
+              p => p.product && p.product.isbn === scannedProductIsbn
             );
             if (scannedProductData)
               window.vm.$f7.mainView.router.load({

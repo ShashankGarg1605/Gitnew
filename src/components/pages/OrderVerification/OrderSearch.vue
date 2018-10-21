@@ -88,7 +88,7 @@ export default {
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
-            const orders = setDefaultVerificationStatus(res.body)
+            const orders = this.setDefaultVerificationStatus(res.body);
             window.vm.$f7.mainView.router.load({
               url: "OrderSelect",
               context: { orders }
@@ -107,7 +107,7 @@ export default {
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
-            const orders = setDefaultVerificationStatus(res.body)
+            const orders = this.setDefaultVerificationStatus(res.body);
             window.vm.$f7.mainView.router.load({
               url: "OrderSelect",
               context: { orders }
@@ -117,8 +117,8 @@ export default {
         .catch(window._pz.errFunc2.bind(this));
     },
     setDefaultVerificationStatus(orders) {
-      if (orders && orders.length) order.forEach(o => o.verification_status = o.verification_status || 0)
-      return orders
+      if (orders && orders.length) orders.forEach(o => { if (!o.verification_status) o.verification_status = 0; });
+      return orders;
     }
   },
   beforeCreate() {

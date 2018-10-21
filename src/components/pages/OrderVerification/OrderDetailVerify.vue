@@ -127,8 +127,8 @@ export default {
         (sum, book) => sum + book.verified_quantity || 0,
         0
       );
-      const verifiedpct = parseInt((verifiedQty / this.nbTotalBooks) * 100);
-      return verifiedpct;
+      const verifiedPct = parseInt((verifiedQty / this.nbTotalBooks) * 100);
+      return verifiedPct;
     },
     progressBarColor() {
       return this.verifiedPct < this.VERIFICATION_THRESHOLD ? "red" : "green";
@@ -195,6 +195,11 @@ export default {
       });
     },
     completeVerification() {
+      if (this.verifiedpct < 100)
+        window.vm.$f7.confirm('Quantity verified is less than pick list. Sure you want to complete verification?', 'Confirm', this.doCompleteVerification);
+      else this.doCompleteVerification();
+    },
+    doCompleteVerification() {
       window.vm.$http
         .patch(
           `${window._pz.apiEndPt}orders?updateType=verification&id=${

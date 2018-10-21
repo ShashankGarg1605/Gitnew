@@ -11,7 +11,7 @@
           alt="product"
         >
         <ul>
-          <!-- <list-item :label="'Title'" :value="bookData.product.title"/> -->
+          <list-item :label="'Title'" :value="bookData.product.title"/>
           <list-item :label="'MRP'" :value="bookData.mrp"/>
           <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
           <list-item

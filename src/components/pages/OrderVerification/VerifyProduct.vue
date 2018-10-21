@@ -12,7 +12,7 @@
         >
         <ul>
           <!-- <list-item :label="'Title'" :value="bookData.product.title"/> -->
-          <list-item :label="'MRP'" :value="bookData.selling_price"/>
+          <list-item :label="'MRP'" :value="bookData.mrp"/>
           <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
           <list-item
             v-if="bookData.product.author"

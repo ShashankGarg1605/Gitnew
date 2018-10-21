@@ -82,13 +82,13 @@ export default {
     };
   },
   methods: {
-openOrdersForVerification() {
-     window.vm.$http
+    openOrdersForVerification() {
+      window.vm.$http
         .get(`${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=100&offset=0&status=103`)
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
-            const orders = res.body;
+            const orders = setDefaultVerificationStatus(res.body)
             window.vm.$f7.mainView.router.load({
               url: "OrderSelect",
               context: { orders }
@@ -96,7 +96,7 @@ openOrdersForVerification() {
           }
         })
         .catch(window._pz.errFunc2.bind(this));
-},
+    },
     onSubmit(e) {
       console.log(this.orderId);
       if (this.orderId) this.fetchOrders();
@@ -107,7 +107,7 @@ openOrdersForVerification() {
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
-            const orders = res.body;
+            const orders = setDefaultVerificationStatus(res.body)
             window.vm.$f7.mainView.router.load({
               url: "OrderSelect",
               context: { orders }
@@ -115,6 +115,10 @@ openOrdersForVerification() {
           }
         })
         .catch(window._pz.errFunc2.bind(this));
+    },
+    setDefaultVerificationStatus(orders) {
+      if (orders && orders.length) order.forEach(o => o.verification_status = o.verification_status || 0)
+      return orders
     }
   },
   beforeCreate() {

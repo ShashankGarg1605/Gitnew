@@ -195,7 +195,7 @@ export default {
       });
     },
     completeVerification() {
-      if (this.verifiedpct < 100)
+      if (this.verifiedPct < 100)
         window.vm.$f7.confirm('Quantity verified is less than pick list. Sure you want to complete verification?', 'Confirm', this.doCompleteVerification);
       else this.doCompleteVerification();
     },

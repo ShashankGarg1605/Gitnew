@@ -140,7 +140,7 @@ export default {
         .get(`${window._pz.apiEndPt}orders/${this.orderId}`)
         .then(res => {
           if (res.ok) {
-            this.orderData = res.body;
+            this.orderData = setDefaultOrderProductVerificationQty(res.body);
           }
         })
         .catch(window._pz.errFunc2.bind(this));
@@ -230,6 +230,10 @@ export default {
           }
         })
         .catch(window._pz.errFunc2.bind(this));
+    },
+    setDefaultOrderProductVerificationQty(order) {
+      if (order && order.orderProduct && order.orderProduct.length) order.orderProduct.forEach(op => op.verified_quantity = 0)
+      return order
     }
   },
   beforeCreate() {

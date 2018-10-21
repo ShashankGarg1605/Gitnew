@@ -26,9 +26,11 @@ Vue.prototype.$pzGlobalReactiveData = globalComp;
 
 Vue.http.interceptors.push(function(request, next) {
   // if (window.vm.$pzGlobalReactiveData.loaderOnAllReqs) window.vm.$f7.showPreloader();
+  window.vm.$f7.showIndicator();
   ++window.vm.$pzGlobalReactiveData.nbPendingReq;
   next(function(response) {
     // window.vm.$f7.hidePreloader();
+    window.vm.$f7.hideIndicator();
     --window.vm.$pzGlobalReactiveData.nbPendingReq;
     window.vm.$pzGlobalReactiveData.loaderOnAllReqs = true; // resume the normal functionality that loader is there for all hits (maybe it was set to false for a particular hit,)
   });

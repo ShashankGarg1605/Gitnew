@@ -79,7 +79,7 @@
 <style scoped>
 .item-inner {
   flex-direction: column;
-  padding-right: 40px;
+  padding-right: 40px !important;
 }
 .money {
   font-weight: bold;

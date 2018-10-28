@@ -80,7 +80,14 @@ export default {
     searchResults() {
       if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;
       const k = this.keyword.toLowerCase();
-      return this.searchableProducts.filter(p => p.product.title.toLowerCase().includes(k) || p.product.isbn.toLowerCase().includes(k) || p.product.publisher.name.toLowerCase().includes(k) || (p.product.additional_code && p.product.additional_code.includes(k)));
+      return this.searchableProducts.filter(productSearch);
+      function productSearch(p) {
+        return doesMatch(p.product.title, k) || doesMatch(p.product.isbn, k) || doesMatch(p.product.publisher, k) || doesMatch(p.product.additional_code, k);
+      }
+      function doesMatch(target, keyword) {
+        if (target) target += "";
+        return target && target.toLowerCase().includes(keyword);
+      }
     }
   },
   methods: {
@@ -102,6 +109,10 @@ export default {
     console.debug(this.$options.name + " created");
     if (window._pz.checkNested(this, "$route", "options", "context", "products"))
       this.products = this.$route.options.context.products;
+    // set the otherProducts block as products
+    this.products.forEach(p => {
+      p.product = p.product ? p.product : p.otherProduct;
+    });
 
     if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
       this.orderId = this.$route.options.context.orderId;

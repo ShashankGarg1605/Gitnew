@@ -182,6 +182,10 @@ export default {
       window._pz.checkNested(this, "$route", "options", "context", "orderData")
     )
       this.orderData = this.$route.options.context.orderData;
+    // set the otherProducts block as products
+    if (this.orderData && this.orderData.orderProduct && this.orderData.orderProduct.length) this.orderData.orderProduct.forEach(p => {
+      p.product = p.product ? p.product : p.otherProduct;
+    });
   },
   beforeMount() {
     console.debug(this.$options.name + " beforeMount");

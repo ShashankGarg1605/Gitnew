@@ -13,7 +13,10 @@
         <ul>
           <list-item :label="'Title'" :value="bookData.product.title"/>
           <list-item :label="'MRP'" :value="bookData.mrp"/>
-          <list-item :label="'Publisher'" :value="bookData.product.publisher.name"/>
+          <list-item
+            :label="itemType === 'book' ? 'Publisher' : 'Brand'"
+            :value="bookData.product.publisher.name"
+          />
           <list-item
             v-if="bookData.product.author"
             :label="'Author'"
@@ -87,7 +90,8 @@ export default {
       title: "VerifyProduct",
       bookData: null,
       orderId: null,
-      verificationQty: null
+      verificationQty: null,
+      itemType: null
     };
   },
   computed: {
@@ -128,6 +132,9 @@ export default {
       window._pz.checkNested(this, "$route", "options", "context", "bookData")
     )
       this.bookData = this.$route.options.context.bookData;
+    this.bookData.product = this.bookData.product || this.bookData.otherProduct;
+    this.itemType = this.bookData.otherProduct ? 'statn' : 'book';
+
     if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
       this.orderId = this.$route.options.context.orderId;
     console.log("this.$route.options.context: ", this.$route.options.context);

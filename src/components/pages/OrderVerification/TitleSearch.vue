@@ -82,7 +82,12 @@ export default {
       const k = this.keyword.toLowerCase();
       return this.searchableProducts.filter(productSearch);
       function productSearch(p) {
-        return doesMatch(p.product.title, k) || doesMatch(p.product.isbn, k) || doesMatch(p.product.publisher, k) || doesMatch(p.product.additional_code, k);
+        return doesMatch(p.product.title, k) ||
+          doesMatch(p.product.isbn, k) ||
+          (p.product.publisher && doesMatch(p.product.publisher.name, k)) ||
+          doesMatch(p.product.additional_code, k) ||
+          doesMatch(p.product.code, k) ||
+          doesMatch(p.product.scan_code, k);
       }
       function doesMatch(target, keyword) {
         if (target) target += "";

@@ -208,6 +208,9 @@ export default {
       this.clickedOrder = order;
       const popupID = "#" + this.randomID;
       window.vm.$f7.popover(window.Dom7(popupID), e.target);
+      // window.dispatchEvent(new Event('resize'));
+      // if the bug arises that popup is not visible, and it is visible only when window resize event fires
+      // then you can trick the popup positioning re-calculation with this hack
     },
     // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
     addInfiniteScroll() {

@@ -30,7 +30,10 @@
           <button @click="openPage('AllUsers')">Buyer Management</button>
         </div>
         <div>
-          <button @click="openPage('CommunicationPanel')">Communications Panel</button>
+          <button
+            @click="openPage('CommunicationPanel')"
+            v-if="$pzGlobalReactiveData.roleAccess('commpanel', 'read')"
+          >Communications Panel</button>
         </div>
       </div>
       <div class="right">

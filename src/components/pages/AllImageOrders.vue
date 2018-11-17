@@ -10,7 +10,7 @@
             </f7-nav-center>
         </f7-navbar>
 
-        <f7-fab color="pink" href="/PlaceImageOrder">
+        <f7-fab color="pink" href="/PlaceImageOrder" v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'create')">
             <f7-icon icon="icon-plus"></f7-icon>
         </f7-fab>
 

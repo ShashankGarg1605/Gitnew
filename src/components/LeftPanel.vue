@@ -21,7 +21,12 @@
               :label="'All Orders'"
               v-if="$pzGlobalReactiveData.roleAccess('order', 'read')"
             ></menu-item>
-            <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
+            <menu-item
+              :icon="'image'"
+              :url="'/AllImageOrders'"
+              :label="'All Image Orders'"
+              v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')"
+            ></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
             <menu-item :icon="'users'" :url="'/AllUsers'" :label="'All Users'"></menu-item>
             <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>

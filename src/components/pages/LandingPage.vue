@@ -35,7 +35,10 @@
       </div>
       <div class="right">
         <div>
-          <button @click="openPage('AllImageOrders')">Image Orders</button>
+          <button
+            @click="openPage('AllImageOrders')"
+            v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')"
+          >Image Orders</button>
         </div>
         <!-- <div><button @click="comingSoon()">Live Inventory</button></div> -->
         <div>

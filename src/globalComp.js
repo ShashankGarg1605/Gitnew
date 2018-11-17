@@ -4,6 +4,7 @@ export default new Vue({
   data: {
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
+    roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {
@@ -57,7 +58,7 @@ export default new Vue({
       1: "Partially verified",
       2: "Verification complete"
     },
-    navHistory: window.f7.mainView.history
+    navHistory: window.f7 && window.f7.mainView && window.f7.mainView.history
   },
   computed: {
     pendingReq() {
@@ -87,6 +88,9 @@ export default new Vue({
     },
     goBack() {
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();
+    },
+    roleAccess(menu, permission) {
+      return window._pz.checkNested(this.roleMenus, menu, permission) ? this.roleMenus[menu][permission] : false;
     },
     scanCode() {
       return new Promise((resolve, reject) => {

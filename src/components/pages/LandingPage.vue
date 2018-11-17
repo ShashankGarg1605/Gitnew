@@ -6,26 +6,38 @@
       </f7-nav-left>
       <f7-nav-center style="display: flex;align-items: center;">
         <span>Home</span>
-        <img style="height: 30px;padding-left: 30px;" :src="tenantImage" />
+        <img style="height: 30px;padding-left: 30px;" :src="tenantImage">
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
-    <section class="hero">
+    <section class="hero" v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')">
       <div>
         <button @click="openPage('dashboard')">Dashboard</button>
       </div>
     </section>
     <section class="links">
       <div class="left">
-        <div><button @click="openPage('allorders')">ISBN Orders</button></div>
-        <div><button @click="openPage('AllUsers')">Buyer Management</button></div>
-        <div><button @click="openPage('CommunicationPanel')">Communications Panel</button></div>
+        <div>
+          <button @click="openPage('allorders')">ISBN Orders</button>
+        </div>
+        <div>
+          <button @click="openPage('AllUsers')">Buyer Management</button>
+        </div>
+        <div>
+          <button @click="openPage('CommunicationPanel')">Communications Panel</button>
+        </div>
       </div>
       <div class="right">
-        <div><button @click="openPage('AllImageOrders')">Image Orders</button></div>
+        <div>
+          <button @click="openPage('AllImageOrders')">Image Orders</button>
+        </div>
         <!-- <div><button @click="comingSoon()">Live Inventory</button></div> -->
-        <div><button @click="openPage('PlaceServiceRequest')">Place Service Request</button></div>
-        <div><button @click="openPage('OrderSearch')">Order Verification</button></div>
+        <div>
+          <button @click="openPage('PlaceServiceRequest')">Place Service Request</button>
+        </div>
+        <div>
+          <button @click="openPage('OrderSearch')">Order Verification</button>
+        </div>
       </div>
     </section>
   </f7-page>

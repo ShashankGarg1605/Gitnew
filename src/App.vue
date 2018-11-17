@@ -1,18 +1,25 @@
 <template>
   <!-- App -->
   <div id="app" :class="platformClass">
-
     <!-- Status bar overlay for fullscreen mode-->
-    <f7-statusbar />
-
+    <f7-statusbar/>
     <!-- Left Panel / View -->
-    <left-panel-view />
-
+    <!-- Load when component is mounted so that the vm instance.. -->
+    <!-- ..(and importantly, the global reactive data, in turn).. -->
+    <!-- ..is available to the side menu -->
+    <left-panel-view v-if="mounted"/>
     <!-- Views-->
     <f7-views>
       <!-- Right view, it is main view-->
       <!-- Defaults to "/" route -->
-      <f7-view :url="defaultPage()" :init="true" id="main-view" :dynamic-navbar="true" navbar-through main>
+      <f7-view
+        :url="defaultPage()"
+        :init="true"
+        id="main-view"
+        :dynamic-navbar="true"
+        navbar-through
+        main
+      >
         <!-- Pages-->
         <f7-pages>
           <!-- Page, data-page contains page name-->
@@ -29,6 +36,14 @@ export default {
   name: 'App',
   components: {
     'left-panel-view': LeftPanel
+  },
+  data() {
+    return {
+      mounted: false
+    };
+  },
+  mounted: function () {
+    this.mounted = true;
   },
   methods: {
     defaultPage() {

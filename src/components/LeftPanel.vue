@@ -9,7 +9,12 @@
         <div class="list-block">
           <ul>
             <menu-item :icon="'home'" :url="'/LandingPage'" :label="'Home'"></menu-item>
-            <menu-item :icon="'line-chart'" :url="'/dashboard'" :label="'Dashboard'"></menu-item>
+            <menu-item
+              :icon="'line-chart'"
+              :url="'/dashboard'"
+              :label="'Dashboard'"
+              v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')"
+            ></menu-item>
             <menu-item :icon="'shopping-cart'" :url="'/allorders'" :label="'All Orders'"></menu-item>
             <menu-item :icon="'image'" :url="'/AllImageOrders'" :label="'All Image Orders'"></menu-item>
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>

@@ -3,21 +3,39 @@
     <section class="pg-login">
       <form @submit.prevent="validateBeforeSubmit" class="form" name="login">
         <div class="list-block" style="width: 80%;">
-
           <div style="padding: 0px 60px 50px 60px;">
             <img src="../../assets/logo.png" alt="" class="pz-width100">
           </div>
           <div class="pz-width100">
-            <input type="number" class="input" placeholder="Mobile number" v-model="username" v-validate.initial="username" data-vv-rules="required|numeric|digits:10">
+            <input
+              type="number"
+              class="input"
+              placeholder="Mobile number"
+              v-model="username"
+              v-validate.initial="username"
+              data-vv-rules="required|numeric|digits:10"
+            >
             <p class="vald-msg" v-if="errors.has('username')">{{ errors.first('username') }}</p>
             <p class="vald-msg" v-else>&nbsp;</p>
           </div>
           <div class="pz-width100">
-            <input type="text" autocapitalize="false" class="input" placeholder="Password" v-model="password" v-validate.initial="password" data-vv-rules="required|min:1">
+            <input
+              type="text"
+              autocapitalize="false"
+              class="input"
+              placeholder="Password"
+              v-model="password"
+              v-validate.initial="password"
+              data-vv-rules="required|min:1"
+            >
             <p class="vald-msg" v-if="errors.has('password')">{{ errors.first('password') }}</p>
             <p class="vald-msg" v-else>&nbsp;</p>
           </div>
-          <button href="#" class="button button-big button-fill button-raised color-teal pz-width100" :disabled="errors.any() || $pzGlobalReactiveData.pendingReq">LOGIN</button>
+          <button
+            href="#"
+            class="button button-big button-fill button-raised color-teal pz-width100"
+            :disabled="errors.any() || $pzGlobalReactiveData.pendingReq"
+          >LOGIN</button>
         </div>
       </form>
     </section>
@@ -106,6 +124,7 @@ export default {
     login() {
       let tempTenant = null;
       let authToken = null;
+      let roleMenus = null;
       // get list of tenants
       window.vm.$http.post(window._pz.apiEndPt + "tenant", { userName: this.username })
 
@@ -170,6 +189,7 @@ export default {
           res => {
             if (res.ok) {
               authToken = res.body.token;
+              if (res.body.userRoles && res.body.userRoles.length) roleMenus = createRoleMenus(res.body.userRoles);
               return window.vm.$http.get(
                 window._pz.apiEndPt + "users/" + res.body.id,
                 {
@@ -190,7 +210,7 @@ export default {
           if (!res.ok) return Promise.reject(res.status);
           if (res.body.user_type === 1) {
 
-            setGlobals(authToken, tempTenant, res.body.id);
+            setGlobals(authToken, tempTenant, res.body.id, roleMenus);
             clearAllHistory();
 
             window.localStorage.userName = res.body.buyer_name;
@@ -239,7 +259,7 @@ export default {
   }
 };
 
-function setGlobals(authToken, tenantData, userID) {
+function setGlobals(authToken, tenantData, userID, roleMenus) {
   window.vm.$options.http.headers.Authorization = authToken;
   window.vm.$options.http.headers.ID = "" + userID;
   window.vm.$options.http.headers.tenant = "tenant_" + tenantData.id;
@@ -247,15 +267,42 @@ function setGlobals(authToken, tenantData, userID) {
   window.localStorage.authToken = authToken;
   window.localStorage.userID = userID;
   window.localStorage.tenantData = JSON.stringify(tenantData);
+  window.localStorage.roleMenus = JSON.stringify(roleMenus);
 
   window._pz.uploadsEndPt = `${window._pz
     .domain}/backend/web/uploads/tenant_${tenantData.id}/`;
 
   // add user specific stuff to the global useable object
   window.vm.$pzGlobalReactiveData.userID = userID;
+  window.vm.$pzGlobalReactiveData.roleMenus = roleMenus;
 }
 
 function clearAllHistory() {
   window.vm.$f7.mainView.history = [];
+}
+
+function createRoleMenus(userRoles) {
+  const roleMenus = {};
+  userRoles.forEach(role => {
+    const rm = role.role.roleMenus;
+    rm.forEach(menu => {
+      const name = menu.menu.name;
+      if (!roleMenus[name]) {
+        roleMenus[name] = {};
+        roleMenus[name].create = menu.create;
+        roleMenus[name].read = menu.read;
+        roleMenus[name].update = menu.update;
+        roleMenus[name].delete = menu.delete;
+      }
+      else {
+        // take super set, i.e. 1 will take preference over 0
+        if (menu.create === 1) roleMenus[name].create = menu.create;
+        if (menu.read === 1) roleMenus[name].read = menu.read;
+        if (menu.update === 1) roleMenus[name].update = menu.update;
+        if (menu.delete === 1) roleMenus[name].delete = menu.delete;
+      }
+    });
+  });
+  return roleMenus;
 }
 </script> ̰

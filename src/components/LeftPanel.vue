@@ -27,7 +27,12 @@
               :label="'All Image Orders'"
               v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')"
             ></menu-item>
-            <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
+            <menu-item
+              :icon="'table'"
+              :url="'/purchaseinvoice'"
+              :label="'Purchase Invoice'"
+              v-if="$pzGlobalReactiveData.roleAccess('inventory', 'read')"
+            ></menu-item>
             <menu-item
               :icon="'users'"
               :url="'/AllUsers'"
@@ -46,7 +51,12 @@
               :label="'Place Service Request'"
               v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
             ></menu-item>
-            <menu-item :icon="'backward'" :url="'/InitiateReturn'" :label="'Initiate Return'"></menu-item>
+            <menu-item
+              :icon="'backward'"
+              :url="'/InitiateReturn'"
+              :label="'Initiate Return'"
+              v-if="$pzGlobalReactiveData.roleAccess('returns', 'create')"
+            ></menu-item>
             <menu-item
               :icon="'check'"
               :url="'/OrderSearch'"

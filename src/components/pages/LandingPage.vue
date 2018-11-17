@@ -10,15 +10,21 @@
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
-    <section class="hero" v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')">
+    <section class="hero">
       <div>
-        <button @click="openPage('dashboard')">Dashboard</button>
+        <button
+          @click="openPage('dashboard')"
+          v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')"
+        >Dashboard</button>
       </div>
     </section>
     <section class="links">
       <div class="left">
         <div>
-          <button @click="openPage('allorders')">ISBN Orders</button>
+          <button
+            @click="openPage('allorders')"
+            v-if="!$pzGlobalReactiveData.roleAccess('order', 'read')"
+          >ISBN Orders</button>
         </div>
         <div>
           <button @click="openPage('AllUsers')">Buyer Management</button>

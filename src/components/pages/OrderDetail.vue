@@ -37,7 +37,7 @@
         <list-item :label="'Value of goods'" :value="dispatchData.biltyDetails.goods_value | moneyFormat" />
       </section>
 
-      <button v-if="isPartiallyDispatched" href="#" class="button button-raised color-teal pz-margin-r16 pz-padding-lr32 pz-float-r" @click="openUpdate()">Update order</button>
+      <button v-if="isPartiallyDispatched && $pzGlobalReactiveData.roleAccess('order', 'update')" href="#" class="button button-raised color-teal pz-margin-r16 pz-padding-lr32 pz-float-r" @click="openUpdate()">Update order</button>
 
     </section>
     <section v-if="data && data.orderProduct && data.orderProduct.length">

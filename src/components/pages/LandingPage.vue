@@ -23,7 +23,7 @@
         <div>
           <button
             @click="openPage('allorders')"
-            v-if="!$pzGlobalReactiveData.roleAccess('order', 'read')"
+            v-if="$pzGlobalReactiveData.roleAccess('order', 'read')"
           >ISBN Orders</button>
         </div>
         <div>

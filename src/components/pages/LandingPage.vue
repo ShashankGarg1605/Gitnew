@@ -27,7 +27,10 @@
           >ISBN Orders</button>
         </div>
         <div>
-          <button @click="openPage('AllUsers')">Buyer Management</button>
+          <button
+            @click="openPage('AllUsers')"
+            v-if="$pzGlobalReactiveData.roleAccess('buyers', 'read')"
+          >Buyer Management</button>
         </div>
         <div>
           <button

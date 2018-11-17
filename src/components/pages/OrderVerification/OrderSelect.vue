@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <i
-                                v-if="order && order.verification_status !== 2"
+                                v-if="order && order.verification_status !== 2 && $pzGlobalReactiveData.roleAccess('orderverification', 'update')"
                                 class="f7-icons pz-popover"
                                 @click="openPopover(order, $event)"
                             >more_horiz</i>

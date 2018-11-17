@@ -48,7 +48,10 @@
           >Place Service Request</button>
         </div>
         <div>
-          <button @click="openPage('OrderSearch')">Order Verification</button>
+          <button
+            @click="openPage('OrderSearch')"
+            v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
+          >Order Verification</button>
         </div>
       </div>
     </section>

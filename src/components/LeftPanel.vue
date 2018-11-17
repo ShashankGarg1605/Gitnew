@@ -37,7 +37,12 @@
               v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
             ></menu-item>
             <menu-item :icon="'backward'" :url="'/InitiateReturn'" :label="'Initiate Return'"></menu-item>
-            <menu-item :icon="'check'" :url="'/OrderSearch'" :label="'Order Verification'"></menu-item>
+            <menu-item
+              :icon="'check'"
+              :url="'/OrderSearch'"
+              :label="'Order Verification'"
+              v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
+            ></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">

@@ -42,7 +42,10 @@
         </div>
         <!-- <div><button @click="comingSoon()">Live Inventory</button></div> -->
         <div>
-          <button @click="openPage('PlaceServiceRequest')">Place Service Request</button>
+          <button
+            @click="openPage('PlaceServiceRequest')"
+            v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
+          >Place Service Request</button>
         </div>
         <div>
           <button @click="openPage('OrderSearch')">Order Verification</button>

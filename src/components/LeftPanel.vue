@@ -30,7 +30,12 @@
             <menu-item :icon="'table'" :url="'/purchaseinvoice'" :label="'Purchase Invoice'"></menu-item>
             <menu-item :icon="'users'" :url="'/AllUsers'" :label="'All Users'"></menu-item>
             <menu-item :icon="'user-o'" :url="'/CommunicationPanel'" :label="'Communication Panel'"></menu-item>
-            <menu-item :icon="'bug'" :url="'/PlaceServiceRequest'" :label="'Place Service Request'"></menu-item>
+            <menu-item
+              :icon="'bug'"
+              :url="'/PlaceServiceRequest'"
+              :label="'Place Service Request'"
+              v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
+            ></menu-item>
             <menu-item :icon="'backward'" :url="'/InitiateReturn'" :label="'Initiate Return'"></menu-item>
             <menu-item :icon="'check'" :url="'/OrderSearch'" :label="'Order Verification'"></menu-item>
           </ul>

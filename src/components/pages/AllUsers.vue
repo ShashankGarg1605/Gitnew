@@ -53,9 +53,9 @@
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
-          <a @click="resetPassword()" class="list-button item-link close-popover">Reset Password</a>
-          <a v-if="clickedUser && clickedUser.status==0" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
-          <a v-if="clickedUser && clickedUser.status==1" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
+          <a @click="resetPassword()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('resetpass', 'update')">Reset Password</a>
+          <a v-if="clickedUser && clickedUser.status==0 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
+          <a v-if="clickedUser && clickedUser.status==1 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
         </div>
       </div>
     </f7-popover>

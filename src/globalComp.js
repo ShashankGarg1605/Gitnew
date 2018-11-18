@@ -90,6 +90,9 @@ export default new Vue({
       if (window.f7 && window.f7.mainView) window.f7.mainView.back();
     },
     roleAccess(menu, permission) {
+      if (!this.roleMenus) return false;
+      if (this.roleMenus._isAdmin) return true;
+
       return window._pz.checkNested(this.roleMenus, menu, permission) ? this.roleMenus[menu][permission] : false;
     },
     scanCode() {

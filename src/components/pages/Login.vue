@@ -285,6 +285,7 @@ function createRoleMenus(userRoles) {
   const roleMenus = {};
   userRoles.forEach(role => {
     const rm = role.role.roleMenus;
+    if (role.role.role_name === 'Admin') roleMenus._isAdmin = true;
     rm.forEach(menu => {
       const name = menu.menu.name;
       if (!roleMenus[name]) {

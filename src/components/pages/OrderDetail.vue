@@ -59,9 +59,9 @@
           <tbody>
             <tr v-for="(p, index) in data.orderProduct" :key="p.id">
               <td class="numeric-cell">{{index+1}}</td>
-              <td class="label-cell">{{p.product.title}}</td>
-              <td class="label-cell">{{p.product.publisher.name}}</td>
-              <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
+              <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].title}}</td>
+              <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].publisher.name}}</td>
+              <td class="numeric-cell">{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
               <td class="numeric-cell">{{p.quantity}}</td>
               <!-- <td class="numeric-cell">{{p.procurement_discount}}%</td> -->
               <td class="numeric-cell">{{p.discount_percent}}</td>

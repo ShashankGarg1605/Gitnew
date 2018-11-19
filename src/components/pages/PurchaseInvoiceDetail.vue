@@ -69,14 +69,14 @@
                     <tbody>
                         <tr v-for="(p, index) in data.stock" :key="p.id">
                             <td class="numeric-cell">{{index+1}}</td>
-                            <td class="label-cell">{{p.product.isbn}}</td>
-                            <td class="label-cell">{{p.product.title}}</td>
-                            <td class="label-cell">{{p.product.publisher.name}}</td>
-                            <td class="numeric-cell">{{p.product.mrp | moneyFormat}}</td>
+                            <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].isbn}}</td>
+                            <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].title}}</td>
+                            <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].publisher.name}}</td>
+                            <td class="numeric-cell">{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
                             <td class="numeric-cell">{{p.original_quantity}}</td>
                             <td class="numeric-cell">{{p.quantity}}</td>
                             <td class="numeric-cell">{{p.procurement_discount}}%</td>
-                            <td class="numeric-cell">{{(p.product.mrp - (p.product.mrp*p.procurement_discount/100))*p.original_quantity | moneyFormat}}</td>
+                            <td class="numeric-cell">{{(p[p.product? 'product' : 'otherProduct'].mrp - (p[p.product? 'product' : 'otherProduct'].mrp*p.procurement_discount/100))*p.original_quantity | moneyFormat}}</td>
                         </tr>
                     </tbody>
                 </table>

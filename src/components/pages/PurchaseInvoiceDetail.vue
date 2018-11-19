@@ -58,7 +58,7 @@
                             <th style="width:1px;" class="numeric-cell">#</th>
                             <th style="width:60px;" class="label-cell">Isbn</th>
                             <th style="width:200px;" class="label-cell">Title</th>
-                            <th style="width:100px;" class="label-cell">Publisher</th>
+                            <th style="width:100px;" class="label-cell">Brand</th>
                             <th class="numeric-cell">MRP</th>
                             <th class="numeric-cell pz-padding-0">Original QTY</th>
                             <th class="numeric-cell pz-padding-0">Current QTY</th>

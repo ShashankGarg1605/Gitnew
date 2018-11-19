@@ -114,10 +114,11 @@ export default {
     },
     resetFilters() {
       for (let filterType of Object.keys(this.comps)) {
-        for (let filter of this.comps[filterType]) {
-          //eg first date type filter, then second date type filter
-          filter.value = null;
-        }
+        if (this.comps[filterType] && typeof this.comps[filterType] === 'object')
+          for (let filter of this.comps[filterType]) {
+            //eg first date type filter, then second date type filter
+            filter.value = null;
+          } else this.comps[filterType] = null;
       }
       this.applyFilters();
     }

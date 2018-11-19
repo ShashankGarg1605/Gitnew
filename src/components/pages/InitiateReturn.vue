@@ -1,75 +1,101 @@
 <template>
     <f7-page name="InitiateReturn">
-
-        <f7-navbar>
-            <f7-nav-left>
+        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
+            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
             </f7-nav-left>
-            <f7-nav-center>
-                Initiate Return
-            </f7-nav-center>
+            <f7-nav-center>Initiate Return</f7-nav-center>
         </f7-navbar>
-
-        <user-select :value.sync="userID" />
-
+        <user-select :value.sync="userID"/>
         <section v-if="userID">
-
             <div class="list-block">
                 <ul>
-                    <single-select :value.sync="selectedWarehouse" :placeholder="'Select warehouse'" :opts="warehouses" />
-                    <date-range v-model="dates" :placeholder="'Start date'" :range="false" :maxDateToday="true" />
-                    <single-select :value.sync="selectedMethod" :placeholder="'Return method'" :opts="methods" />
-
+                    <single-select
+                        :value.sync="selectedWarehouse"
+                        :placeholder="'Select warehouse'"
+                        :opts="warehouses"
+                    />
+                    <date-range
+                        v-model="dates"
+                        :placeholder="'Start date'"
+                        :range="false"
+                        :maxDateToday="true"
+                    />
+                    <single-select
+                        :value.sync="selectedMethod"
+                        :placeholder="'Return method'"
+                        :opts="methods"
+                    />
                     <template v-if="selectedMethod === 1">
-                        <text-search :value.sync="biltyNb" :placeholder="'Bilty Number'" />
+                        <text-search :value.sync="biltyNb" :placeholder="'Bilty Number'"/>
                         <li class="item-content pz-colr-inherit pz-cap">
                             <div class="item-media">
                                 <icon name="image"></icon>
                             </div>
-                            <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-                                <span class="pz-size-normal">
-                                    Bilty Image
-                                </span>
-                                <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'biltyImage')" />
+                            <div
+                                class="item-inner pz-margin-l0"
+                                style="align-items: left;     display: flex;     flex-direction: column;"
+                            >
+                                <span class="pz-size-normal">Bilty Image</span>
+                                <image-uploader
+                                    :maxCount="1"
+                                    :inputTitles="false"
+                                    :tooltip="false"
+                                    :hideSubmitBtn="true"
+                                    @added="imageAdded($event, 'biltyImage')"
+                                />
                             </div>
                         </li>
                     </template>
-
                     <li class="item-content pz-colr-inherit pz-cap">
                         <div class="item-media">
                             <icon name="image"></icon>
                         </div>
-                        <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-                            <span class="pz-size-normal">
-                                Debit note
-                            </span>
-                            <image-uploader :maxCount="1" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imageAdded($event, 'debitNoteImage')" />
+                        <div
+                            class="item-inner pz-margin-l0"
+                            style="align-items: left;     display: flex;     flex-direction: column;"
+                        >
+                            <span class="pz-size-normal">Debit note</span>
+                            <image-uploader
+                                :maxCount="1"
+                                :inputTitles="false"
+                                :tooltip="false"
+                                :hideSubmitBtn="true"
+                                @added="imageAdded($event, 'debitNoteImage')"
+                            />
                         </div>
                     </li>
-
                     <li class="item-content pz-colr-inherit pz-cap">
                         <div class="item-media">
                             <icon name="pencil"></icon>
                         </div>
-                        <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-                            <span class="pz-size-normal">
-                                Return notes
-                            </span>
-                            <textarea type="text" placeholder="Please enter as much detail as possible" v-model="notes"></textarea>
+                        <div
+                            class="item-inner pz-margin-l0"
+                            style="align-items: left;     display: flex;     flex-direction: column;"
+                        >
+                            <span class="pz-size-normal">Return notes</span>
+                            <textarea
+                                type="text"
+                                placeholder="Please enter as much detail as possible"
+                                v-model="notes"
+                            ></textarea>
                         </div>
                     </li>
-
                 </ul>
-
                 <div class="bottom">
-                    <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!canSubmit">Submit</button>
+                    <button
+                        type="button"
+                        @click="submit()"
+                        class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+                        :disabled="!canSubmit"
+                    >Submit</button>
                 </div>
             </div>
-
         </section>
-
-        <div class="color-gray pz-page-err" v-if="errMsg && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
-
+        <div
+            class="color-gray pz-page-err"
+            v-if="errMsg && !$pzGlobalReactiveData.pendingReq"
+        >{{errMsg}}</div>
     </f7-page>
 </template>
 

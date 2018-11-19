@@ -53,9 +53,9 @@
             ></menu-item>
             <menu-item
               :icon="'backward'"
-              :url="'/InitiateReturn'"
-              :label="'Initiate Return'"
-              v-if="$pzGlobalReactiveData.roleAccess('returns', 'create')"
+              :url="'/Returns'"
+              :label="'Returns'"
+              v-if="$pzGlobalReactiveData.roleAccess('returns', 'read')"
             ></menu-item>
             <menu-item
               :icon="'check'"

@@ -58,6 +58,11 @@ export default new Vue({
       1: "Partially verified",
       2: "Verification complete"
     },
+    returnStatusMap: {
+      1: "Open",
+      2: "Under process",
+      3: "Complete"
+    },
     navHistory: window.f7 && window.f7.mainView && window.f7.mainView.history
   },
   computed: {

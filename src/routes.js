@@ -15,6 +15,7 @@ import UserDetail from "./components/pages/UserDetail";
 import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
 import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
 import InitiateReturn from "./components/pages/InitiateReturn";
+import Returns from "./components/pages/Returns";
 import LandingPage from "./components/pages/LandingPage";
 import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
@@ -92,6 +93,10 @@ export default [
   {
     path: "/PlaceServiceRequest/",
     component: PlaceServiceRequest
+  },
+{
+    path: "/Returns/",
+    component: Returns
   },
   {
     path: "/InitiateReturn/",

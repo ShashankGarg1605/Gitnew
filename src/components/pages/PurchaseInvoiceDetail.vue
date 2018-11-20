@@ -61,7 +61,7 @@
                             <th style="width:100px;" class="label-cell">Brand</th>
                             <th class="numeric-cell">MRP</th>
                             <th class="numeric-cell pz-padding-0">Original QTY</th>
-                            <th class="numeric-cell pz-padding-0">Current QTY</th>
+                            <!-- <th class="numeric-cell pz-padding-0">Current QTY</th> -->
                             <th class="numeric-cell pz-padding-0">Buy %</th>
                             <th class="numeric-cell pz-padding-0">Amount</th>
                         </tr>
@@ -74,7 +74,7 @@
                             <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].publisher.name}}</td>
                             <td class="numeric-cell">{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
                             <td class="numeric-cell">{{p.original_quantity}}</td>
-                            <td class="numeric-cell">{{p.quantity}}</td>
+                            <!-- <td class="numeric-cell">{{p.quantity}}</td> -->
                             <td class="numeric-cell">{{p.procurement_discount}}%</td>
                             <td class="numeric-cell">{{(p[p.product? 'product' : 'otherProduct'].mrp - (p[p.product? 'product' : 'otherProduct'].mrp*p.procurement_discount/100))*p.original_quantity | moneyFormat}}</td>
                         </tr>

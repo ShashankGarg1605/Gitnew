@@ -152,7 +152,13 @@ export default {
           const scannedProductIsbn = res.text;
           if (scannedProductIsbn) {
             const scannedProductData = this.orderData.orderProduct.find(
-              p => (p.product && p.product.isbn === scannedProductIsbn) || (p.otherProduct && p.otherProduct.code === scannedProductIsbn) || (p.otherProduct && p.otherProduct.scan_code === scannedProductIsbn)
+              p => {
+                const searchTargets = [];
+                if (window._pz.checkNested(p, 'product', 'isbn')) searchTargets.push(p.product.isbn);
+                if (window._pz.checkNested(p, 'otherProduct', 'code')) searchTargets.push(p.otherProduct.code.replace(/ /g, ''));
+                if (window._pz.checkNested(p, 'otherProduct', 'scan_code')) searchTargets.push(p.otherProduct.scan_code.replace(/ /g, ''));
+                return searchTargets.includes(scannedProductIsbn.replace(/ /g, ''));
+              }
             );
             if (scannedProductData)
               window.vm.$f7.mainView.router.load({

@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <i
-                                v-if="order && order.verification_status !== 2 && $pzGlobalReactiveData.roleAccess('orderverification', 'update')"
+                                v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'update')"
                                 class="f7-icons pz-popover"
                                 @click="openPopover(order, $event)"
                             >more_horiz</i>
@@ -67,6 +67,15 @@
                     >
                         <a
                             @click="goToOrderDetails()"
+                            class="list-button item-link close-popover"
+                        >Resume verification</a>
+                    </div>
+                    <div
+                        v-if="clickedOrder && clickedOrder.verification_status === 2"
+                        class="list-block"
+                    >
+                        <a
+                            @click="resumeVerification()"
                             class="list-button item-link close-popover"
                         >Resume verification</a>
                     </div>
@@ -122,6 +131,18 @@ export default {
         goToOrderDetails() {
             let url = `OrderDetailVerify?orderId=${this.clickedOrder.id}`;
             window.vm.$f7.mainView.router.loadPage(url);
+        },
+        resumeVerification() {
+            window.vm.$http
+                .patch(
+                    `${window._pz.apiEndPt}orders?updateType=verification&id=${
+                    this.clickedOrder.id
+                    }&verification_status=1`
+                )
+                .then(res => {
+                    if (res.ok) this.goToOrderDetails();
+                })
+                .catch(window._pz.errFunc2.bind(this));
         }
     },
     beforeCreate() {

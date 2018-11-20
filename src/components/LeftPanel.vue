@@ -47,9 +47,9 @@
             ></menu-item>
             <menu-item
               :icon="'bug'"
-              :url="'/PlaceServiceRequest'"
-              :label="'Place Service Request'"
-              v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
+              :url="'/ServiceRequests'"
+              :label="'Service Requests'"
+              v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'read')"
             ></menu-item>
             <menu-item
               :icon="'backward'"

@@ -13,9 +13,10 @@ import CommunicationPanel from "./components/pages/CommunicationPanel";
 import AllUsers from "./components/pages/AllUsers";
 import UserDetail from "./components/pages/UserDetail";
 import UnconvertedImageOrders from "./components/pages/UnconvertedImageOrders";
+import ServiceRequests from "./components/pages/ServiceRequests";
 import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
-import InitiateReturn from "./components/pages/InitiateReturn";
 import Returns from "./components/pages/Returns";
+import InitiateReturn from "./components/pages/InitiateReturn";
 import LandingPage from "./components/pages/LandingPage";
 import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
@@ -91,10 +92,14 @@ export default [
     component: UnconvertedImageOrders
   },
   {
+    path: "/ServiceRequests/",
+    component: ServiceRequests
+  },
+  {
     path: "/PlaceServiceRequest/",
     component: PlaceServiceRequest
   },
-{
+  {
     path: "/Returns/",
     component: Returns
   },

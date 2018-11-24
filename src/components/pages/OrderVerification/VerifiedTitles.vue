@@ -149,7 +149,7 @@ export default {
     openPopover(title, e) {
       this.clickedTitle = title;
       const popupID = "#" + this.randomID;
-      window.vm.$f7.popover(window.Dom7(popupID), e.target);
+      window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7(popupID), e.target);
     },
     reverify() {
       window.vm.$http

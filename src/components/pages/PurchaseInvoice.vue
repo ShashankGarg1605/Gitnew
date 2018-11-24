@@ -185,7 +185,7 @@ export default {
             window.vm.$f7.mainView.router.loadPage(url);
         },
         openPopover(id, e) {
-            window.vm.$f7.popover(window.Dom7('#pz-popover-2'), e.target);
+            window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7('#pz-popover-2'), e.target);
             window.Dom7('#pz-popover-2').data('pz-id', id);
         },
         // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll

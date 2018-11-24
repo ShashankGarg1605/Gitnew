@@ -171,6 +171,12 @@ export default new Vue({
           else reject("Plugin or Cordova not available");
         }
       });
+    },
+    openPopoverMenu(popupElem, targetElem) {
+      // if the bug arises that popup is not visible, and it is visible only when window resize event fires
+      // then you can trick the popup positioning re-calculation with this hack
+      window.dispatchEvent(new Event("resize"));
+      window.vm.$f7.popover(popupElem, targetElem);
     }
   },
   created() {

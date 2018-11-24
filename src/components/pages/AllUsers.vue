@@ -144,7 +144,7 @@ export default {
     openPopover(user, e) {
       this.clickedUser = user;
       const popupID = '#' + this.randomID;
-      window.vm.$f7.popover(window.Dom7(popupID), e.target);
+      window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7(popupID), e.target);
     },
     // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
     addInfiniteScroll() {

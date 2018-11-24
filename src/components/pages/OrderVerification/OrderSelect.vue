@@ -114,7 +114,7 @@ export default {
         openPopover(order, e) {
             this.clickedOrder = order;
             const popupID = "#" + this.randomID;
-            window.vm.$f7.popover(window.Dom7(popupID), e.target);
+            window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7(popupID), e.target);
         },
         startVerification() {
             window.vm.$http

@@ -217,6 +217,9 @@ export default {
             window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
 
             window.vm.$f7.mainView.router.loadPage("LandingPage");
+
+            window.vm.$pzGlobalReactiveData.beginPeriodicDataFetch();
+
           } else return Promise.reject('You are not an admin.');
         })
 

@@ -2,6 +2,7 @@ import Vue from "vue";
 
 export default new Vue({
   data: {
+    dataFetchIntervalInstance: null,
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
     roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
@@ -71,6 +72,47 @@ export default new Vue({
     }
   },
   methods: {
+    signOut() {
+      console.log("signing out");
+      delete window.vm.$options.http.headers.Authorization;
+      delete window.vm.$options.http.headers.tenant;
+      window.localStorage.clear();
+      window.vm.$f7.mainView.history = [];
+      window.vm.$f7.mainView.router.loadPage({
+        url: "/",
+        reload: true
+      });
+      this.stopPeriodicDataFetch();
+    },
+    beginPeriodicDataFetch() {
+      const INTERVAL_IN_MIN = 10;
+      if (this.userID && !this.dataFetchIntervalInstance) {
+        console.log("setting interval for periodicDataFetch");
+        this.dataFetchIntervalInstance = setInterval(this.periodicDataFetch, INTERVAL_IN_MIN * 60 * 1000);
+      }
+    },
+    periodicDataFetch() {
+      console.log("fetching periodic data");
+      // window.vm.$http.get(window._pz.apiEndPt + "users/");
+      window.vm.$http
+        .get(window._pz.apiEndPt + "users/" + this.userID)
+        .then(res => {
+          if (!res.body.status || res.body.is_deleted) this.signOut();
+        })
+        .catch(err => {
+          window._pz.errFunc2.call(this, err);
+        });
+
+      window.vm.$http
+        .get(window._pz.apiEndPt + "user_role/" + this.userID)
+        .then(res => {})
+        .catch(err => {
+          window._pz.errFunc2.call(this, err);
+        });
+    },
+    stopPeriodicDataFetch() {
+      if (this.dataFetchIntervalInstance) clearInterval(this.dataFetchIntervalInstance);
+    },
     openZoomView(imgURL) {
       var a = window.f7.photoBrowser({
         type: "popup",
@@ -130,5 +172,8 @@ export default new Vue({
         }
       });
     }
+  },
+  created() {
+    setTimeout(this.beginPeriodicDataFetch);
   }
 });

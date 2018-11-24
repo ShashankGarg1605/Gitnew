@@ -27,7 +27,10 @@
                     <li class="item-content" v-for="invoice in allInvoice" :key="invoice.id" :class="{ 'pz-bg-red-lightest': !invoice.image }">
                         <div class="item-inner" style="flex-direction: column;">
                             <div class="row pz-width100">
-                                <div class="col-30 color-gray">#{{invoice.invoice_number}}</div>
+                                <div class="color-gray">#{{invoice.invoice_number}}</div>
+                            </div>
+                            <div class="row pz-width100">
+                                <div class="col-30 color-gray pz-weight-thin ">Value:</div>
                                 <div class="col-70 ">{{invoice.value | moneyFormat}} </div>
                             </div>
                             <div class="row pz-width100">

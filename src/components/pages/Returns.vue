@@ -23,6 +23,16 @@
             class="pz-padding-16 pz-float-l color-gray"
             v-if="totalCount"
         >Found {{totalCount}} results</div>
+        <div style="overflow: hidden; margin: 16px 16px 16px;">
+            <a
+                href="#"
+                class="button button-fill button-raised pz-flex-c-c pz-float-r"
+                @click="openFilters()"
+            >
+                <icon name="filter"></icon>
+                <span class="pz-padding-l16">Filter</span>
+            </a>
+        </div>
         <f7-list>
             <div v-if="allReturns.length" class="list-block">
                 <ul>
@@ -41,8 +51,12 @@
                                 <div class="col-65">{{ret.created_date}}</div>
                             </div>
                             <div class="row pz-width100">
-                                <div class="col-35 color-gray pz-weight-thin">Value:</div>
+                                <div class="col-35 color-gray pz-weight-thin">Return value:</div>
                                 <div class="col-65">{{ret.return_value}}</div>
+                            </div>
+                            <div class="row pz-width100">
+                                <div class="col-35 color-gray pz-weight-thin">Approved value:</div>
+                                <div class="col-65">{{ret.approved_value}}</div>
                             </div>
                             <div class="row pz-width100">
                                 <div class="col-35 color-gray pz-weight-thin">Total books:</div>
@@ -96,14 +110,43 @@ export default {
             totalCount: null,
             randomID: Math.random()
                 .toString(36)
-                .substr(2, 10)
+                .substr(2, 10),
+            filters: {
+                singleselect: [
+                    {
+                        placeholder: "Chose status",
+                        value: null,
+                        opts: [
+                            { label: "All", value: null },
+                            { label: "Open", value: "1" },
+                            { label: "Under process", value: "2" },
+                            { label: "Complete", value: "3" }
+                        ]
+                    }
+                ],
+                userSelect: null
+            }
         };
+    },
+    computed: {
+        filterQuery() {
+            let filterQuery = '';
+
+            // a. status select
+            let { value: status = null } = this.filters.singleselect[0];
+            if (status !== null) filterQuery += `&status=${status}`;
+
+            // b. user filter
+            if (this.filters.userSelect) filterQuery += `&user=${this.filters.userSelect}`;
+
+            return filterQuery;
+        }
     },
     methods: {
         getAllReturns() {
             window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
 
-            let url = `${window._pz.apiEndPt}returns?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}`;
+            let url = `${window._pz.apiEndPt}returns?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
             window.vm.$http
                 .get(url)
                 .then(res => {
@@ -126,7 +169,7 @@ export default {
                 });
         },
         onInfiniteScroll() {
-            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllReturns();
         },
         onPullToRefresh() {
             window.vm.$f7.mainView.router.refreshPage();
@@ -141,6 +184,13 @@ export default {
             window.vm.$f7.detachInfiniteScroll(window.Dom7(".infinite-scroll"));
             window.Dom7(".infinite-scroll-preloader").hide();
             this.hasReachedEnd = true;
+        },
+        openFilters() {
+            window.vm.$f7.mainView.router.load({
+                url: "filters",
+                // send over a clone of the filters object to avoid mutating it directly from the filters page
+                context: { comps: JSON.parse(JSON.stringify(this.filters)) }
+            });
         }
     },
 
@@ -149,6 +199,7 @@ export default {
     },
     created() {
         console.debug(this.$options.name + " created");
+        if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
         this.getAllReturns();
     },
     beforeMount() {

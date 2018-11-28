@@ -23,6 +23,16 @@
             class="pz-padding-16 pz-float-l color-gray"
             v-if="totalCount"
         >Found {{totalCount}} results</div>
+        <div style="overflow: hidden; margin: 16px 16px 16px;">
+            <a
+                href="#"
+                class="button button-fill button-raised pz-flex-c-c pz-float-r"
+                @click="openFilters()"
+            >
+                <icon name="filter"></icon>
+                <span class="pz-padding-l16">Filter</span>
+            </a>
+        </div>
         <f7-list>
             <div v-if="allSr.length" class="list-block">
                 <ul>
@@ -89,17 +99,48 @@ export default {
             totalCount: null,
             randomID: Math.random()
                 .toString(36)
-                .substr(2, 10)
+                .substr(2, 10),
+            filters: {
+                singleselect: [
+                    {
+                        placeholder: "Chose status",
+                        value: null,
+                        opts: [
+                            { label: "All", value: null },
+                            { label: "Open", value: "0" },
+                            { label: "Resolved", value: "1" },
+                            { label: "Resolved for buyer", value: "2" },
+                            { label: "Non resolvable", value: "3" }
+                        ]
+                    }
+                ],
+                userSelect: null
+            }
         };
+    },
+    computed: {
+        filterQuery() {
+            let filterQuery = '';
+
+            // a. status select
+            let { value: status = null } = this.filters.singleselect[0];
+            if (status !== null) filterQuery += `&status=${status}`;
+
+            // b. user filter
+            if (this.filters.userSelect) filterQuery += `&user=${this.filters.userSelect}`;
+
+            return filterQuery;
+        }
     },
     methods: {
         getAllSR() {
             window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
 
-            let url = `${window._pz.apiEndPt}sr?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}`;
+            let url = `${window._pz.apiEndPt}sr?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
             window.vm.$http
                 .get(url)
                 .then(res => {
+                    this.totalCount = res.headers.map.count && res.headers.map.count[0];
                     console.log('res.headers.map: ', res.headers.map);
                     const data = res.body.map(ret => {
                         ret.statusText = window.vm.$pzGlobalReactiveData.serviceReqMap[ret.status];
@@ -118,7 +159,7 @@ export default {
                 });
         },
         onInfiniteScroll() {
-            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+            if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllSR();
         },
         onPullToRefresh() {
             window.vm.$f7.mainView.router.refreshPage();
@@ -133,6 +174,13 @@ export default {
             window.vm.$f7.detachInfiniteScroll(window.Dom7(".infinite-scroll"));
             window.Dom7(".infinite-scroll-preloader").hide();
             this.hasReachedEnd = true;
+        },
+        openFilters() {
+            window.vm.$f7.mainView.router.load({
+                url: "filters",
+                // send over a clone of the filters object to avoid mutating it directly from the filters page
+                context: { comps: JSON.parse(JSON.stringify(this.filters)) }
+            });
         }
     },
 
@@ -141,6 +189,7 @@ export default {
     },
     created() {
         console.debug(this.$options.name + " created");
+        if (window._pz.checkNested(this, '$route', 'options', 'context', 'comps')) this.filters = this.$route.options.context.comps;
         this.getAllSR();
     },
     beforeMount() {

@@ -69,7 +69,7 @@
           <a
             href="#"
             class="button button-raised close-panel pz-padding-lr16"
-            @click="signOut()"
+            @click="$pzGlobalReactiveData.signOut()"
           >Sign Out</a>
         </div>
       </div>
@@ -111,18 +111,6 @@ export default {
       isMaterial: window.isMaterial,
       isiOS: window.isiOS
     };
-  },
-  methods: {
-    signOut() {
-      delete window.vm.$options.http.headers.Authorization;
-      delete window.vm.$options.http.headers.tenant;
-      window.localStorage.clear();
-      window.vm.$f7.mainView.history = [];
-      window.vm.$f7.mainView.router.loadPage({
-        url: "/",
-        reload: true
-      });
-    }
   },
   components: {
     "menu-item": menuItem

@@ -72,11 +72,11 @@
                             <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].isbn}}</td>
                             <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].title}}</td>
                             <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].publisher.name}}</td>
-                            <td class="numeric-cell">{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
+                            <td class="numeric-cell">{{p.mrp | moneyFormat}}</td>
                             <td class="numeric-cell">{{p.original_quantity}}</td>
                             <!-- <td class="numeric-cell">{{p.quantity}}</td> -->
                             <td class="numeric-cell">{{p.procurement_discount}}%</td>
-                            <td class="numeric-cell">{{(p[p.product? 'product' : 'otherProduct'].mrp - (p[p.product? 'product' : 'otherProduct'].mrp*p.procurement_discount/100))*p.original_quantity | moneyFormat}}</td>
+                            <td class="numeric-cell">{{(p.mrp - (p.mrp*p.procurement_discount/100))*p.original_quantity | moneyFormat}}</td>
                         </tr>
                     </tbody>
                 </table>

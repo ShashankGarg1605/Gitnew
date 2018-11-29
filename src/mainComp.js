@@ -39,7 +39,8 @@ export default new Vue({ // eslint-disable-line no-new
             'source': '3',
             'Authorization': (() => window.localStorage.authToken)(),
             'ID': (() => window.localStorage.userID)(),
-            'tenant': (() => window.localStorage.tenantData && ('tenant_' + JSON.parse(window.localStorage.tenantData).id))()
+            'tenant': (() => window.localStorage.tenantData && ('tenant_' + JSON.parse(window.localStorage.tenantData).id))(),
+            'isRM': (() => window.localStorage.isRM)()
         }
     },
     // Register App Component

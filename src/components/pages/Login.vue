@@ -210,11 +210,9 @@ export default {
           if (!res.ok) return Promise.reject(res.status);
           if (res.body.user_type === 1) {
 
-            setGlobals(authToken, tempTenant, res.body.id, roleMenus);
+            setGlobals(authToken, tempTenant, res.body.id, roleMenus, res.body.buyer_name, res.body.is_relationship_manager);
             clearAllHistory();
 
-            window.localStorage.userName = res.body.buyer_name;
-            window.vm.$pzGlobalReactiveData.userName = res.body.buyer_name;
 
             window.vm.$f7.mainView.router.loadPage("LandingPage");
 
@@ -262,22 +260,26 @@ export default {
   }
 };
 
-function setGlobals(authToken, tenantData, userID, roleMenus) {
+function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM) {
   window.vm.$options.http.headers.Authorization = authToken;
   window.vm.$options.http.headers.ID = "" + userID;
   window.vm.$options.http.headers.tenant = "tenant_" + tenantData.id;
+  window.vm.$options.http.headers.isRM = "" + isRM;
 
   window.localStorage.authToken = authToken;
-  window.localStorage.userID = userID;
   window.localStorage.tenantData = JSON.stringify(tenantData);
+  window.localStorage.userID = userID;
   window.localStorage.roleMenus = JSON.stringify(roleMenus);
-
-  window._pz.uploadsEndPt = `${window._pz
-    .domain}/backend/web/uploads/tenant_${tenantData.id}/`;
+  window.localStorage.userName = userName;
+  window.localStorage.isRM = isRM;
 
   // add user specific stuff to the global useable object
   window.vm.$pzGlobalReactiveData.userID = userID;
   window.vm.$pzGlobalReactiveData.roleMenus = roleMenus;
+  window.vm.$pzGlobalReactiveData.userName = userName;
+  window.vm.$pzGlobalReactiveData.isRM = isRM;
+
+  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${tenantData.id}/`;
 }
 
 function clearAllHistory() {

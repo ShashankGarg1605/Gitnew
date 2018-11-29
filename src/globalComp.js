@@ -76,6 +76,8 @@ export default new Vue({
       console.log("signing out");
       delete window.vm.$options.http.headers.Authorization;
       delete window.vm.$options.http.headers.tenant;
+      delete window.vm.$options.http.headers.ID;
+      delete window.vm.$options.http.headers.isRM;
       window.localStorage.clear();
       window.vm.$f7.mainView.history = [];
       window.vm.$f7.mainView.router.loadPage({
@@ -111,6 +113,7 @@ export default new Vue({
         });
     },
     stopPeriodicDataFetch() {
+        console.log("clearing interval for periodicDataFetch");
       if (this.dataFetchIntervalInstance) clearInterval(this.dataFetchIntervalInstance);
     },
     openZoomView(imgURL) {

@@ -72,6 +72,34 @@ export default new Vue({
     }
   },
   methods: {
+    setGlobal(key, value) {
+      window.localStorage[key] = JSON.stringify(value);
+      if (window.vm && window.vm.$pzGlobalReactiveData) window.vm.$pzGlobalReactiveData[key] = value;
+    },
+    createRoleMenus(userRoles) {
+      const roleMenus = {};
+      userRoles.forEach(role => {
+        const rm = role.role.roleMenus;
+        if (role.role.role_name === "Admin") roleMenus._isAdmin = true;
+        rm.forEach(menu => {
+          const name = menu.menu.name;
+          if (!roleMenus[name]) {
+            roleMenus[name] = {};
+            roleMenus[name].create = menu.create;
+            roleMenus[name].read = menu.read;
+            roleMenus[name].update = menu.update;
+            roleMenus[name].delete = menu.delete;
+          } else {
+            // take super set, i.e. 1 will take preference over 0
+            if (menu.create === 1) roleMenus[name].create = menu.create;
+            if (menu.read === 1) roleMenus[name].read = menu.read;
+            if (menu.update === 1) roleMenus[name].update = menu.update;
+            if (menu.delete === 1) roleMenus[name].delete = menu.delete;
+          }
+        });
+      });
+      return roleMenus;
+    },
     signOut() {
       console.log("signing out");
       delete window.vm.$options.http.headers.Authorization;
@@ -89,17 +117,17 @@ export default new Vue({
     beginPeriodicDataFetch() {
       const INTERVAL_IN_MIN = 10;
       if (this.userID && !this.dataFetchIntervalInstance) {
-        console.log("setting interval for periodicDataFetch");
+        console.log("Setting interval for periodicDataFetch");
         this.dataFetchIntervalInstance = setInterval(this.periodicDataFetch, INTERVAL_IN_MIN * 60 * 1000);
       }
     },
     periodicDataFetch() {
-      console.log("fetching periodic data");
-      // window.vm.$http.get(window._pz.apiEndPt + "users/");
+      console.log("Fetching periodic data");
       window.vm.$http
         .get(window._pz.apiEndPt + "users/" + this.userID)
         .then(res => {
           if (!res.body.status || res.body.is_deleted) this.signOut();
+          if (res.body && res.body.is_relationship_manager) this.setGlobal("isRM", res.body.is_relationship_manager);
         })
         .catch(err => {
           window._pz.errFunc2.call(this, err);
@@ -107,13 +135,16 @@ export default new Vue({
 
       window.vm.$http
         .get(window._pz.apiEndPt + "user_role/" + this.userID)
-        .then(res => {})
+        .then(res => {
+          var roleMenus = this.createRoleMenus(res.data);
+          this.setGlobal("roleMenus", roleMenus);
+        })
         .catch(err => {
           window._pz.errFunc2.call(this, err);
         });
     },
     stopPeriodicDataFetch() {
-        console.log("clearing interval for periodicDataFetch");
+      console.log("clearing interval for periodicDataFetch");
       if (this.dataFetchIntervalInstance) clearInterval(this.dataFetchIntervalInstance);
     },
     openZoomView(imgURL) {

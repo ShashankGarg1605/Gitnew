@@ -189,7 +189,7 @@ export default {
           res => {
             if (res.ok) {
               authToken = res.body.token;
-              if (res.body.userRoles && res.body.userRoles.length) roleMenus = createRoleMenus(res.body.userRoles);
+              if (res.body.userRoles && res.body.userRoles.length) roleMenus = window.vm.$pzGlobalReactiveData.createRoleMenus(res.body.userRoles);
               return window.vm.$http.get(
                 window._pz.apiEndPt + "users/" + res.body.id,
                 {
@@ -286,29 +286,4 @@ function clearAllHistory() {
   window.vm.$f7.mainView.history = [];
 }
 
-function createRoleMenus(userRoles) {
-  const roleMenus = {};
-  userRoles.forEach(role => {
-    const rm = role.role.roleMenus;
-    if (role.role.role_name === 'Admin') roleMenus._isAdmin = true;
-    rm.forEach(menu => {
-      const name = menu.menu.name;
-      if (!roleMenus[name]) {
-        roleMenus[name] = {};
-        roleMenus[name].create = menu.create;
-        roleMenus[name].read = menu.read;
-        roleMenus[name].update = menu.update;
-        roleMenus[name].delete = menu.delete;
-      }
-      else {
-        // take super set, i.e. 1 will take preference over 0
-        if (menu.create === 1) roleMenus[name].create = menu.create;
-        if (menu.read === 1) roleMenus[name].read = menu.read;
-        if (menu.update === 1) roleMenus[name].update = menu.update;
-        if (menu.delete === 1) roleMenus[name].delete = menu.delete;
-      }
-    });
-  });
-  return roleMenus;
-}
 </script> ̰

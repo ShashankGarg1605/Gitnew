@@ -9,118 +9,93 @@
         <img style="height: 30px;padding-left: 30px;" :src="tenantImage">
       </f7-nav-center>
     </f7-navbar>
-    <!-- Scrollable page content-->
-    <section class="hero">
-      <div>
-        <button
-          @click="openPage('dashboard')"
-          v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')"
-        >Dashboard</button>
-      </div>
-    </section>
-    <section class="links">
-      <div class="left">
-        <div>
-          <button
-            @click="openPage('allorders')"
-            v-if="$pzGlobalReactiveData.roleAccess('order', 'read')"
-          >ISBN Orders</button>
-        </div>
-        <div>
-          <button
-            @click="openPage('AllUsers')"
-            v-if="$pzGlobalReactiveData.roleAccess('buyers', 'read')"
-          >Buyer Management</button>
-        </div>
-        <div>
-          <button
-            @click="openPage('CommunicationPanel')"
-            v-if="$pzGlobalReactiveData.roleAccess('commpanel', 'read')"
-          >Communications Panel</button>
-        </div>
-      </div>
-      <div class="right">
-        <div>
-          <button
-            @click="openPage('AllImageOrders')"
-            v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')"
-          >Image Orders</button>
-        </div>
-        <!-- <div><button @click="comingSoon()">Live Inventory</button></div> -->
-        <div>
-          <button
-            @click="openPage('PlaceServiceRequest')"
-            v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
-          >Place Service Request</button>
-        </div>
-        <div>
-          <button
-            @click="openPage('OrderSearch')"
-            v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
-          >Order Verification</button>
-        </div>
-      </div>
-    </section>
+
+    <ul>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('dashboard', 'read')"
+        :icon="'line-chart'"
+        :url="'/dashboard'"
+        :label="'Dashboard'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('order', 'read')"
+        :icon="'shopping-cart'"
+        :url="'/allorders'"
+        :label="'ISBN Orders'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('buyers', 'read')"
+        :icon="'users'"
+        :url="'/AllUsers'"
+        :label="'Buyer Management'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('commpanel', 'read')"
+        :icon="'user-o'"
+        :url="'/CommunicationPanel'"
+        :label="'Communications Panel'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')"
+        :icon="'image'"
+        :url="'/AllImageOrders'"
+        :label="'Image Orders'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'read')"
+        :icon="'image'"
+        :url="'/PlaceServiceRequest'"
+        :label="'Place Service Request'"
+      ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
+        :icon="'check'"
+        :url="'/OrderSearch'"
+        :label="'Order Verification'"
+      ></menu-item>
+    </ul>
   </f7-page>
 </template>
 
 <style scoped>
-.hero {
-  background-image: url("../../../static/img/banner2.jpg");
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid lightgrey;
-}
-.links {
-  background: white;
-  height: 150px;
-  display: flex;
-  margin-top: 20px;
-  justify-content: space-evenly;
-}
-.hero button {
-  background: white;
-  color: #009588;
-  text-shadow: none;
-  outline: none;
-  padding: 15px;
-  border-radius: 15px;
-  margin: 10px;
-  font-size: 1rem;
-  border: none;
-  width: 140px;
-  transition: all 0.3s ease;
-  box-shadow: 0px 2px 10px 0px #212121;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-.links button {
-  background: #009688;
-  outline: none;
-  /* padding: 15px; */
-  border-radius: 15px;
-  margin: 10px;
-  font-size: 1rem;
-  border: none;
-  box-shadow: 0px 2px 1px 0px lightgrey;
-  color: white;
-  text-shadow: 0px 1px 1px black;
-  width: 140px;
-  transition: all 0.3s ease;
-  height: 70px;
+li {
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+  justify-content: space-around;
+  font-size: 20px;
+  color: #616161;
+  padding: 15px 20px 15px 0px;
+  font-weight: lighter;
+  margin-left: 20px;
 }
-.hero button:active {
-  box-shadow: none;
-  background: #e0e0e0;
-}
-.links button:active {
-  box-shadow: none;
-  background: #006d63;
+li span:nth-child(3) {
+  color: #bdbdbd;
 }
 </style>
 
 <script>
+var menuItem = {
+  template: `<li @click="openPage(url)">
+        <span>
+          <icon :name="icon"></icon>
+        </span>
+        <span style="flex-grow: 1; margin-left: 20px;">{{label}}</span>
+        <span>
+          <icon name="chevron-right"></icon>
+        </span>
+      </li>`,
+  props: ["icon", "url", "label"],
+  methods: {
+    openPage(page) {
+      window.vm.$f7.mainView.router.loadPage(page);
+    }
+  }
+};
 export default {
   name: "LandingPage",
   data() {
@@ -129,10 +104,10 @@ export default {
       tenantImage: JSON.parse(window.localStorage.tenantData).logo_lnk
     };
   },
+  components: {
+    "menu-item": menuItem
+  },
   methods: {
-    openPage(page) {
-      window.vm.$f7.mainView.router.loadPage(page);
-    },
     comingSoon() {
       window.vm.$f7.addNotification({
         message: "This feature is coming soon!",

@@ -106,6 +106,12 @@ export default new Vue({
       delete window.vm.$options.http.headers.tenant;
       delete window.vm.$options.http.headers.ID;
       delete window.vm.$options.http.headers.isRM;
+
+      delete window.vm.$pzGlobalReactiveData.userID;
+      delete window.vm.$pzGlobalReactiveData.roleMenus;
+      delete window.vm.$pzGlobalReactiveData.userName;
+      delete window.vm.$pzGlobalReactiveData.isRM;
+
       window.localStorage.clear();
       window.vm.$f7.mainView.history = [];
       window.vm.$f7.mainView.router.loadPage({

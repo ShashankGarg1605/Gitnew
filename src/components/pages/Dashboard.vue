@@ -12,9 +12,9 @@
     <!-- Scrollable page content-->
     <f7-block-title>Welcome {{$pzGlobalReactiveData.userName}}</f7-block-title>
     <f7-block inner>
-      <div class="card">
+      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('order', 'read')">
         <div class="card-content">
-          <div class="card-content-inner pz-flex-j-sb" @click="openOrders()">
+          <div class="card-content-inner pz-flex-j-sb" @click="openOrders()" >
             <span class="underline">No. of open orders</span>
             <span class="value">{{nbOpenOrders}}</span>
           </div>
@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('order', 'read')">
         <div class="card-content">
           <div class="card-content-inner pz-flex-j-sb" @click="openUnconvertedImageOrders()">
             <span class="underline">No. of un-converted image orders</span>

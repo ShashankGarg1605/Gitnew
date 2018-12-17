@@ -242,7 +242,7 @@
                             </f7-accordion-content>
                         </f7-list-item>
 
-                        <f7-list-item accordion-item title="View Orders " @click="openOrders() ">
+                        <f7-list-item accordion-item title="View Orders " @click="openOrders()" v-if="$pzGlobalReactiveData.roleAccess('order', 'read')">
                             <f7-accordion-content />
                         </f7-list-item>
 

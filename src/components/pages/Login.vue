@@ -209,8 +209,8 @@ export default {
         .then(res => {
           if (!res.ok) return Promise.reject(res.status);
           if (res.body.user_type === 1) {
-
-            setGlobals(authToken, tempTenant, res.body.id, roleMenus, res.body.buyer_name, res.body.is_relationship_manager);
+            // an admin user won't have the warehouses field, becuase he has access to all the warehouses
+            setGlobals(authToken, tempTenant, res.body.id, roleMenus, res.body.buyer_name, res.body.is_relationship_manager, res.body.warehouse);
             clearAllHistory();
 
 
@@ -260,7 +260,7 @@ export default {
   }
 };
 
-function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM) {
+function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM, warehouse) {
   window.vm.$options.http.headers.Authorization = authToken;
   window.vm.$options.http.headers.ID = "" + userID;
   window.vm.$options.http.headers.tenant = "tenant_" + tenantData.id;
@@ -272,12 +272,14 @@ function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM) {
   window.localStorage.roleMenus = JSON.stringify(roleMenus);
   window.localStorage.userName = userName;
   window.localStorage.isRM = isRM;
+  window.localStorage.warehouse = JSON.stringify(warehouse);
 
   // add user specific stuff to the global useable object
   window.vm.$pzGlobalReactiveData.userID = userID;
   window.vm.$pzGlobalReactiveData.roleMenus = roleMenus;
   window.vm.$pzGlobalReactiveData.userName = userName;
   window.vm.$pzGlobalReactiveData.isRM = isRM;
+  window.vm.$pzGlobalReactiveData.warehouse = warehouse;
 
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${tenantData.id}/`;
 }

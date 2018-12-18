@@ -6,6 +6,7 @@ export default new Vue({
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
     roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
+    warehouse: window.localStorage.warehouse && JSON.parse(window.localStorage.warehouse),
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {
@@ -111,6 +112,7 @@ export default new Vue({
       delete window.vm.$pzGlobalReactiveData.roleMenus;
       delete window.vm.$pzGlobalReactiveData.userName;
       delete window.vm.$pzGlobalReactiveData.isRM;
+      delete window.vm.$pzGlobalReactiveData.warehouse;
 
       window.localStorage.clear();
       window.vm.$f7.mainView.history = [];
@@ -134,6 +136,7 @@ export default new Vue({
         .then(res => {
           if (!res.body.status || res.body.is_deleted) this.signOut();
           if (res.body && res.body.is_relationship_manager) this.setGlobal("isRM", res.body.is_relationship_manager);
+          if (res.body && res.body.warehouse) this.setGlobal("warehouse", res.body.warehouse);
         })
         .catch(err => {
           window._pz.errFunc2.call(this, err);

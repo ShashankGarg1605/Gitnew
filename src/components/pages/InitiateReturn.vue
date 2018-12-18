@@ -221,7 +221,7 @@ export default {
                     if (res.ok) {
                         window.vm.$f7.addNotification({ message: `Return has been initiated has been placed.`, hold: 5000 });
                         window.vm.$f7.mainView.router.load({
-                            url: "dashboard",
+                            url: "Returns",
                             reload: true
                         });
                     }

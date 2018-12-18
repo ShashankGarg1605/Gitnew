@@ -149,7 +149,7 @@ export default {
           if (res.ok) {
             window.vm.$f7.addNotification({ message: `Service request has been placed.`, hold: 5000 });
             window.vm.$f7.mainView.router.load({
-              url: "dashboard",
+              url: "ServiceRequests",
               reload: true
             });
           }

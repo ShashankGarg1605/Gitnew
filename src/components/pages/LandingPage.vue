@@ -43,7 +43,7 @@
       ></menu-item>
       <menu-item
         v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'read')"
-        :icon="'image'"
+        :icon="'bug'"
         :url="'/PlaceServiceRequest'"
         :label="'Place Service Request'"
       ></menu-item>
@@ -71,7 +71,10 @@ li {
   color: #616161;
   padding: 15px 20px 15px 0px;
   font-weight: lighter;
-  margin-left: 20px;
+  padding-left: 20px;
+}
+li:nth-child(even) {
+  background: #FAFAFA;
 }
 li span:nth-child(3) {
   color: #bdbdbd;

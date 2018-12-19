@@ -42,7 +42,7 @@
         :label="'Image Orders'"
       ></menu-item>
       <menu-item
-        v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'read')"
+        v-if="$pzGlobalReactiveData.roleAccess('servicerequests', 'create')"
         :icon="'bug'"
         :url="'/PlaceServiceRequest'"
         :label="'Place Service Request'"

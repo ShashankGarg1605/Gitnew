@@ -121,6 +121,9 @@ export default new Vue({
         reload: true
       });
       this.stopPeriodicDataFetch();
+      setTimeout(function() {
+        window.location.reload();
+      });
     },
     beginPeriodicDataFetch() {
       const INTERVAL_IN_MIN = 10;

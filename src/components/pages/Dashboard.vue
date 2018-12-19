@@ -6,16 +6,19 @@
       </f7-nav-left>
       <f7-nav-center style="display: flex;align-items: center;">
         <span>Dashboard</span>
-        <img style="height: 30px;padding-left: 30px;" :src="tenantImage" />
+        <img style="height: 30px;padding-left: 30px;" :src="tenantImage">
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
     <f7-block-title>Welcome {{$pzGlobalReactiveData.userName}}</f7-block-title>
     <f7-block inner>
-      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('order', 'read')">
+      <div class="card">
         <div class="card-content">
-          <div class="card-content-inner pz-flex-j-sb" @click="openOrders()" >
-            <span class="underline">No. of open orders</span>
+          <div
+            :class="`card-content-inner pz-flex-j-sb ${$pzGlobalReactiveData.roleAccess('order', 'read')? 'clickable': 'not-clickable'}`"
+            @click="openOrders()"
+          >
+            <span>No. of open orders</span>
             <span class="value">{{nbOpenOrders}}</span>
           </div>
         </div>
@@ -41,7 +44,10 @@
 
       <div class="card">
         <div class="card-content">
-          <div class="card-content-inner" style="display: flex; justify-content: space-between; flex-direction: column;">
+          <div
+            class="card-content-inner"
+            style="display: flex; justify-content: space-between; flex-direction: column;"
+          >
             <div>No. of accounts:</div>
             <div style="display: flex; justify-content: space-between;">
               <span>Active</span>
@@ -77,9 +83,12 @@
         </div>
       </div>
 
-      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')">
+      <div class="card">
         <div class="card-content">
-          <div class="card-content-inner pz-flex-j-sb" @click="openUnconvertedImageOrders()">
+          <div
+            :class="`card-content-inner pz-flex-j-sb ${$pzGlobalReactiveData.roleAccess('imageorders', 'read')? 'clickable': 'not-clickable'}`"
+            @click="openUnconvertedImageOrders()"
+          >
             <span class="underline">No. of un-converted image orders</span>
             <span class="value">{{nbImageOrdersNotConv}}</span>
           </div>
@@ -94,7 +103,6 @@
           </div>
         </div>
       </div>
-
     </f7-block>
   </f7-page>
 </template>
@@ -108,7 +116,15 @@
   padding-left: 15px;
 }
 
-.underline {
+.not-clickable {
+  pointer-events: none;
+}
+
+.clickable {
+  pointer-events: auto;
+}
+
+.clickable span:first-child {
   text-decoration: underline;
 }
 </style>

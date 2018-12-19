@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('order', 'read')">
+      <div class="card" v-if="$pzGlobalReactiveData.roleAccess('imageorders', 'read')">
         <div class="card-content">
           <div class="card-content-inner pz-flex-j-sb" @click="openUnconvertedImageOrders()">
             <span class="underline">No. of un-converted image orders</span>

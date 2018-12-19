@@ -19,10 +19,9 @@
     "babel-polyfill": "^6.23.0",
     "call-number": "git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
     "cordova-android": "^5.1.1",
-    "cordova-ios": "~4.1.1",
+    "cordova-ios": "^4.5.5",
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.1.0",
-    "cordova-plugin-console": "^1.0.7",
     "cordova-plugin-inappbrowser": "^2.0.2",
     "cordova-plugin-splashscreen": "^3.1.0",
     "cordova-plugin-statusbar": "^2.2.3",
@@ -122,7 +121,6 @@
       "ios"
     ],
     "plugins": {
-      "cordova-plugin-console": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-whitelist": {},

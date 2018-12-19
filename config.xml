@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.prozo.admin" version="1.5.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.prozo.admin" version="1.10.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Bookz Admin</name>
     <description>
         Bookz Admin
@@ -44,14 +44,10 @@
         <icon height="76" src="res/icon/ios/icon-76.png" width="76" />
         <icon height="152" src="res/icon/ios/icon-76@2x.png" width="152" />
         <icon height="40" src="res/icon/ios/icon-40.png" width="40" />
-        <icon height="80" src="res/icon/ios/icon-40@2x.png" width="80" />
-        <icon height="57" src="res/icon/ios/icon.png" width="57" />
-        <icon height="114" src="res/icon/ios/icon@2x.png" width="114" />
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />
         <icon height="144" src="res/icon/ios/icon-72@2x.png" width="144" />
         <icon height="29" src="res/icon/ios/icon-small.png" width="29" />
         <icon height="58" src="res/icon/ios/icon-small@2x.png" width="58" />
-        <icon height="87" src="res/icon/ios/icon-small@3x.png" width="87" />
         <icon height="50" src="res/icon/ios/icon-50.png" width="50" />
         <icon height="100" src="res/icon/ios/icon-50@2x.png" width="100" />
         <splash height="480" src="res/screen/ios/Default~iphone.png" width="320" />
@@ -91,9 +87,6 @@
     <preference name="StatusBarStyle" value="default" />
     <preference name="FadeSplashScreenDuration" value="300" />
     <preference name="phonegap-version" value="cli-6.1.0" />
-    <engine name="android" spec="^5.1.1" />
-    <engine name="ios" spec="~4.1.1" />
-    <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-splashscreen" spec="^3.1.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.2.2" />
@@ -104,6 +97,8 @@
     <plugin name="call-number" spec="git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git" />
     <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^6.0.8">
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="To take pictures of books in order to scan their ISBN barcode" />
+        <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
     </plugin>
+    <engine name="android" spec="^5.1.1" />
+    <engine name="ios" spec="^4.5.5" />
 </widget>

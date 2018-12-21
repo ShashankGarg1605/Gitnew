@@ -66,7 +66,11 @@
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('orderdetail')" class="list-button item-link close-popover">Details</a>
-          <a @click="releaseOrder()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update')">Release Order</a>
+          <a
+            @click="releaseOrder()"
+            class="list-button item-link close-popover"
+            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.order_status < 5"
+          >Release Order</a>
           <a
             @click="openAssignOrderPage()"
             class="list-button item-link close-popover"
@@ -217,13 +221,13 @@ export default {
     },
     doReleaseOrder() {
       window.vm.$http.patch(`${window._pz.apiEndPt}order?action=release `, {
-          id: this.clickedOrder.id,
-          release: 1
+        id: this.clickedOrder.id,
+        release: 1
+      })
+        .then(res => {
+          window.vm.$f7.addNotification({ message: 'Order released successfully!', hold: 2000 });
         })
-          .then(res => {
-            window.vm.$f7.addNotification({ message: 'Order released successfully!', hold: 2000 });
-          })
-          .catch(window._pz.errFunc2.bind(this));
+        .catch(window._pz.errFunc2.bind(this));
     },
     // reset the infinite scroll behaviour, as on previous page, we may have reached the end of ITS scroll
     addInfiniteScroll() {

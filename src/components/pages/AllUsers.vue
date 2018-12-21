@@ -54,6 +54,7 @@
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
           <a @click="resetPassword()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('resetpass', 'update')">Reset Password</a>
+          <a @click="updateCreditLimit()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('creditlimit', 'update')">Update Credit Limit</a>
           <a v-if="clickedUser && clickedUser.status==0 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
           <a v-if="clickedUser && clickedUser.status==1 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
         </div>
@@ -172,6 +173,19 @@ export default {
         })
           .then(res => {
             window.vm.$f7.addNotification({ message: 'Password reset successfully!', hold: 2000 });
+          })
+          .catch(window._pz.errFunc2.bind(this));
+      });
+    },
+    updateCreditLimit() {
+      window.f7.prompt('Enter new credit limit for ' + this.clickedUser.name, 'Credit Limit', cl => {
+        window.vm.$http.patch(`${window._pz.apiEndPt}users?action=credit`, {
+          id: this.clickedUser.id,
+          credit_limit_type: 0,
+          credit_limit: cl
+        })
+          .then(res => {
+            window.vm.$f7.addNotification({ message: 'Credit limit updated successfully!', hold: 2000 });
           })
           .catch(window._pz.errFunc2.bind(this));
       });

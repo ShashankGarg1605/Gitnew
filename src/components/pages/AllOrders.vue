@@ -220,7 +220,7 @@ export default {
       window.vm.$f7.confirm(`Do you want to release order ${this.clickedOrder.id}?`, 'Confirm', this.doReleaseOrder);
     },
     doReleaseOrder() {
-      window.vm.$http.patch(`${window._pz.apiEndPt}order?action=release `, {
+      window.vm.$http.patch(`${window._pz.apiEndPt}order?action=release`, {
         id: this.clickedOrder.id,
         release: 1
       })

@@ -281,8 +281,8 @@ export default {
 
 const statusMapping = {
   1: "Received",
-  2: "Received",
-  3: "Being procured",
+  2: "In progress",
+  3: "Being packed",
   4: "Ready to dispatch",
   5: "Dispatched",
   6: "Fulfilled"

@@ -6,7 +6,7 @@ export default new Vue({
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
     roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
-    warehouse: window.localStorage.warehouse && JSON.parse(window.localStorage.warehouse),
+    warehouse: window.localStorage.warehouse && window.localStorage.warehouse !== 'undefined' && JSON.parse(window.localStorage.warehouse),
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {

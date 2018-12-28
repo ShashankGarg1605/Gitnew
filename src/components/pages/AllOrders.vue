@@ -69,7 +69,7 @@
           <a
             @click="releaseOrder()"
             class="list-button item-link close-popover"
-            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.order_status < 5"
+            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.credit_released"
           >Release Order</a>
           <a
             @click="openAssignOrderPage()"
@@ -220,10 +220,7 @@ export default {
       window.vm.$f7.confirm(`Do you want to release order ${this.clickedOrder.id}?`, 'Confirm', this.doReleaseOrder);
     },
     doReleaseOrder() {
-      window.vm.$http.patch(`${window._pz.apiEndPt}order?action=release`, {
-        id: this.clickedOrder.id,
-        release: 1
-      })
+      window.vm.$http.patch(`${window._pz.apiEndPt}orders?action=release&id=${this.clickedOrder.id}`)
         .then(res => {
           window.vm.$f7.addNotification({ message: 'Order released successfully!', hold: 2000 });
         })

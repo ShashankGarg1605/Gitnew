@@ -181,7 +181,6 @@ export default {
       window.f7.prompt('Enter new credit limit for ' + this.clickedUser.name, 'Credit Limit', cl => {
         window.vm.$http.patch(`${window._pz.apiEndPt}users?action=credit`, {
           id: this.clickedUser.id,
-          credit_limit_type: 0,
           credit_limit: cl
         })
           .then(res => {

@@ -1,26 +1,21 @@
 <template>
-  <f7-page
-    name="AllUsers"
-    infinite-scroll
-    @infinite="onInfiniteScroll"
-    pull-to-refresh
-    @ptr:refresh="onPullToRefresh"
-  >
+  <f7-page name="AllUsers" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
+
     <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-center>All Users</f7-nav-center>
+      <f7-nav-center>
+        All Users
+      </f7-nav-center>
     </f7-navbar>
 
-    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">Found {{totalCount}} results</div>
+    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
+      Found {{totalCount}} results
+    </div>
 
     <div style="overflow: hidden; margin: 16px 16px 16px;">
-      <a
-        href="#"
-        class="button button-fill button-raised pz-flex-c-c pz-float-r"
-        @click="openFilters()"
-      >
+      <a href="#" class="button button-fill button-raised pz-flex-c-c pz-float-r" @click="openFilters()">
         <icon name="filter"></icon>
         <span class="pz-padding-l16">Filter</span>
       </a>
@@ -29,12 +24,7 @@
     <f7-list>
       <div v-if="allUsers.length" class="list-block">
         <ul>
-          <li
-            class="item-content"
-            v-for="user in allUsers"
-            :key="user.id"
-            :class="{ 'pz-bg-red-lightest': user.status==0 }"
-          >
+          <li class="item-content" v-for="user in allUsers" :key="user.id" :class="{ 'pz-bg-red-lightest': user.status==0 }">
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">User ID:</div>
@@ -42,9 +32,7 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Name:</div>
-                <div
-                  class="col-70"
-                >{{user.buyer_name}} ({{user.userAddress.find(_=>_.address_type===1).city.name}})</div>
+                <div class="col-70">{{user.buyer_name}} ({{user.userAddress.find(_=>_.address_type===1).city.name}})</div>
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Mobile:</div>
@@ -52,50 +40,27 @@
                   <a @click="$pzGlobalReactiveData.phone(user.mobile)">{{user.mobile}}</a>
                 </div>
               </div>
-              <i class="f7-icons pz-popover" @click="openPopover(user, $event)">more_horiz</i>
+              <i class="f7-icons pz-popover" @click='openPopover(user, $event)'>more_horiz</i>
             </div>
           </li>
         </ul>
       </div>
-      <div
-        class="color-gray"
-        style="text-align: center; font-style: italic;"
-        v-if="allUsers.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq"
-      >Thats all folks!</div>
-      <div
-        class="color-gray"
-        style="text-align: center; font-style: italic;"
-        v-if="!allUsers.length && !$pzGlobalReactiveData.pendingReq"
-      >No results found</div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allUsers.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
+      <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allUsers.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
     </f7-list>
 
     <f7-popover :id="randomID">
       <div class="popover-inner">
         <div class="list-block">
           <a @click="openPage('UserDetail')" class="list-button item-link close-popover">Details</a>
-          <a
-            @click="resetPassword()"
-            class="list-button item-link close-popover"
-            v-if="$pzGlobalReactiveData.roleAccess('resetpass', 'update')"
-          >Reset Password</a>
-          <a
-            @click="updateCreditLimit()"
-            class="list-button item-link close-popover"
-            v-if="$pzGlobalReactiveData.roleAccess('creditlimit', 'update')"
-          >Update Credit Limit</a>
-          <a
-            v-if="clickedUser && clickedUser.status==0 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')"
-            @click="changeUserStatus('activate')"
-            class="list-button item-link close-popover"
-          >Activate</a>
-          <a
-            v-if="clickedUser && clickedUser.status==1 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')"
-            @click="changeUserStatus('deactivate')"
-            class="list-button item-link close-popover"
-          >De-activate</a>
+          <a @click="resetPassword()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('resetpass', 'update')">Reset Password</a>
+          <a @click="updateCreditLimit()" class="list-button item-link close-popover" v-if="$pzGlobalReactiveData.roleAccess('creditlimit', 'update')">Update Credit Limit</a>
+          <a v-if="clickedUser && clickedUser.status==0 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('activate')" class="list-button item-link close-popover">Activate</a>
+          <a v-if="clickedUser && clickedUser.status==1 && $pzGlobalReactiveData.roleAccess('useractivation', 'update')" @click="changeUserStatus('deactivate')" class="list-button item-link close-popover">De-activate</a>
         </div>
       </div>
     </f7-popover>
+
   </f7-page>
 </template>
 
@@ -213,52 +178,17 @@ export default {
       });
     },
     updateCreditLimit() {
-      const popupHTML = `
-        <div class="item-input">
-          <input type="number" name="credit_limit" style="border: 1px solid lightgrey; font-size: 1em; width: 100%; padding: 10px; box-sizing: border-box; border-radius: 8px;">
-        </div>
-        <br>
-        <div style="display: flex; justify-content: space-around;">
-          <div class="item-title label">Variable</div>
-          <div>
-            <label class="label-switch">
-              <input type="checkbox" name="credit_limit_type">
-              <div class="checkbox"></div>
-            </label>
-          </div>
-          <div class="item-title label">Fixed</div>
-        </div>`;
-      const modal = window.vm.$f7.modal({
-        title: 'Credit Limit',
-        text: `Enter new credit limit for ${this.clickedUser.name}:`,
-        afterText: popupHTML,
-        buttons: [
-          {
-            text: 'Cancel'
-          },
-          {
-            text: 'Save',
-            bold: true,
-            close: false,
-            onClick: e => {
-              const creditLimit = e[0].querySelector('input[name=credit_limit]').value;
-              const creditLimitType = e[0].querySelector('input[name=credit_limit_type]').value === 'on' ? '1' : '0';
-
-              window.vm.$http.patch(`${window._pz.apiEndPt}users?action=credit`, {
-                id: this.clickedUser.id,
-                credit_limit: creditLimit,
-                credit_limit_type: creditLimitType
-              })
-                .then(res => {
-                  window.vm.$f7.closeModal(modal);
-                  window.vm.$f7.addNotification({ message: 'Credit limit updated successfully!', hold: 2000 });
-                })
-                .catch(window._pz.errFunc2.bind(this));
-            }
-          }
-        ]
+      window.f7.prompt('Enter new credit limit for ' + this.clickedUser.name, 'Credit Limit', cl => {
+        window.vm.$http.patch(`${window._pz.apiEndPt}users?action=credit`, {
+          id: this.clickedUser.id,
+          credit_limit_type: 0,
+          credit_limit: cl
+        })
+          .then(res => {
+            window.vm.$f7.addNotification({ message: 'Credit limit updated successfully!', hold: 2000 });
+          })
+          .catch(window._pz.errFunc2.bind(this));
       });
-
     },
     changeUserStatus(todo) {
       let url, status, msg;

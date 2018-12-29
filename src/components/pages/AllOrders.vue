@@ -213,9 +213,10 @@ export default {
       window.vm.$f7.confirm(`Do you want to release order ${this.clickedOrder.id}?`, 'Confirm', this.doReleaseOrder);
     },
     doReleaseOrder() {
-      window.vm.$http.patch(`${window._pz.apiEndPt}orders?action=release&id=${this.clickedOrder.id}`)
+      window.vm.$http.patch(`${window._pz.apiEndPt}orders?updateType=release&id=${this.clickedOrder.id}`)
         .then(res => {
           window.vm.$f7.addNotification({ message: 'Order released successfully!', hold: 2000 });
+          this.clickedOrder.credit_released = 1;
         })
         .catch(window._pz.errFunc2.bind(this));
     },

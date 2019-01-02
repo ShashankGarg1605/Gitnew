@@ -246,6 +246,32 @@
                             <f7-accordion-content />
                         </f7-list-item>
 
+                        <f7-list-item accordion-item title="Receivables Ageing" v-if="ageingDetails">
+                            <f7-accordion-content>
+                                <f7-block>
+                                    <list-item :label="'Credit Limit'" :value="ageingDetails.user.credit_limit | moneyFormat" />
+                                    <list-item :label="'Total Due'" :value="ageingDetails.user.collection_due | moneyFormat" />
+                                    <list-item :label="'Available Credit'" :value="ageingDetails.availableCredit | moneyFormat" />
+                                    <list-item :label="'Total Over Due'" :value="ageingDetails.overDue | moneyFormat" />
+                                    <list-item :label="'Amount Not Due'" :value="ageingDetails.notDueAmt | moneyFormat" />
+
+                                    <list-item :label="'0 to 30 days'" :value="ageingDetails.zeroToThirty | moneyFormat" />
+                                    <list-item :label="'30 to 60 days'" :value="ageingDetails.thirtyToSixty | moneyFormat" />
+                                    <list-item :label="'60 to 90 days'" :value="ageingDetails.sixtyToNinety | moneyFormat" />
+                                    <list-item :label="'90 to 120 days'" :value="ageingDetails.ninetyToOnetwenty | moneyFormat" />
+                                    <list-item :label="'120 to 150 days'" :value="ageingDetails.ontwentyToOnefifty | moneyFormat" />
+                                    <list-item :label="'150 to 180 days'" :value="ageingDetails.onefiftyToOneeighty | moneyFormat" />
+                                    <list-item :label="'180 to 210 days'" :value="ageingDetails.oneeightyToTwoten | moneyFormat" />
+                                    <list-item :label="'210 to 240 days'" :value="ageingDetails.twotenToTwofourty | moneyFormat" />
+                                    <list-item :label="'240 to 270 days'" :value="ageingDetails.twofourtyToTwoseventy | moneyFormat" />
+                                    <list-item :label="'270 to 300 days'" :value="ageingDetails.TwoeventyToThreehundered | moneyFormat" />
+                                    <list-item :label="'300 to 330 days'" :value="ageingDetails.threehunderedToThreethirty | moneyFormat" />
+                                    <list-item :label="'330 to 360 days'" :value="ageingDetails.threethirtyToThreesixty | moneyFormat" />
+                                    <list-item :label="'Greater than 360'" :value="ageingDetails.greaterThanThreesixty | moneyFormat" />
+                                </f7-block>
+                            </f7-accordion-content>
+                        </f7-list-item>
+
                     </f7-list>
                 </section>
 
@@ -285,7 +311,8 @@ export default {
             userDiscountDetails: null,
             buyerConversations: null,
             serviceRequests: null,
-            publisherSales: null
+            publisherSales: null,
+            ageingDetails: null
         };
     },
     computed: {
@@ -330,6 +357,7 @@ export default {
             this.buyerConversations = null;
             this.serviceRequests = null;
             this.publisherSales = null;
+            this.ageingDetails = null;
         },
         getAllUsers() {
             window.vm.$http
@@ -434,6 +462,11 @@ export default {
                 if (res.ok) this.publisherSales = res.body.slice(0, 10);
             });
         },
+        getAgeingDetails() {
+            window.vm.$http.get(window._pz.apiEndPt + "utils/ageing/" + this.userID).then(res => {
+                if (res.ok) this.ageingDetails = res.body;
+            });
+        },
         getUserDetails() {
             window.vm.$http.get(window._pz.apiEndPt + "users/" + this.userID).then(res => {
                 if (res.ok) {
@@ -446,6 +479,7 @@ export default {
                     this.getBuyerConversations();
                     this.getServiceRequests();
                     this.getPublisherSales();
+                    this.getAgeingDetails();
                 }
             });
         },

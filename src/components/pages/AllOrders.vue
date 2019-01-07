@@ -46,6 +46,10 @@
                 <div class="col-30 color-gray pz-weight-thin">Status:</div>
                 <div class="col-70">{{order.statusText}}</div>
               </div>
+              <div class="row pz-width100" v-if="order.order_status === 5">
+                <div class="col-30 color-gray pz-weight-thin">Dispatch Date</div>
+                <div class="col-70">{{order.orderStatus.find(s=>s.status_id === 5).dispatch_date}}</div>
+              </div>
               <i class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
             </div>
           </li>

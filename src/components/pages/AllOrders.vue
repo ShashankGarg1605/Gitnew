@@ -48,7 +48,7 @@
               </div>
               <div class="row pz-width100" v-if="order.order_status === 5">
                 <div class="col-30 color-gray pz-weight-thin">Dispatch Date</div>
-                <div class="col-70">{{order.orderStatus.find(s=>s.status_id === 5).dispatch_date}}</div>
+                <div class="col-70">{{order.dispatchDate | dateFormat}}</div>
               </div>
               <i class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
             </div>
@@ -172,6 +172,10 @@ export default {
             // else order.statusText = statusMapping[order.order_status];
 
             order.statusText = statusMapping[order.order_status];
+            if (order.order_status === 5) {
+              const dispatchStatusObject = order.orderStatus.find(s => s.status_id === 5);
+              if (dispatchStatusObject && dispatchStatusObject.dispatch_date) order.dispatchDate = dispatchStatusObject.dispatch_date;
+            }
 
             return order;
           });

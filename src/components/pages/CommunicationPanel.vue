@@ -487,7 +487,7 @@ export default {
             window.vm.$f7.mainView.router.load({
                 url: "allorders",
                 context: {
-                    comps: ["search", 1, this.userID]
+                    comps: ["userSelect", this.userID]
                 }
             });
         },

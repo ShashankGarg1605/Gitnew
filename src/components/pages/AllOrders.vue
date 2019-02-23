@@ -261,9 +261,8 @@ export default {
       if (this.$route.options.context.comps instanceof Array) {
         // if selected filters are passed, like linking from dashboard page to only show the "open orders"
         const filter = this.$route.options.context.comps[0];
-        const filterIdx = this.$route.options.context.comps[1];
-        const value = this.$route.options.context.comps[2];
-        this.filters[filter][filterIdx].value = value;
+        const value = this.$route.options.context.comps[1];
+        this.filters[filter] = value;
       } else {
         // if all filters are passed, like when coming from filters page
         this.filters = this.$route.options.context.comps;

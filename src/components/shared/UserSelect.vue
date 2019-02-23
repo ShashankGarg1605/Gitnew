@@ -4,7 +4,8 @@
             <input type="hidden" v-model="userID">
             <div class="item-inner">
                 <div class="item-title" v-if="!userID">Select User</div>
-                <div class="item-after" :class="{'pz-max-width100': userID, 'pz-width100': userID}"></div>
+                <div class="item-title pz-max-width100 pz-width100" v-if="userID">{{this.selectedUser.name}}</div>
+                <!-- <div class="item-after" :class="{'pz-max-width100': userID, 'pz-width100': userID}"></div> -->
             </div>
         </a>
     </div>
@@ -16,7 +17,8 @@ export default {
     data() {
         return {
             users: null,
-            userID: null
+            userID: null,
+            selectedUser: null
         };
     },
     props: ['default'],
@@ -71,13 +73,8 @@ export default {
             this.autocompleteRef.open();
         },
         showSelectedValue(autocomplete, value) {
-            // Add item text value to item-after
-            window.vm
-                .Dom7("#autocomplete-standalone-popup-2")
-                .find(".item-after")
-                .text(value[0].name);
-            // Add item value to input value
             this.userID = value[0].id;
+            this.selectedUser = value[0];
         }
     },
     beforeCreate() {

@@ -4,6 +4,7 @@ import AllOrders from "./components/pages/AllOrders";
 import Another from "./components/pages/Another";
 import OrderDetail from "./components/pages/OrderDetail";
 import OrderUpdate from "./components/pages/OrderUpdate";
+import OrderPod from "./components/pages/OrderPod";
 import PurchaseInvoice from "./components/pages/PurchaseInvoice";
 import Filters from "./components/pages/Filters";
 import PurchaseInvoiceDetail from "./components/pages/PurchaseInvoiceDetail";
@@ -54,6 +55,10 @@ export default [
   {
     path: "/orderupdate/",
     component: OrderUpdate
+  },
+  {
+    path: "/orderpod/",
+    component: OrderPod
   },
   {
     path: "/purchaseinvoice/",

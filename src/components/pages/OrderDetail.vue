@@ -1,44 +1,80 @@
 <template>
   <f7-page name="OrderDetail">
     <f7-navbar back-link="Back" sliding>
-      <f7-nav-center>
-        Order Detail
-      </f7-nav-center>
+      <f7-nav-center>Order Detail</f7-nav-center>
     </f7-navbar>
 
     <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="data">
       <list-item :label="'Status'">
-        <span class="status pz-padding-lr16 ">{{statusText}}</span>
+        <span class="status pz-padding-lr16">{{statusText}}</span>
       </list-item>
-      <list-item :label="'Order ID'" :value="data.order_id" />
+      <list-item :label="'Order ID'" :value="data.order_id"/>
       <list-item :label="'Mobile No'" :value="data.order_id">
         <a @click="$pzGlobalReactiveData.phone(data.user.mobile)">{{data.user.mobile}}</a>
       </list-item>
-      <list-item :label="'Buyer Name'" :value="data.user.buyer_name" />
-      <list-item :label="'Invoice Amt'" :value="data.finalOrderValue | moneyFormat" />
-      <list-item :label="'Created Date'" :value="data.created_date | dateFormat" />
-      <list-item v-if="dispatchData && dispatchData.carrierTransportationDays" :label="'Carrier'" :value="dispatchData.carrierTransportationDays.carrier.name" />
+      <list-item :label="'Buyer Name'" :value="data.user.buyer_name"/>
+      <list-item :label="'Invoice Amt'" :value="data.finalOrderValue | moneyFormat"/>
+      <list-item :label="'Created Date'" :value="data.created_date | dateFormat"/>
+      <list-item
+        v-if="dispatchData && dispatchData.carrierTransportationDays"
+        :label="'Carrier'"
+        :value="dispatchData.carrierTransportationDays.carrier.name"
+      />
 
       <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="biltyImage">
-        <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty:</span>
+        <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Bilty:</span>
         <div class="col-65">
-          <img :src="biltyImage" class="pz-margin-r8 image" @click="$pzGlobalReactiveData.openZoomView(biltyImage)">
+          <img
+            :src="biltyImage"
+            class="pz-margin-r8 image"
+            @click="$pzGlobalReactiveData.openZoomView(biltyImage)"
+          >
         </div>
       </div>
 
-      <list-item v-if="dispatchData && dispatchData.cartons_number" :label="'# of cartons'" :value="dispatchData.cartons_number" />
+      <list-item
+        v-if="dispatchData && dispatchData.cartons_number"
+        :label="'# of cartons'"
+        :value="dispatchData.cartons_number"
+      />
 
-      <section v-if="dispatchData && dispatchData.biltyDetails && dispatchData.carrierTransportationDays && dispatchData.carrierTransportationDays.carrier.name.toLowerCase() !== 'local transport'">
-        <list-item :label="'GR Number'" :value="dispatchData.biltyDetails.gr_no" />
-        <list-item :label="'Bilty type'" :value="$pzGlobalReactiveData.biltyTypeMap[dispatchData.biltyDetails.bilty_type]" />
-        <list-item :label="'Freight Type'" :value="$pzGlobalReactiveData.freightTypeMap[dispatchData.biltyDetails.freight_type]" />
-        <list-item :label="'Freight Charges'" :value="dispatchData.biltyDetails.freight_charges | moneyFormat" />
-        <list-item :label="'Weight (in kgs)'" :value="dispatchData.biltyDetails.weight" />
-        <list-item :label="'Value of goods'" :value="dispatchData.biltyDetails.goods_value | moneyFormat" />
+      <section
+        v-if="dispatchData && dispatchData.biltyDetails && dispatchData.carrierTransportationDays && dispatchData.carrierTransportationDays.carrier.name.toLowerCase() !== 'local transport'"
+      >
+        <list-item :label="'GR Number'" :value="dispatchData.biltyDetails.gr_no"/>
+        <list-item
+          :label="'Bilty type'"
+          :value="$pzGlobalReactiveData.biltyTypeMap[dispatchData.biltyDetails.bilty_type]"
+        />
+        <list-item
+          :label="'Freight Type'"
+          :value="$pzGlobalReactiveData.freightTypeMap[dispatchData.biltyDetails.freight_type]"
+        />
+        <list-item
+          :label="'Freight Charges'"
+          :value="dispatchData.biltyDetails.freight_charges | moneyFormat"
+        />
+        <list-item :label="'Weight (in kgs)'" :value="dispatchData.biltyDetails.weight"/>
+        <list-item
+          :label="'Value of goods'"
+          :value="dispatchData.biltyDetails.goods_value | moneyFormat"
+        />
       </section>
 
-      <button v-if="isPartiallyDispatched && $pzGlobalReactiveData.roleAccess('order', 'update')" href="#" class="button button-raised color-teal pz-margin-r16 pz-padding-lr32 pz-float-r" @click="openUpdate()">Update order</button>
-
+      <div class="btn-container">
+        <button
+          v-if="isPartiallyDispatched && $pzGlobalReactiveData.roleAccess('order', 'update')"
+          href="#"
+          class="button button-raised color-teal pz-padding-lr16 pz-float-r"
+          @click="openUpdate()"
+        >Update order</button>
+        <button
+          v-if="isPartiallyDispatched && $pzGlobalReactiveData.roleAccess('order', 'update')"
+          href="#"
+          class="button button-raised color-teal pz-padding-lr16 pz-float-r"
+          @click="openPOD()"
+        >Upload POD</button>
+      </div>
     </section>
     <section v-if="data && data.orderProduct && data.orderProduct.length">
       <f7-block-title>Books' details:</f7-block-title>
@@ -61,7 +97,9 @@
               <td class="numeric-cell">{{index+1}}</td>
               <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].title}}</td>
               <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].publisher.name}}</td>
-              <td class="numeric-cell">{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
+              <td
+                class="numeric-cell"
+              >{{p[p.product? 'product' : 'otherProduct'].mrp | moneyFormat}}</td>
               <td class="numeric-cell">{{p.quantity}}</td>
               <!-- <td class="numeric-cell">{{p.procurement_discount}}%</td> -->
               <td class="numeric-cell">{{p.discount_percent}}</td>
@@ -72,7 +110,6 @@
       </div>
     </section>
     <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
-
   </f7-page>
 </template>
 
@@ -92,6 +129,12 @@
 
 .row.pz-padding-tb-4.pz-padding-l16.pz-word-wrap-brk:nth-child(even) {
   background: #fafafa !important;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>
 <script>
@@ -171,6 +214,9 @@ export default {
     },
     openUpdate() {
       window.vm.$f7.mainView.router.load({ url: `orderupdate?id=${this.id}` });
+    },
+    openPOD() {
+      window.vm.$f7.mainView.router.load({ url: `orderpod?id=${this.id}` });
     }
   },
   beforeCreate() {

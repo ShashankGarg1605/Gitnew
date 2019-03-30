@@ -501,6 +501,48 @@
                 </f7-block>
               </f7-accordion-content>
             </f7-list-item>
+
+            <f7-list-item
+              accordion-item
+              title="Credit notes"
+              v-if="creditNotes && creditNotes.length"
+            >
+              <f7-accordion-content>
+                <f7-block>
+                  <div
+                    v-for="(o, index) in creditNotes "
+                    :key="index "
+                    class="message"
+                    :class="{ 'pz-bg-gray-lightest': index%2==0} "
+                  >
+                    <div
+                      style="display: flex; justify-content: space-between; font-size: smaller; font-weight: bold; "
+                    >
+                      <span>Credit note ID: {{o.id}}</span>
+                      <span>Amount: {{o.amount | moneyFormat}}</span>
+                    </div>
+                    <div
+                      style="display: flex; justify-content: space-between; font-size: smaller; "
+                    >
+                      <button
+                        href="#"
+                        class="button button-raised color-teal pz-padding-lr16 pz-float-r"
+                        @click="viewCreditNote(o.file_name)"
+                      >View</button>
+                    </div>
+                  </div>
+                </f7-block>
+              </f7-accordion-content>
+            </f7-list-item>
+
+            <f7-list-item
+              accordion-item
+              title="View Orders "
+              @click="openOrders()"
+              v-if="$pzGlobalReactiveData.roleAccess('order', 'read')"
+            >
+              <f7-accordion-content/>
+            </f7-list-item>
           </f7-list>
         </section>
       </f7-page-content>
@@ -562,7 +604,8 @@ export default {
       serviceRequests: null,
       publisherSales: null,
       ageingDetails: null,
-      compvalue: null
+      compvalue: null,
+      creditNotes: null
     };
   },
   computed: {
@@ -634,6 +677,7 @@ export default {
       this.serviceRequests = null;
       this.publisherSales = null;
       this.ageingDetails = null;
+      this.creditNotes = null;
     },
     getAllUsers() {
       window.vm.$http
@@ -770,6 +814,13 @@ export default {
           if (res.ok) this.ageingDetails = res.body;
         });
     },
+    getCreditNotes() {
+      window.vm.$http
+        .get(window._pz.apiEndPt + "credit_notes?user=" + this.userID)
+        .then(res => {
+          if (res.ok) this.creditNotes = res.body;
+        });
+    },
     getUserDetails() {
       window.vm.$http
         .get(window._pz.apiEndPt + "users/" + this.userID)
@@ -785,6 +836,7 @@ export default {
             this.getServiceRequests();
             this.getPublisherSales();
             this.getAgeingDetails();
+            this.getCreditNotes();
           }
         });
     },
@@ -846,6 +898,10 @@ export default {
       if (window._pz.checkNested(window, "cordova", "InAppBrowser"))
         window.cordova.InAppBrowser.open(url, "_system");
       else window.open(url, "_newtab");
+    },
+    viewCreditNote(fileName) {
+      const url = window._pz.serverUploadUrl + "creditnotes/" + fileName;
+      this.openExternalLink(url);
     },
     openPhotoBrowser(image, type, caption) {
       //   if (!image || image.length < 1) return;

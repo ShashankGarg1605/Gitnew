@@ -172,16 +172,25 @@ document.addEventListener("deviceready", () => {
 window._pz.domain = "http://staging.prozo.com";
 // window._pz.domain = "http://192.168.1.11:8091";
 // window._pz.domain = "http://192.168.0.104:8091";
+
+window._pz.serverUploadUrl = "http://staging.prozo.com/backend/web/uploads/";
+// window._pz.serverUploadUrl= 'http://admin.prozo.com/backend/web/uploads/';
+
 window._pz.apiEndPt = window._pz.domain + "/api/v3/";
 if (localStorage.tenantData) {
-  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${JSON.parse(localStorage.tenantData).id}/`;
+  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${
+    JSON.parse(localStorage.tenantData).id
+  }/`;
 }
 
 // show the environment on top left if not on prod
 if (window._pz.domain !== "http://admin.prozo.com") {
   var env = document.createElement("span");
   env.innerHTML = window._pz.domain;
-  env.setAttribute("style", "position: absolute; top: 0; left: 0; z-index: 9999; font-size: xx-small; background: #ff000078; color: white; font-weight: bold;");
+  env.setAttribute(
+    "style",
+    "position: absolute; top: 0; left: 0; z-index: 9999; font-size: xx-small; background: #ff000078; color: white; font-weight: bold;"
+  );
   document.body.append(env);
 }
 

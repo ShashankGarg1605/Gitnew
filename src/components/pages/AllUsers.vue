@@ -246,7 +246,7 @@ export default {
         })
         .then(res => {
           const mobile = this.clickedUser.mobile;
-          const smsText = `"Hi, please find below the login details for signing into Bookz app:\\nUser Name: ${mobile}\\nPassword: ${pass}"`;
+          const smsText = `Hi, please find below the login details for signing into Bookz app:%0D%0AUser Name: ${mobile}%0D%0APassword: ${pass}`;
           window.vm.$http.post(
             `${
               window._pz.apiEndPt

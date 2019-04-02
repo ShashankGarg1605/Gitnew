@@ -495,7 +495,7 @@
                   <button
                     v-if="compvalue && compvalue.length===2"
                     href="#"
-                    class="button button-raised color-teal pz-padding-lr16 pz-float-r"
+                    class="button button-raised color-teal pz-margin-8 pz-float-r"
                     @click="downloadAccountStatement()"
                   >View</button>
                 </f7-block>
@@ -580,6 +580,7 @@
   flex-direction: column !important;
   align-items: flex-start !important;
   line-height: 37px !important;
+  justify-content: center;
 }
 </style>
 

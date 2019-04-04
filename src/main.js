@@ -168,13 +168,10 @@ document.addEventListener("deviceready", () => {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-// window._pz.domain = "http://admin.prozo.com";
-window._pz.domain = "http://staging.prozo.com";
+window._pz.domain = "http://admin.prozo.com";
+// window._pz.domain = "http://staging.prozo.com";
 // window._pz.domain = "http://192.168.1.11:8091";
 // window._pz.domain = "http://192.168.0.104:8091";
-
-window._pz.serverUploadUrl = "http://staging.prozo.com/backend/web/uploads/";
-// window._pz.serverUploadUrl= 'http://admin.prozo.com/backend/web/uploads/';
 
 window._pz.apiEndPt = window._pz.domain + "/api/v3/";
 if (localStorage.tenantData) {

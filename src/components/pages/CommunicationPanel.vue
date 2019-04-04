@@ -901,7 +901,7 @@ export default {
       else window.open(url, "_newtab");
     },
     viewCreditNote(fileName) {
-      const url = window._pz.serverUploadUrl + "creditnotes/" + fileName;
+      const url = window._pz.uploadsEndPt + "creditnotes/" + fileName;
       this.openExternalLink(url);
     },
     openPhotoBrowser(image, type, caption) {

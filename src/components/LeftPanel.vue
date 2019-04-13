@@ -63,6 +63,12 @@
               :label="'Order Verification'"
               v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
             ></menu-item>
+            <menu-item
+              :icon="'cube'"
+              :url="'/Procurement'"
+              :label="'Procurement Discounts'"
+              v-if="tenantId===3 && $pzGlobalReactiveData.roleAccess('categories', 'read')"
+            ></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">
@@ -109,7 +115,10 @@ export default {
   data() {
     return {
       isMaterial: window.isMaterial,
-      isiOS: window.isiOS
+      isiOS: window.isiOS,
+      tenantId:
+        window.localStorage.tenantData &&
+        JSON.parse(window.localStorage.tenantData).id
     };
   },
   components: {

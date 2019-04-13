@@ -85,9 +85,9 @@ export default {
       return window.vm.$http
         .get(
           window._pz.apiEndPt +
-            `publisher_category?publisher=${pubID}&user=${
-              window.vm.$pzGlobalReactiveData.userID
-            }`
+          `publisher_category?publisher=${pubID}&user=${
+          window.vm.$pzGlobalReactiveData.userID
+          }`
         )
         .then(res => {
           if (res.ok && res.body) this.categories = res.body;
@@ -118,7 +118,6 @@ export default {
   },
   destroyed() {
     console.debug(this.$options.name + " destroyed");
-    this.images = null;
   }
 };
 </script>

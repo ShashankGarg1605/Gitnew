@@ -224,7 +224,7 @@
 
             <f7-list-item
               accordion-item
-              title="Payment Details"
+              title="Last Payment Details"
               v-if="lastPaymentDetails || userDetails || chqBounceDetails"
             >
               <f7-accordion-content>
@@ -241,19 +241,10 @@
                     />
                   </template>
                   <template v-if="userDetails">
-                    <list-item
-                      :label="'Overall outstanding'"
-                      :value="userDetails.payment_due | moneyFormat"
-                    />
-                    <list-item :label="'Bad debt'" :value="userDetails.bad_debt | moneyFormat"/>
                     <list-item :label="'Credit days'" :value="userDetails.credit_period + ' days'"/>
                     <list-item
                       :label="'Credit limit'"
                       :value="userDetails.credit_limit | moneyFormat"
-                    />
-                    <list-item
-                      :label="'Due after last payment'"
-                      :value="userDetails.collection_due | moneyFormat"
                     />
                   </template>
                   <list-item
@@ -379,7 +370,7 @@
               <f7-accordion-content/>
             </f7-list-item>
 
-            <f7-list-item accordion-item title="Receivables Ageing" v-if="ageingDetails">
+            <f7-list-item accordion-item title="Ageing and Outstanding" v-if="ageingDetails">
               <f7-accordion-content>
                 <f7-block>
                   <list-item
@@ -387,8 +378,8 @@
                     :value="ageingDetails.user.credit_limit | moneyFormat"
                   />
                   <list-item
-                    :label="'Total Due'"
-                    :value="ageingDetails.user.collection_due | moneyFormat"
+                    :label="'Overall Outstanding'"
+                    :value="(ageingDetails.user.credit_limit - ageingDetails.availableCredit) | moneyFormat"
                   />
                   <list-item
                     :label="'Available Credit'"

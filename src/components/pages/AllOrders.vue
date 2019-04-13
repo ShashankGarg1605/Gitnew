@@ -79,6 +79,11 @@
             v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.credit_released"
           >Release Order</a>
           <a
+            @click="reqOrderRelease()"
+            class="list-button item-link close-popover"
+            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.releaseRequested"
+          >Request Order Release</a>
+          <a
             @click="openAssignOrderPage()"
             class="list-button item-link close-popover"
             v-if="clickedOrder && clickedOrder.order_status === 3"
@@ -148,13 +153,18 @@ export default {
       if (status !== null) filterQuery += `&status=${status}`;
 
       let { value: dateRange = null } = this.filters.date[0];
-      if (dateRange !== null) filterQuery += "&startDate=" + window.vm.moment(dateRange[0]).format("YYYY-MM-DD");
-      if (dateRange !== null && dateRange.length) filterQuery += "&endDate=" + window.vm.moment(dateRange[1]).format("YYYY-MM-DD");
+      if (dateRange !== null)
+        filterQuery +=
+          "&startDate=" + window.vm.moment(dateRange[0]).format("YYYY-MM-DD");
+      if (dateRange !== null && dateRange.length)
+        filterQuery +=
+          "&endDate=" + window.vm.moment(dateRange[1]).format("YYYY-MM-DD");
 
       let { value: orderID = null } = this.filters.search[0];
       if (orderID !== null) filterQuery += `&order_id=${orderID}`;
 
-      if (this.filters.userSelect) filterQuery += `&userId=${this.filters.userSelect}`;
+      if (this.filters.userSelect)
+        filterQuery += `&userId=${this.filters.userSelect}`;
 
       return filterQuery;
     }
@@ -162,22 +172,34 @@ export default {
   methods: {
     getAllOrders() {
       window.vm.$pzGlobalReactiveData.loaderOnAllReqs = false;
-      let url = `${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=${this.limit}&offset=${this.offset}` + this.filterQuery;
+      let url =
+        `${
+          window._pz.apiEndPt
+        }orders?orderBy=created_date&orderByValue=desc&limit=${
+          this.limit
+        }&offset=${this.offset}` + this.filterQuery;
       window.vm.$http
         .get(url)
         .then(res => {
           this.totalCount = res.headers.map.count && res.headers.map.count[0];
 
           var data = res.body.map(order => {
-            order.isPartiallyDispatched = order.order_status === 5 && !order.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays);
+            order.isPartiallyDispatched =
+              order.order_status === 5 &&
+              !order.orderStatus.some(
+                el => el.status_id === 5 && el.carrierTransportationDays
+              );
 
             // if (typeof order.isPartiallyDispatched !== 'undefined') order.statusText = order.isPartiallyDispatched ? 'Partially dispatched' : 'Fully Dispatched';
             // else order.statusText = statusMapping[order.order_status];
 
             order.statusText = statusMapping[order.order_status];
             if (order.order_status === 5) {
-              const dispatchStatusObject = order.orderStatus.find(s => s.status_id === 5);
-              if (dispatchStatusObject && dispatchStatusObject.dispatch_date) order.dispatchDate = dispatchStatusObject.dispatch_date;
+              const dispatchStatusObject = order.orderStatus.find(
+                s => s.status_id === 5
+              );
+              if (dispatchStatusObject && dispatchStatusObject.dispatch_date)
+                order.dispatchDate = dispatchStatusObject.dispatch_date;
             }
 
             return order;
@@ -195,7 +217,11 @@ export default {
         });
     },
     onInfiniteScroll() {
-      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+      if (
+        this.offset % this.limit === 0 &&
+        !window.vm.$pzGlobalReactiveData.pendingReq
+      )
+        this.getAllOrders();
     },
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
@@ -218,16 +244,51 @@ export default {
     openPopover(order, e) {
       this.clickedOrder = order;
       const popupID = "#" + this.randomID;
-      window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7(popupID), e.target);
+      window.vm.$pzGlobalReactiveData.openPopoverMenu(
+        window.Dom7(popupID),
+        e.target
+      );
     },
     releaseOrder() {
-      window.vm.$f7.confirm(`Do you want to release order ${this.clickedOrder.id}?`, 'Confirm', this.doReleaseOrder);
+      window.vm.$f7.confirm(
+        `Do you want to release order ${this.clickedOrder.id}?`,
+        "Confirm",
+        this.doReleaseOrder
+      );
     },
     doReleaseOrder() {
-      window.vm.$http.patch(`${window._pz.apiEndPt}orders?updateType=release&id=${this.clickedOrder.id}`)
+      window.vm.$http
+        .patch(
+          `${window._pz.apiEndPt}orders?updateType=release&id=${
+            this.clickedOrder.id
+          }`
+        )
         .then(res => {
-          window.vm.$f7.addNotification({ message: 'Order released successfully!', hold: 2000 });
+          window.vm.$f7.addNotification({
+            message: "Order released successfully!",
+            hold: 2000
+          });
           this.clickedOrder.credit_released = 1;
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    reqOrderRelease() {
+      window.vm.$f7.confirm(
+        `Do you want to request release for the order ${this.clickedOrder.id}?`,
+        "Confirm",
+        this.doReqOrderRelease
+      );
+    },
+    doReqOrderRelease() {
+      window.vm.$http
+        .post(`${window._pz.apiEndPt}orders/send_order_release_email`, {
+          id: this.clickedOrder.id
+        })
+        .then(res => {
+          window.vm.$f7.addNotification({
+            message: "Order released requested successfully!",
+            hold: 2000
+          });
         })
         .catch(window._pz.errFunc2.bind(this));
     },
@@ -257,7 +318,10 @@ export default {
   created() {
     console.debug(this.$options.name + " created");
     if (window._pz.checkNested(this, "$route", "options", "context", "comps")) {
-      console.log("this.$route.options.context.comps: ", JSON.stringify(this.$route.options.context.comps));
+      console.log(
+        "this.$route.options.context.comps: ",
+        JSON.stringify(this.$route.options.context.comps)
+      );
       if (this.$route.options.context.comps instanceof Array) {
         // if selected filters are passed, like linking from dashboard page to only show the "open orders"
         const filter = this.$route.options.context.comps[0];

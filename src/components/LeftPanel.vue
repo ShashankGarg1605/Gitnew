@@ -123,6 +123,12 @@ export default {
   },
   components: {
     "menu-item": menuItem
+  },
+  mounted: function () {
+    document.addEventListener('loginSuccess', () => {
+      //refresh tenantID on login - in case logged in via a different tenant
+      this.tenantId = window.localStorage.tenantData && JSON.parse(window.localStorage.tenantData).id;
+    }, false);
   }
 };
 </script>

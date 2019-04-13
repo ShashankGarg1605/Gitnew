@@ -4,7 +4,7 @@
       <form @submit.prevent="validateBeforeSubmit" class="form" name="login">
         <div class="list-block" style="width: 80%;">
           <div style="padding: 0px 60px 50px 60px;">
-            <img src="../../assets/logo.png" alt="" class="pz-width100">
+            <img src="../../assets/logo.png" alt class="pz-width100">
           </div>
           <div class="pz-width100">
             <input
@@ -217,6 +217,9 @@ export default {
             window.vm.$f7.mainView.router.loadPage("LandingPage");
 
             window.vm.$pzGlobalReactiveData.beginPeriodicDataFetch();
+
+            const event = new Event('loginSuccess');
+            document.dispatchEvent(event);
 
           } else return Promise.reject('You are not an admin.');
         })

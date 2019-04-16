@@ -82,7 +82,7 @@
             @click="reqOrderRelease()"
             class="list-button item-link close-popover"
             style="white-space: pre;"
-            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.releaseRequested"
+            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.credit_released"
           >Request Order Release</a>
           <a
             @click="openAssignOrderPage()"

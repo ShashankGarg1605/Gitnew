@@ -12,7 +12,10 @@
     <section v-if="selectedPub && categories" class="proc">
       <div v-for="(c, i) in categories" :key="i" class="category">
         <span>{{c.category_name}}</span>
-        <div class="sources">
+        <div
+          class="sources"
+          v-if="c.categoryProcurementJoin && c.categoryProcurementJoin.categoryProcurementInfo"
+        >
           <span>Default Source:</span>
           <list-item
             :label="c.categoryProcurementJoin.categoryProcurementInfo.type === 2? c.categoryProcurementJoin.categoryProcurementInfo.distributors.distributor_name:selectedPub.name"
@@ -22,7 +25,7 @@
             styles="color:inherit"
           />
         </div>
-        <div class="sources">
+        <div class="sources" v-if="c.categoryProcurementInfo && c.categoryProcurementInfo.length">
           <span>All sources:</span>
           <list-item
             v-for="(d, index) in c.categoryProcurementInfo"
@@ -34,6 +37,10 @@
             styles="color:inherit"
           />
         </div>
+        <div
+          class="sources"
+          v-if="!c.categoryProcurementInfo || !c.categoryProcurementInfo.length"
+        >No results found</div>
       </div>
     </section>
 
@@ -85,9 +92,9 @@ export default {
       return window.vm.$http
         .get(
           window._pz.apiEndPt +
-          `publisher_category?publisher=${pubID}&user=${
-          window.vm.$pzGlobalReactiveData.userID
-          }`
+            `publisher_category?publisher=${pubID}&user=${
+              window.vm.$pzGlobalReactiveData.userID
+            }`
         )
         .then(res => {
           if (res.ok && res.body) this.categories = res.body;

@@ -53,6 +53,7 @@
         :url="'/OrderSearch'"
         :label="'Order Verification'"
       ></menu-item>
+      <menu-item :icon="'asterisk'" :url="'/Products'" :label="'All Products'"></menu-item>
     </ul>
   </f7-page>
 </template>
@@ -74,7 +75,7 @@ li {
   padding-left: 20px;
 }
 li:nth-child(even) {
-  background: #FAFAFA;
+  background: #fafafa;
 }
 li span:nth-child(3) {
   color: #bdbdbd;

@@ -284,7 +284,13 @@ function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM, wa
   window.vm.$pzGlobalReactiveData.isRM = isRM;
   window.vm.$pzGlobalReactiveData.warehouse = warehouse;
 
-  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${tenantData.id}/`;
+  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${
+    tenantData.id
+  }/`;
+  window._pz.algoliaBooksIndex = window._pz.algoliaBooksIndex.replace(
+    "tenant_ID",
+    tenantData.id
+  );
 }
 
 function clearAllHistory() {

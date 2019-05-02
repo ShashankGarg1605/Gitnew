@@ -168,16 +168,35 @@ document.addEventListener("deviceready", () => {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-window._pz.domain = "http://admin.prozo.com";
-// window._pz.domain = "http://staging.prozo.com";
-// window._pz.domain = "http://192.168.1.11:8091";
-// window._pz.domain = "http://192.168.0.104:8091";
+window._pz.instance = "STAGING";
+// window._pz.instance = "PRODUCTION";
+
+switch (window._pz.instance) {
+  case "STAGING": {
+    window._pz.domain = "http://staging.prozo.com";
+    window._pz.algoliaBooksIndex = "tenant_ID_dev_products";
+    break;
+  }
+  case "PRODUCTION": {
+    window._pz.domain = "http://admin.prozo.com";
+    window._pz.algoliaBooksIndex = "tenant_ID_prod_products";
+    break;
+  }
+}
 
 window._pz.apiEndPt = window._pz.domain + "/api/v3/";
+
 if (localStorage.tenantData) {
-  window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${
-    JSON.parse(localStorage.tenantData).id
-  }/`;
+  const tenantId = JSON.parse(localStorage.tenantData).id;
+
+  window._pz.uploadsEndPt = `${
+    window._pz.domain
+  }/backend/web/uploads/tenant_${tenantId}/`;
+
+  window._pz.algoliaBooksIndex = window._pz.algoliaBooksIndex.replace(
+    "ID",
+    tenantId
+  );
 }
 
 // show the environment on top left if not on prod

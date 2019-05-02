@@ -27,6 +27,7 @@ import VerifiedTitles from "./components/pages/OrderVerification/VerifiedTitles"
 import TitleSearch from "./components/pages/OrderVerification/TitleSearch";
 import AssignOrder from "./components/pages/OrderVerification/AssignOrder";
 import Procurement from "./components/pages/Procurement";
+import Products from "./components/pages/Products";
 
 export default [
   {
@@ -144,5 +145,9 @@ export default [
   {
     path: "/Procurement/",
     component: Procurement
+  },
+  {
+    path: "/Products/",
+    component: Products
   }
 ];

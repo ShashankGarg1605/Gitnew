@@ -69,6 +69,7 @@
               :label="'Procurement Discounts'"
               v-if="tenantId===3 && $pzGlobalReactiveData.roleAccess('categories', 'read')"
             ></menu-item>
+            <menu-item :icon="'cube'" :url="'/Products'" :label="'All products'"></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">
@@ -124,11 +125,17 @@ export default {
   components: {
     "menu-item": menuItem
   },
-  mounted: function () {
-    document.addEventListener('loginSuccess', () => {
-      //refresh tenantID on login - in case logged in via a different tenant
-      this.tenantId = window.localStorage.tenantData && JSON.parse(window.localStorage.tenantData).id;
-    }, false);
+  mounted: function() {
+    document.addEventListener(
+      "loginSuccess",
+      () => {
+        //refresh tenantID on login - in case logged in via a different tenant
+        this.tenantId =
+          window.localStorage.tenantData &&
+          JSON.parse(window.localStorage.tenantData).id;
+      },
+      false
+    );
   }
 };
 </script>

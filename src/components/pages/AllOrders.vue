@@ -26,7 +26,11 @@
     <f7-list>
       <div v-if="allOrders.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="order in allOrders" :key="order.id">
+          <li
+            :class="'item-content ' + (order.order_status < 5 && !order.credit_released? 'needs-release' : '')"
+            v-for="order in allOrders"
+            :key="order.id"
+          >
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Order ID:</div>
@@ -99,6 +103,13 @@
     </f7-popover>
   </f7-page>
 </template>
+
+<style scoped>
+li.needs-release {
+  background: #ffebee;
+}
+</style>
+
 
 <script>
 export default {

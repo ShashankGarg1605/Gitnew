@@ -235,6 +235,12 @@ window._pz.checkNested = function(obj, ...args) {
   return true;
 };
 
+window._pz.openExternalLink = function(url) {
+  if (window._pz.checkNested(window, "cordova", "InAppBrowser"))
+    window.cordova.InAppBrowser.open(url, "_system");
+  else window.open(url, "_newtab");
+};
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

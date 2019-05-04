@@ -97,6 +97,11 @@
             class="list-button item-link close-popover"
             v-if="clickedOrder && clickedOrder.order_status === 3"
           >Assign Order</a>
+          <a
+            @click="viewInvoice()"
+            class="list-button item-link close-popover"
+            v-if="clickedOrder && clickedOrder.order_status >4"
+          >View Invoice</a>
           <!-- <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a> -->
         </div>
       </div>
@@ -256,6 +261,27 @@ export default {
       window.vm.$f7.mainView.router.load({
         url: url
       });
+    },
+    viewInvoice() {
+      window.vm.$http
+        .get(
+          `${window._pz.apiEndPt}orders/invoice?orderId=${this.clickedOrder.id}`
+        )
+        .then(res => {
+          if (!res.ok || !res.body || !res.body.length)
+            window._pz.errFunc2.bind(this);
+
+          const invoice = res.body.find(
+            f => f.invoice_type === 1 && f.is_proforma === 0
+          );
+
+          if (invoice) {
+            const url =
+              window._pz.uploadsEndPt + "order-invoice/" + invoice.file_name;
+            window._pz.openExternalLink(url);
+          } else window._pz.errFunc2.bind(this);
+        })
+        .catch(window._pz.errFunc2.bind(this));
     },
     openPopover(order, e) {
       this.clickedOrder = order;

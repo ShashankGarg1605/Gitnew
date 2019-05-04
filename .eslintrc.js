@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     sourceType: "module"
   },
-  extends: "semistandard",
+  extends: ["semistandard"],
   env: {
     browser: true,
     node: true,
@@ -38,6 +38,7 @@ module.exports = {
     "spaced-comment": 0,
     quotes: 0,
     curly: 0,
-    "space-before-blocks": 0
+    "space-before-blocks": 0,
+    "standard/computed-property-even-spacing": 0
   }
 };

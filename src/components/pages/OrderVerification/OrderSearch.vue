@@ -84,7 +84,11 @@ export default {
   methods: {
     openOrdersForVerification() {
       window.vm.$http
-        .get(`${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=100&offset=0&status=103`)
+        .get(
+          `${
+            window._pz.apiEndPt
+          }orders?orderBy=created_date&orderByValue=desc&limit=100&offset=0&status=103`
+        )
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
@@ -103,7 +107,13 @@ export default {
     },
     fetchOrders() {
       window.vm.$http
-        .get(`${window._pz.apiEndPt}orders?orderBy=created_date&orderByValue=desc&limit=20&offset=0&status=103&order_id=${this.orderId}`)
+        .get(
+          `${
+            window._pz.apiEndPt
+          }orders?orderBy=created_date&orderByValue=desc&limit=20&offset=0&status=103&order_id=${
+            this.orderId
+          }`
+        )
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
@@ -117,7 +127,10 @@ export default {
         .catch(window._pz.errFunc2.bind(this));
     },
     setDefaultVerificationStatus(orders) {
-      if (orders && orders.length) orders.forEach(o => { if (!o.verification_status) o.verification_status = 0; });
+      if (orders && orders.length)
+        orders.forEach(o => {
+          if (!o.verification_status) o.verification_status = 0;
+        });
       return orders;
     }
   },

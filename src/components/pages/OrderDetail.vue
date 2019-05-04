@@ -154,19 +154,31 @@ export default {
   },
   computed: {
     dispatchData() {
-      return this.data && this.data.orderStatus && this.data.orderStatus.find(x => x.status_id === 5);
+      return (
+        this.data &&
+        this.data.orderStatus &&
+        this.data.orderStatus.find(x => x.status_id === 5)
+      );
     },
     biltyImage() {
       if (!this.data || !this.data.orderStatus) return null;
       let dispatchData = this.data.orderStatus.find(x => x.status_id === 5);
       // ccbilty.png means the image is not there. Its a dummy hardcoded file name appended when the bilty type is CC bilty -_-
-      if (!dispatchData || !dispatchData.bill_t_file_name || dispatchData.bill_t_file_name === 'ccbilty.png') return null;
+      if (
+        !dispatchData ||
+        !dispatchData.bill_t_file_name ||
+        dispatchData.bill_t_file_name === "ccbilty.png"
+      )
+        return null;
       return window._pz.uploadsEndPt + "billt/" + dispatchData.bill_t_file_name;
     },
     isPartiallyDispatched() {
       return (
         this.data &&
-        this.data.order_status === 5 && !this.data.orderStatus.some(el => el.status_id === 5 && el.carrierTransportationDays)
+        this.data.order_status === 5 &&
+        !this.data.orderStatus.some(
+          el => el.status_id === 5 && el.carrierTransportationDays
+        )
       );
     },
     statusText() {

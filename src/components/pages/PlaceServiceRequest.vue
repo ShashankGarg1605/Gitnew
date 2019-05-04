@@ -1,53 +1,71 @@
 <template>
   <f7-page name="PlaceServiceRequest">
-
     <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-center>
-        Place Service Request
-      </f7-nav-center>
+      <f7-nav-center>Place Service Request</f7-nav-center>
     </f7-navbar>
 
-    <user-select :value.sync="userID" />
+    <user-select :value.sync="userID"/>
 
     <section v-if="userID">
-
       <div class="list-block">
         <ul>
-
-          <single-select :value.sync="selectedReason" :placeholder="'Select Reason'" :opts="reasons" />
+          <single-select
+            :value.sync="selectedReason"
+            :placeholder="'Select Reason'"
+            :opts="reasons"
+          />
 
           <li class="item-content pz-colr-inherit pz-cap">
             <div class="item-media">
               <icon name="pencil"></icon>
             </div>
-            <div class="item-inner pz-margin-l0" style="align-items: left;     display: flex;     flex-direction: column;">
-              <span class="pz-size-normal">
-                Enter description
-              </span>
-              <textarea type="text" placeholder="Please enter as much detail as possible" v-model="description"></textarea>
+            <div
+              class="item-inner pz-margin-l0"
+              style="align-items: left;     display: flex;     flex-direction: column;"
+            >
+              <span class="pz-size-normal">Enter description</span>
+              <textarea
+                type="text"
+                placeholder="Please enter as much detail as possible"
+                v-model="description"
+              ></textarea>
             </div>
           </li>
 
-          <li class="item-content pz-colr-inherit pz-cap" style="padding-right: 20px;     margin-top: 20px;">
+          <li
+            class="item-content pz-colr-inherit pz-cap"
+            style="padding-right: 20px;     margin-top: 20px;"
+          >
             <div class="item-media">
               <icon name="image"></icon>
             </div>
-            <image-uploader :maxCount="3" :inputTitles="false" :tooltip="false" :hideSubmitBtn="true" @added="imadeAdded($event)" />
+            <image-uploader
+              :maxCount="3"
+              :inputTitles="false"
+              :tooltip="false"
+              :hideSubmitBtn="true"
+              @added="imadeAdded($event)"
+            />
           </li>
-
         </ul>
         <div class="bottom">
-          <button type="button" @click="submit()" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="!selectedReason">Submit</button>
+          <button
+            type="button"
+            @click="submit()"
+            class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+            :disabled="!selectedReason"
+          >Submit</button>
         </div>
       </div>
-
     </section>
 
-    <div class="color-gray pz-page-err" v-if="errMsg && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
-
+    <div
+      class="color-gray pz-page-err"
+      v-if="errMsg && !$pzGlobalReactiveData.pendingReq"
+    >{{errMsg}}</div>
   </f7-page>
 </template>
 
@@ -140,14 +158,21 @@ export default {
         status: 0
       };
 
-      if (this.images && this.images.length) params.images = this.images.map(image => ({ name: "", stringValue: image.data }));
+      if (this.images && this.images.length)
+        params.images = this.images.map(image => ({
+          name: "",
+          stringValue: image.data
+        }));
 
       window.vm.$http
         .post(window._pz.apiEndPt + "sr", params)
         .then(res => {
           window.vm.$f7.hidePreloader();
           if (res.ok) {
-            window.vm.$f7.addNotification({ message: `Service request has been placed.`, hold: 5000 });
+            window.vm.$f7.addNotification({
+              message: `Service request has been placed.`,
+              hold: 5000
+            });
             window.vm.$f7.mainView.router.load({
               url: "ServiceRequests",
               reload: true

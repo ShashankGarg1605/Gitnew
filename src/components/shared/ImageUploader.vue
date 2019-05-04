@@ -1,6 +1,11 @@
 <template>
   <section class="pz-width100">
-    <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white color-gray" @click="uploadChoices()" :disabled="images.length==maxCount">
+    <a
+      href="#"
+      class="button button-raised pz-flex-sa-c pz-bg-gray-white color-gray"
+      @click="uploadChoices()"
+      :disabled="images.length==maxCount"
+    >
       Add {{images.length? 'another': ''}} image
       <icon name="plus"></icon>
     </a>
@@ -8,16 +13,31 @@
       <span class="color-gray pz-size-small" v-if="tooltip">Tap image for options</span>
       <div v-if="inputTitles">
         <span v-for="(image, index) in images" :key="index" class="pz-flex pz-margin-b8">
-          <img :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+          <img
+            :src="'data:image/jpeg;base64,' + images[index].data"
+            class="pz-margin-r8 image"
+            @click="thumbnailClick(index)"
+          >
           <input type="text" placeholder="Title (optional)" v-model="images[index].title">
         </span>
       </div>
 
       <div v-else>
-        <img v-for="(image, index) in images" :key="index" :src="'data:image/jpeg;base64,' + images[index].data" class="pz-margin-r8 image" @click="thumbnailClick(index)">
+        <img
+          v-for="(image, index) in images"
+          :key="index"
+          :src="'data:image/jpeg;base64,' + images[index].data"
+          class="pz-margin-r8 image"
+          @click="thumbnailClick(index)"
+        >
       </div>
     </div>
-    <a href="#" class="button button-raised pz-flex-sa-c pz-bg-gray-white" @click="uploadImages()" v-if="!hideSubmitBtn && images.length>0">
+    <a
+      href="#"
+      class="button button-raised pz-flex-sa-c pz-bg-gray-white"
+      @click="uploadImages()"
+      v-if="!hideSubmitBtn && images.length>0"
+    >
       {{submitLabel}}
       <icon name="cloud-upload"></icon>
     </a>
@@ -48,13 +68,13 @@ export default {
         { text: "Upload invoice using", label: true },
         {
           text: "Camera",
-          onClick: function () {
+          onClick: function() {
             this.getImage("CAMERA");
           }.bind(this)
         },
         {
           text: "Gallery",
-          onClick: function () {
+          onClick: function() {
             this.getImage("PHOTOLIBRARY");
           }.bind(this)
         }
@@ -97,13 +117,13 @@ export default {
       let buttons = [
         {
           text: "View",
-          onClick: function () {
+          onClick: function() {
             this.openZoomView(index);
           }.bind(this)
         },
         {
           text: "Remove",
-          onClick: function () {
+          onClick: function() {
             this.images.splice(index, 1);
             this.$emit("removed", this.images);
           }.bind(this)

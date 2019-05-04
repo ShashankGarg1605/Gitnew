@@ -70,8 +70,7 @@ export default {
       images: []
     };
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     getOrderDetails() {
       window.vm.$http
@@ -91,22 +90,35 @@ export default {
     },
     doUpdate() {
       const params = {
-        "order": {
-          "id": this.orderDetails.id
+        order: {
+          id: this.orderDetails.id
         },
-        "bill_t_file_name": this.images[0]
+        bill_t_file_name: this.images[0]
       };
 
-
       window.vm.$f7.showPreloader();
-      window.vm.$http.post(`${window._pz.apiEndPt}orders/bilty_details`, params)
+      window.vm.$http
+        .post(`${window._pz.apiEndPt}orders/bilty_details`, params)
         .then(res => {
           window.vm.$f7.hidePreloader();
           if (res.ok) {
-            window.f7.addNotification({ message: 'Proof of delivery successfully uploaded', hold: 2000 });
+            window.f7.addNotification({
+              message: "Proof of delivery successfully uploaded",
+              hold: 2000
+            });
 
-            const allOrdersFilters = window._pz.checkNested(this.$route, 'options', 'context', 'allOrdersFilters') ? this.$route.options.context.allOrdersFilters : null;
-            const prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            const allOrdersFilters = window._pz.checkNested(
+              this.$route,
+              "options",
+              "context",
+              "allOrdersFilters"
+            )
+              ? this.$route.options.context.allOrdersFilters
+              : null;
+            const prevPage =
+              window.vm.$f7.mainView.history[
+                window.vm.$f7.mainView.history.length - 2
+              ];
             window.vm.$f7.mainView.router.load({
               url: prevPage,
               reload: true,

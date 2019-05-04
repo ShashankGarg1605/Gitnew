@@ -102,15 +102,15 @@ export default {
     city() {
       return window._pz.checkNested(this, "orderData", "user", "userAddress")
         ? this.orderData.user.userAddress.find(_ => _.address_type === 1).city
-          .name
+            .name
         : null;
     },
     nbTotalBooks() {
       return window._pz.checkNested(this, "orderData", "orderProduct")
         ? this.orderData.orderProduct.reduce(
-          (sum, book) => sum + book.quantity,
-          0
-        )
+            (sum, book) => sum + book.quantity,
+            0
+          )
         : null;
     },
     nbUniqueTitles() {
@@ -140,7 +140,9 @@ export default {
         .get(`${window._pz.apiEndPt}orders/${this.orderId}`)
         .then(res => {
           if (res.ok) {
-            this.orderData = this.setDefaultOrderProductVerificationQty(res.body);
+            this.orderData = this.setDefaultOrderProductVerificationQty(
+              res.body
+            );
           }
         })
         .catch(window._pz.errFunc2.bind(this));
@@ -151,15 +153,18 @@ export default {
         .then(res => {
           const scannedProductIsbn = res.text;
           if (scannedProductIsbn) {
-            const scannedProductData = this.orderData.orderProduct.find(
-              p => {
-                const searchTargets = [];
-                if (window._pz.checkNested(p, 'product', 'isbn')) searchTargets.push(p.product.isbn);
-                if (window._pz.checkNested(p, 'otherProduct', 'code')) searchTargets.push(p.otherProduct.code.replace(/ /g, ''));
-                if (window._pz.checkNested(p, 'otherProduct', 'scan_code')) searchTargets.push(p.otherProduct.scan_code.replace(/ /g, ''));
-                return searchTargets.includes(scannedProductIsbn.replace(/ /g, ''));
-              }
-            );
+            const scannedProductData = this.orderData.orderProduct.find(p => {
+              const searchTargets = [];
+              if (window._pz.checkNested(p, "product", "isbn"))
+                searchTargets.push(p.product.isbn);
+              if (window._pz.checkNested(p, "otherProduct", "code"))
+                searchTargets.push(p.otherProduct.code.replace(/ /g, ""));
+              if (window._pz.checkNested(p, "otherProduct", "scan_code"))
+                searchTargets.push(p.otherProduct.scan_code.replace(/ /g, ""));
+              return searchTargets.includes(
+                scannedProductIsbn.replace(/ /g, "")
+              );
+            });
             if (scannedProductData)
               window.vm.$f7.mainView.router.load({
                 url: "VerifyProduct",
@@ -170,7 +175,8 @@ export default {
               });
             else
               window.vm.$f7.addNotification({
-                message: "Oops! This product is not in the pick list. Please recheck barcode and product details as per picklist",
+                message:
+                  "Oops! This product is not in the pick list. Please recheck barcode and product details as per picklist",
                 hold: 2000
               });
           } else
@@ -202,14 +208,18 @@ export default {
     },
     completeVerification() {
       if (this.verifiedPct < 100)
-        window.vm.$f7.confirm('Quantity verified is less than pick list. Sure you want to complete verification?', 'Confirm', this.doCompleteVerification);
+        window.vm.$f7.confirm(
+          "Quantity verified is less than pick list. Sure you want to complete verification?",
+          "Confirm",
+          this.doCompleteVerification
+        );
       else this.doCompleteVerification();
     },
     doCompleteVerification() {
       window.vm.$http
         .patch(
           `${window._pz.apiEndPt}orders?updateType=verification&id=${
-          this.orderData.id
+            this.orderData.id
           }&verification_status=2`
         )
         .then(res => {
@@ -221,19 +231,21 @@ export default {
 
             const buttons = [
               {
-                text: `Thank you! The picklist for order ID ${this.orderData.order_id} has been verified successfully. You can now:`,
+                text: `Thank you! The picklist for order ID ${
+                  this.orderData.order_id
+                } has been verified successfully. You can now:`,
                 label: true
               },
               {
-                text: 'Verify another order',
-                onClick: function () {
-                  window.vm.$f7.mainView.router.loadPage('OrderSearch');
+                text: "Verify another order",
+                onClick: function() {
+                  window.vm.$f7.mainView.router.loadPage("OrderSearch");
                 }
               },
               {
-                text: 'Go home',
-                onClick: function () {
-                  window.vm.$f7.mainView.router.loadPage('LandingPage');
+                text: "Go home",
+                onClick: function() {
+                  window.vm.$f7.mainView.router.loadPage("LandingPage");
                 }
               }
             ];
@@ -243,7 +255,10 @@ export default {
         .catch(window._pz.errFunc2.bind(this));
     },
     setDefaultOrderProductVerificationQty(order) {
-      if (order && order.orderProduct && order.orderProduct.length) order.orderProduct.forEach(op => { if (!op.verified_quantity) op.verified_quantity = 0; });
+      if (order && order.orderProduct && order.orderProduct.length)
+        order.orderProduct.forEach(op => {
+          if (!op.verified_quantity) op.verified_quantity = 0;
+        });
       return order;
     }
   },

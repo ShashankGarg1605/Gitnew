@@ -30,24 +30,24 @@
 </template>
 
 <script>
-import LeftPanel from './components/LeftPanel';
+import LeftPanel from "./components/LeftPanel";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    'left-panel-view': LeftPanel
+    "left-panel-view": LeftPanel
   },
   data() {
     return {
       mounted: false
     };
   },
-  mounted: function () {
+  mounted: function() {
     this.mounted = true;
   },
   methods: {
     defaultPage() {
-      return window.localStorage.authToken ? 'LandingPage' : '/';
+      return window.localStorage.authToken ? "LandingPage" : "/";
     }
   },
   computed: {
@@ -55,7 +55,7 @@ export default {
       return window.isiOS;
     },
     platformClass() {
-      return window.isiOS ? 'ios' : 'material';
+      return window.isiOS ? "ios" : "material";
     }
   }
 };

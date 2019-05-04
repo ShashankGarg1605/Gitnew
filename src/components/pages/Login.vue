@@ -126,8 +126,8 @@ export default {
       let authToken = null;
       let roleMenus = null;
       // get list of tenants
-      window.vm.$http.post(window._pz.apiEndPt + "tenant", { userName: this.username })
-
+      window.vm.$http
+        .post(window._pz.apiEndPt + "tenant", { userName: this.username })
 
         //  check status and lenth
         .then(res => {
@@ -136,7 +136,6 @@ export default {
             return Promise.reject("You dont have an account");
           else return Promise.reject(res.status);
         })
-
 
         // ask user to select a tenant
         .then(res => {
@@ -165,72 +164,80 @@ export default {
           });
         })
 
-
         // auth with password
-        .then(tenant => window.vm.$http.post(
-          window._pz.apiEndPt + "auth",
-          {
-            username: this.username,
-            password: this.password
-          },
-          {
-            headers: {
-              tenant: "tenant_" + tenant.id,
-              source: "3",
-              "Content-type": "application/json;charset=UTF-8; charset=UTF-8"
+        .then(tenant =>
+          window.vm.$http.post(
+            window._pz.apiEndPt + "auth",
+            {
+              username: this.username,
+              password: this.password
+            },
+            {
+              headers: {
+                tenant: "tenant_" + tenant.id,
+                source: "3",
+                "Content-type": "application/json;charset=UTF-8; charset=UTF-8"
+              }
             }
-          }
+          )
         )
-        )
-
 
         // check status and get user details
-        .then(
-          res => {
-            if (res.ok) {
-              authToken = res.body.token;
-              if (res.body.userRoles && res.body.userRoles.length) roleMenus = window.vm.$pzGlobalReactiveData.createRoleMenus(res.body.userRoles);
-              return window.vm.$http.get(
-                window._pz.apiEndPt + "users/" + res.body.id,
-                {
-                  headers: {
-                    tenant: "tenant_" + tempTenant.id,
-                    source: "3",
-                    "Content-type": "application/json;charset=UTF-8; charset=UTF-8",
-                    Authorization: authToken
-                  }
-                });
-            } else return Promise.reject(res.status);
-          }
-        )
-
+        .then(res => {
+          if (res.ok) {
+            authToken = res.body.token;
+            if (res.body.userRoles && res.body.userRoles.length)
+              roleMenus = window.vm.$pzGlobalReactiveData.createRoleMenus(
+                res.body.userRoles
+              );
+            return window.vm.$http.get(
+              window._pz.apiEndPt + "users/" + res.body.id,
+              {
+                headers: {
+                  tenant: "tenant_" + tempTenant.id,
+                  source: "3",
+                  "Content-type":
+                    "application/json;charset=UTF-8; charset=UTF-8",
+                  Authorization: authToken
+                }
+              }
+            );
+          } else return Promise.reject(res.status);
+        })
 
         // check if its an admin
         .then(res => {
           if (!res.ok) return Promise.reject(res.status);
           if (res.body.user_type === 1) {
             // an admin user won't have the warehouses field, becuase he has access to all the warehouses
-            setGlobals(authToken, tempTenant, res.body.id, roleMenus, res.body.buyer_name, res.body.is_relationship_manager, res.body.warehouse);
+            setGlobals(
+              authToken,
+              tempTenant,
+              res.body.id,
+              roleMenus,
+              res.body.buyer_name,
+              res.body.is_relationship_manager,
+              res.body.warehouse
+            );
             clearAllHistory();
-
 
             window.vm.$f7.mainView.router.loadPage("LandingPage");
 
             window.vm.$pzGlobalReactiveData.beginPeriodicDataFetch();
 
-            const event = new Event('loginSuccess');
+            const event = new Event("loginSuccess");
             document.dispatchEvent(event);
-
-          } else return Promise.reject('You are not an admin.');
+          } else return Promise.reject("You are not an admin.");
         })
 
-
-        .catch(function (err) {
+        .catch(function(err) {
           console.log("err: ", err);
           var msg;
           if (typeof err === "string") msg = window._pz.err[err] || err;
-          else if (typeof err === "number") msg = `Something went wrong. (err ${err})`;
-          else if (typeof err === "object" && err.status && err.status === 401) msg = window._pz.err["ERR_CREDS"];
+          else if (typeof err === "number")
+            msg = `Something went wrong. (err ${err})`;
+          else if (typeof err === "object" && err.status && err.status === 401)
+            msg = window._pz.err["ERR_CREDS"];
           else if (err && !err.ok) msg = window._pz.err["ERR_NET"];
 
           if (msg) window.vm.$f7.addNotification({ message: msg, hold: 2000 });
@@ -263,7 +270,15 @@ export default {
   }
 };
 
-function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM, warehouse) {
+function setGlobals(
+  authToken,
+  tenantData,
+  userID,
+  roleMenus,
+  userName,
+  isRM,
+  warehouse
+) {
   window.vm.$options.http.headers.Authorization = authToken;
   window.vm.$options.http.headers.ID = "" + userID;
   window.vm.$options.http.headers.tenant = "tenant_" + tenantData.id;
@@ -296,5 +311,4 @@ function setGlobals(authToken, tenantData, userID, roleMenus, userName, isRM, wa
 function clearAllHistory() {
   window.vm.$f7.mainView.history = [];
 }
-
 </script> ̰

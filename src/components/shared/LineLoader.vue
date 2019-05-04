@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+  <div></div>
 </template>
 
 <style scoped>
@@ -36,22 +36,22 @@ div {
 
 <script>
 export default {
-    props: {
-        label: String,
-        value: {
-            default: '(Not available)'
-        },
-        leftColWidth: {
-            default: 35
-        },
-        rightColWidth: {
-            default: 65
-        }
+  props: {
+    label: String,
+    value: {
+      default: "(Not available)"
     },
-    computed: {
-        hasCustomValueSlot() {
-            return !!this.$slots.default;
-        }
+    leftColWidth: {
+      default: 35
+    },
+    rightColWidth: {
+      default: 65
     }
+  },
+  computed: {
+    hasCustomValueSlot() {
+      return !!this.$slots.default;
+    }
+  }
 };
 </script>

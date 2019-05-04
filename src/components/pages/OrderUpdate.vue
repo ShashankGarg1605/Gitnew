@@ -1,24 +1,27 @@
 <template>
   <f7-page name="OrderUpdate">
-
     <f7-navbar back-link="Back" sliding>
-      <f7-nav-center>
-        Update Order
-      </f7-nav-center>
+      <f7-nav-center>Update Order</f7-nav-center>
     </f7-navbar>
 
     <section class="pz-width100 pz-size-normal pz-padding-t16" v-if="orderDetails">
-
-      <list-item :label="'Order ID'" :value="orderDetails.order_id" />
-      <list-item :label="'Buyer'" :value="orderDetails.user.buyer_name" />
+      <list-item :label="'Order ID'" :value="orderDetails.order_id"/>
+      <list-item :label="'Buyer'" :value="orderDetails.user.buyer_name"/>
       <list-item :label="'Mobile No'">
-        <a @click="$pzGlobalReactiveData.phone(orderDetails.user.mobile)">{{orderDetails.user.mobile}}</a>
+        <a
+          @click="$pzGlobalReactiveData.phone(orderDetails.user.mobile)"
+        >{{orderDetails.user.mobile}}</a>
       </list-item>
 
       <div class="row pz-padding-tb-4 pz-padding-l16 pz-bg-gray-lightest" v-if="carriers">
-        <span class="col-35 color-gray pz-weight-thin ">Select Carrier</span>
-        <span class="col-65 ">
-          <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
+        <span class="col-35 color-gray pz-weight-thin">Select Carrier</span>
+        <span class="col-65">
+          <a
+            href="#"
+            class="item-link smart-select"
+            data-open-in="popup"
+            data-back-on-select="true"
+          >
             <select name="carrier" v-model="selectedCarrier">
               <option v-for="c in carriers" :key="c.id" :value="c.id">{{c.carrier.name}}</option>
             </select>
@@ -34,11 +37,25 @@
       <main v-if="selCrrName && selCrrName.toLowerCase() !== 'local transport'">
         <form @submit.prevent="validateBeforeSubmit" class="form" name="update">
           <div class="row pz-padding-tb-4 pz-padding-l16">
-            <span class="col-35 color-gray pz-weight-thin ">Bilty type</span>
-            <span class="col-65 ">
-              <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
-                <select name="biltyType" v-model="biltyType" v-validate.initial="biltyType" data-vv-rules="required">
-                  <option v-for="(biltyName, biltyIdx) in biltyTypes" :key="biltyIdx" :value="biltyIdx">{{biltyName}}</option>
+            <span class="col-35 color-gray pz-weight-thin">Bilty type</span>
+            <span class="col-65">
+              <a
+                href="#"
+                class="item-link smart-select"
+                data-open-in="popup"
+                data-back-on-select="true"
+              >
+                <select
+                  name="biltyType"
+                  v-model="biltyType"
+                  v-validate.initial="biltyType"
+                  data-vv-rules="required"
+                >
+                  <option
+                    v-for="(biltyName, biltyIdx) in biltyTypes"
+                    :key="biltyIdx"
+                    :value="biltyIdx"
+                  >{{biltyName}}</option>
                 </select>
                 <div class="item-content">
                   <div class="item-inner">
@@ -51,30 +68,61 @@
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest" v-if="biltyType">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Bilty Image:</span>
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Bilty Image:</span>
             <div class="col-65">
-              <image-uploader :maxCount="1" @added="imadeAdded($event)" @removed="imadeRemoved($event)" :hideSubmitBtn="true" />
+              <image-uploader
+                :maxCount="1"
+                @added="imadeAdded($event)"
+                @removed="imadeRemoved($event)"
+                :hideSubmitBtn="true"
+              />
             </div>
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Dispatch date</span>
-            <input type="text" id="datepick" name="datepick" class="col-65" placeholder="Tap here" v-model="dispatchDateReadable" v-validate.initial="dispatchDate" data-vv-rules="required">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Dispatch date</span>
+            <input
+              type="text"
+              id="datepick"
+              name="datepick"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="dispatchDateReadable"
+              v-validate.initial="dispatchDate"
+              data-vv-rules="required"
+            >
             <p class="vald-msg" v-if="errors.has('dispatchDate')">Please input a correct value</p>
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">No. of cartons</span>
-            <input type="number" name="nbCartons" class="col-65" placeholder="Tap here" v-model="nbCartons" v-validate.initial="nbCartons" data-vv-rules="required|numeric">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">No. of cartons</span>
+            <input
+              type="number"
+              name="nbCartons"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="nbCartons"
+              v-validate.initial="nbCartons"
+              data-vv-rules="required|numeric"
+            >
             <p class="vald-msg" v-if="errors.has('nbCartons')">Please input a correct value</p>
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-l16">
-            <span class="col-35 color-gray pz-weight-thin ">Freight type</span>
-            <span class="col-65 ">
-              <a href="#" class="item-link smart-select" data-open-in="popup" data-back-on-select="true">
+            <span class="col-35 color-gray pz-weight-thin">Freight type</span>
+            <span class="col-65">
+              <a
+                href="#"
+                class="item-link smart-select"
+                data-open-in="popup"
+                data-back-on-select="true"
+              >
                 <select name="freightType" v-model="freightType">
-                  <option v-for="(value, key, index) in freightTypes" :key="index" :value="key">{{value}}</option>
+                  <option
+                    v-for="(value, key, index) in freightTypes"
+                    :key="index"
+                    :value="key"
+                  >{{value}}</option>
                 </select>
                 <div class="item-content">
                   <div class="item-inner">
@@ -86,54 +134,100 @@
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">G.R. No.</span>
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">G.R. No.</span>
             <input type="text" name="grNb" class="col-65" placeholder="Tap here" v-model="grNb">
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Freight charges</span>
-            <input type="number" name="freightCharges" class="col-65" placeholder="Tap here" v-model="freightCharges">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Freight charges</span>
+            <input
+              type="number"
+              name="freightCharges"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="freightCharges"
+            >
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Weight (in kg)</span>
-            <input type="number" name="weight" class="col-65" placeholder="Tap here" v-model="weight">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Weight (in kg)</span>
+            <input
+              type="number"
+              name="weight"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="weight"
+            >
           </div>
 
           <div class="row pz-padding-tb-4 pz-padding-lr16">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Value of goods</span>
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Value of goods</span>
             <input type="number" name="value" class="col-65" placeholder="Tap here" v-model="value">
           </div>
 
           <div class="bottom">
-            <button type="button" href="#" class="button color-green pz-margin-r16 pz-padding-lr32" @click="$pzGlobalReactiveData.goBack()">Cancel</button>
-            <button type="submit" href="#" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="errors.any() || $pzGlobalReactiveData.pendingReq">Update</button>
+            <button
+              type="button"
+              href="#"
+              class="button color-green pz-margin-r16 pz-padding-lr32"
+              @click="$pzGlobalReactiveData.goBack()"
+            >Cancel</button>
+            <button
+              type="submit"
+              href="#"
+              class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+              :disabled="errors.any() || $pzGlobalReactiveData.pendingReq"
+            >Update</button>
           </div>
         </form>
-
       </main>
 
       <main v-if="selCrrName && selCrrName.toLowerCase() === 'local transport'">
         <form @submit.prevent="validateBeforeSubmit" class="form" name="update">
           <div class="row pz-padding-tb-4 pz-padding-lr16">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">Dispatch date</span>
-            <input type="text" id="datepick" name="datepick" class="col-65" placeholder="Tap here" v-model="dispatchDateReadable" v-validate.initial="dispatchDate" data-vv-rules="required">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">Dispatch date</span>
+            <input
+              type="text"
+              id="datepick"
+              name="datepick"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="dispatchDateReadable"
+              v-validate.initial="dispatchDate"
+              data-vv-rules="required"
+            >
             <p class="vald-msg" v-if="errors.has('dispatchDate')">Please input a correct value</p>
           </div>
           <div class="row pz-padding-tb-4 pz-padding-lr16 pz-bg-gray-lightest">
-            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin ">No. of cartons</span>
-            <input type="number" name="nbCartons" class="col-65" placeholder="Tap here" v-model="nbCartons" v-validate.initial="nbCartons" data-vv-rules="required|numeric">
+            <span class="col-35 pz-wht-spc-norm color-gray pz-weight-thin">No. of cartons</span>
+            <input
+              type="number"
+              name="nbCartons"
+              class="col-65"
+              placeholder="Tap here"
+              v-model="nbCartons"
+              v-validate.initial="nbCartons"
+              data-vv-rules="required|numeric"
+            >
             <p class="vald-msg" v-if="errors.has('nbCartons')">Please input a correct value</p>
           </div>
           <div class="bottom">
-            <button type="button" href="#" class="button color-green pz-margin-r16 pz-padding-lr32" @click="$pzGlobalReactiveData.goBack()">Cancel</button>
-            <button type="submit" href="#" class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32" :disabled="errors.any() || $pzGlobalReactiveData.pendingReq">Update</button>
+            <button
+              type="button"
+              href="#"
+              class="button color-green pz-margin-r16 pz-padding-lr32"
+              @click="$pzGlobalReactiveData.goBack()"
+            >Cancel</button>
+            <button
+              type="submit"
+              href="#"
+              class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+              :disabled="errors.any() || $pzGlobalReactiveData.pendingReq"
+            >Update</button>
           </div>
         </form>
       </main>
-
     </section>
-
   </f7-page>
 </template>
 
@@ -209,7 +303,7 @@ export default {
     },
     dispatchDateReadable() {
       if (!this.dispatchDate || !this.dispatchDate.length) return null;
-      return window.vm.moment(this.dispatchDate[0]).format('Do MMM YY');
+      return window.vm.moment(this.dispatchDate[0]).format("Do MMM YY");
     }
   },
   methods: {
@@ -225,14 +319,13 @@ export default {
 
       setTimeout(() => {
         calendarInstance = window.f7.calendar({
-          input: '#datepick',
-          dateFormat: 'd-M-yy',
+          input: "#datepick",
+          dateFormat: "d-M-yy",
           onChange: (comp, values, displayValues) => {
             this.dispatchDate = values;
           }
         });
       });
-
     },
     getOrderDetails() {
       window.vm.$http
@@ -241,18 +334,27 @@ export default {
           if (res.ok) {
             this.orderDetails = res.body;
 
-            if (window._pz.checkNested(res.body, "address", "city", "id")) this.getCarriers(res.body.address.city.id);
+            if (window._pz.checkNested(res.body, "address", "city", "id"))
+              this.getCarriers(res.body.address.city.id);
 
             this.value = this.orderDetails.finalOrderValue; // set default value of goods to be the invoice value
             this.biltyType = this.orderDetails.user.billt_requirement_code; // set default bilty to be the default bilty value of that user
 
             const statusObj = res.body.orderStatus.find(_ => _.status_id === 5);
             if (statusObj) {
-              this.dispatchDate = [window.vm.moment(statusObj.dispatch_date, 'DD-MM-YYYY HH:mm')._d];
+              this.dispatchDate = [
+                window.vm.moment(statusObj.dispatch_date, "DD-MM-YYYY HH:mm")._d
+              ];
               this.nbCartons = statusObj.cartons_number;
-              this.selectedCarrier = window._pz.checkNested(statusObj, 'carrierTransportationDays', 'carrier', 'id') ? statusObj.carrierTransportationDays.id : null;
+              this.selectedCarrier = window._pz.checkNested(
+                statusObj,
+                "carrierTransportationDays",
+                "carrier",
+                "id"
+              )
+                ? statusObj.carrierTransportationDays.id
+                : null;
             }
-
           }
         })
         .catch(window._pz.errFunc2.bind(this));
@@ -274,43 +376,66 @@ export default {
     doUpdate() {
       // bilty image is mandatory in case of physical and scanned bilty
       // put a hardcoded value in the case of CC bilty
-      if ((this.biltyType === '1' || this.biltyType === '3') && !this.biltyImage && this.selCrrName.toLowerCase() !== 'local transport')
-        return window.f7.addNotification({ message: 'Please add the bilty image', hold: 2000 });
-      else if (this.biltyType === '2' && !this.biltyImage) this.biltyImage = 'ccbilty.png';
+      if (
+        (this.biltyType === "1" || this.biltyType === "3") &&
+        !this.biltyImage &&
+        this.selCrrName.toLowerCase() !== "local transport"
+      )
+        return window.f7.addNotification({
+          message: "Please add the bilty image",
+          hold: 2000
+        });
+      else if (this.biltyType === "2" && !this.biltyImage)
+        this.biltyImage = "ccbilty.png";
 
       const params = {
-        "order_status": 5,
-        "order": {
-          "id": this.orderDetails.id
+        order_status: 5,
+        order: {
+          id: this.orderDetails.id
         },
-        "dispatch_date": window.vm.moment(this.dispatchDate[0]).format('DD-MM-YYYY 00:00'),
-        "cartons_number": this.nbCartons,
-        "carrier_fk_id": this.selectedCarrier,
-        "biltyDetails": {
-          "order": {
-            "id": this.orderDetails.id
+        dispatch_date: window.vm
+          .moment(this.dispatchDate[0])
+          .format("DD-MM-YYYY 00:00"),
+        cartons_number: this.nbCartons,
+        carrier_fk_id: this.selectedCarrier,
+        biltyDetails: {
+          order: {
+            id: this.orderDetails.id
           },
-          "bilty_type": this.biltyType || 1, // for local transport, set as scanned bilty
-          "weight": this.weight,
-          "freight_type": this.freightType,
-          "gr_no": this.grNb,
-          "freight_charges": this.freightCharges,
-          "goods_value": this.value,
-          "is_deleted": 0
+          bilty_type: this.biltyType || 1, // for local transport, set as scanned bilty
+          weight: this.weight,
+          freight_type: this.freightType,
+          gr_no: this.grNb,
+          freight_charges: this.freightCharges,
+          goods_value: this.value,
+          is_deleted: 0
         },
-        "bill_t_file_name": this.biltyImage
+        bill_t_file_name: this.biltyImage
       };
 
-
       window.vm.$f7.showPreloader();
-      window.vm.$http.post(`${window._pz.apiEndPt}orders/bilty_details`, params)
+      window.vm.$http
+        .post(`${window._pz.apiEndPt}orders/bilty_details`, params)
         .then(res => {
           window.vm.$f7.hidePreloader();
           if (res.ok) {
-            window.f7.addNotification({ message: 'Order successfully updated!', hold: 2000 });
+            window.f7.addNotification({
+              message: "Order successfully updated!",
+              hold: 2000
+            });
 
-            const allOrdersFilters = window._pz.checkNested(this.$route, 'options', 'context', 'allOrdersFilters') ? this.$route.options.context.allOrdersFilters : null;
-            const prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+            const allOrdersFilters = window._pz.checkNested(
+              this.$route,
+              "options",
+              "context",
+              "allOrdersFilters"
+            )
+              ? this.$route.options.context.allOrdersFilters
+              : null;
+            const prevPage =
+              window.vm.$f7.mainView.history[
+                window.vm.$f7.mainView.history.length - 2
+              ];
             window.vm.$f7.mainView.router.load({
               url: prevPage,
               reload: true,

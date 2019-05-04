@@ -75,19 +75,27 @@ export default {
 
   computed: {
     searchableProducts() {
-      return this.products.filter(p => p.product && !p.product.is_added_by_user && p.verified_quantity < p.quantity);
+      return this.products.filter(
+        p =>
+          p.product &&
+          !p.product.is_added_by_user &&
+          p.verified_quantity < p.quantity
+      );
     },
     searchResults() {
-      if (!this.keyword || !this.keyword.length || this.keyword.length < 3) return null;
+      if (!this.keyword || !this.keyword.length || this.keyword.length < 3)
+        return null;
       const k = this.keyword.toLowerCase();
       return this.searchableProducts.filter(productSearch);
       function productSearch(p) {
-        return doesMatch(p.product.title, k) ||
+        return (
+          doesMatch(p.product.title, k) ||
           doesMatch(p.product.isbn, k) ||
           (p.product.publisher && doesMatch(p.product.publisher.name, k)) ||
           doesMatch(p.product.additional_code, k) ||
           doesMatch(p.product.code, k) ||
-          doesMatch(p.product.scan_code, k);
+          doesMatch(p.product.scan_code, k)
+        );
       }
       function doesMatch(target, keyword) {
         if (target) target += "";
@@ -112,7 +120,9 @@ export default {
   },
   created() {
     console.debug(this.$options.name + " created");
-    if (window._pz.checkNested(this, "$route", "options", "context", "products"))
+    if (
+      window._pz.checkNested(this, "$route", "options", "context", "products")
+    )
       this.products = this.$route.options.context.products;
     // set the otherProducts block as products
     this.products.forEach(p => {

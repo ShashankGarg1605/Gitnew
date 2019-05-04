@@ -1,9 +1,7 @@
 <template>
   <f7-page name="another">
     <f7-navbar back-link="Back" sliding>
-      <f7-nav-center>
-        Another
-      </f7-nav-center>
+      <f7-nav-center>Another</f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
     <f7-block-title>{{ title }}</f7-block-title>
@@ -17,12 +15,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'Another',
-    data () {
-      return {
-        title: 'Another Page'
-      };
-    }
-  };
+export default {
+  name: "Another",
+  data() {
+    return {
+      title: "Another Page"
+    };
+  }
+};
 </script>

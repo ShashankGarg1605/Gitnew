@@ -105,7 +105,10 @@ export default {
   methods: {
     applyFilters() {
       console.log("this.comps: ", JSON.stringify(this.comps));
-      let prevPage = window.vm.$f7.mainView.history[window.vm.$f7.mainView.history.length - 2];
+      let prevPage =
+        window.vm.$f7.mainView.history[
+          window.vm.$f7.mainView.history.length - 2
+        ];
       window.vm.$f7.mainView.router.load({
         url: prevPage,
         reload: true,
@@ -114,11 +117,15 @@ export default {
     },
     resetFilters() {
       for (let filterType of Object.keys(this.comps)) {
-        if (this.comps[filterType] && typeof this.comps[filterType] === 'object')
+        if (
+          this.comps[filterType] &&
+          typeof this.comps[filterType] === "object"
+        )
           for (let filter of this.comps[filterType]) {
             //eg first date type filter, then second date type filter
             filter.value = null;
-          } else this.comps[filterType] = null;
+          }
+        else this.comps[filterType] = null;
       }
       this.applyFilters();
     }
@@ -128,7 +135,8 @@ export default {
   },
   created() {
     console.debug(this.$options.name + " created");
-    this.comps = this.$route.options.context && this.$route.options.context.comps;
+    this.comps =
+      this.$route.options.context && this.$route.options.context.comps;
   },
   beforeMount() {
     console.debug(this.$options.name + " beforeMount");

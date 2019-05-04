@@ -117,9 +117,9 @@ export default {
     nbTotalTitles() {
       return window._pz.checkNested(this, "orderData", "orderProduct")
         ? this.orderData.orderProduct.reduce(
-          (sum, book) => sum + book.quantity,
-          0
-        )
+            (sum, book) => sum + book.quantity,
+            0
+          )
         : null;
     },
     nbUniqueTitles() {
@@ -130,9 +130,9 @@ export default {
     nbTotalVerifiedTitles() {
       return window._pz.checkNested(this, "orderData", "orderProduct")
         ? this.orderData.orderProduct.reduce(
-          (sum, book) => sum + book.verified_quantity,
-          0
-        )
+            (sum, book) => sum + book.verified_quantity,
+            0
+          )
         : null;
     },
     nbUniqueVerifiedTitles() {
@@ -149,7 +149,10 @@ export default {
     openPopover(title, e) {
       this.clickedTitle = title;
       const popupID = "#" + this.randomID;
-      window.vm.$pzGlobalReactiveData.openPopoverMenu(window.Dom7(popupID), e.target);
+      window.vm.$pzGlobalReactiveData.openPopoverMenu(
+        window.Dom7(popupID),
+        e.target
+      );
     },
     reverify() {
       window.vm.$http
@@ -183,9 +186,14 @@ export default {
     )
       this.orderData = this.$route.options.context.orderData;
     // set the otherProducts block as products
-    if (this.orderData && this.orderData.orderProduct && this.orderData.orderProduct.length) this.orderData.orderProduct.forEach(p => {
-      p.product = p.product ? p.product : p.otherProduct;
-    });
+    if (
+      this.orderData &&
+      this.orderData.orderProduct &&
+      this.orderData.orderProduct.length
+    )
+      this.orderData.orderProduct.forEach(p => {
+        p.product = p.product ? p.product : p.otherProduct;
+      });
   },
   beforeMount() {
     console.debug(this.$options.name + " beforeMount");

@@ -1,52 +1,65 @@
 <template>
-    <f7-page name="UnconvertedImageOrders" infinite-scroll @infinite="onInfiniteScroll" pull-to-refresh @ptr:refresh="onPullToRefresh">
+  <f7-page
+    name="UnconvertedImageOrders"
+    infinite-scroll
+    @infinite="onInfiniteScroll"
+    pull-to-refresh
+    @ptr:refresh="onPullToRefresh"
+  >
+    <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
+      <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
+        <f7-link icon="icon-bars" open-panel="left"></f7-link>
+      </f7-nav-left>
+      <f7-nav-center>Un-converted Image Orders</f7-nav-center>
+    </f7-navbar>
 
-        <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
-            <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
-                <f7-link icon="icon-bars" open-panel="left"></f7-link>
-            </f7-nav-left>
-            <f7-nav-center>
-                Un-converted Image Orders
-            </f7-nav-center>
-        </f7-navbar>
+    <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">Found {{totalCount}} results</div>
 
-        <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">
-            Found {{totalCount}} results
-        </div>
-
-        <f7-list>
-            <div v-if="allOrders.length" class="list-block">
-                <ul>
-                    <li class="item-content" v-for="order in allOrders" :key="order.id">
-                        <div class="item-inner" style="flex-direction: column;">
-                            <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Order ID:</div>
-                                <div class="col-70">{{order.order_id}}</div>
-                            </div>
-                            <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
-                                <div class="col-70">{{order.user.buyer_name}}</div>
-                            </div>
-                            <div class="row pz-width100">
-                                <div class="col-30 color-gray pz-weight-thin">Created:</div>
-                                <div class="col-70">{{order.created_date | dateFormat}}</div>
-                            </div>
-                            <div v-if="order.img_path && order.img_path.length" style="width:100%;">
-                                <span v-for="(image, index) in order.img_path.split(';').slice(0,order.img_path.split(';').length-1) " :key="index" 
-                                @click="openPhotoBrowser(order.img_path, order.img_title, index)" 
-                                class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16" 
-                                style="float: left; margin-bottom: 10px;">
-                                    <icon name="image"></icon>#{{index+1}}
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+    <f7-list>
+      <div v-if="allOrders.length" class="list-block">
+        <ul>
+          <li class="item-content" v-for="order in allOrders" :key="order.id">
+            <div class="item-inner" style="flex-direction: column;">
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Order ID:</div>
+                <div class="col-70">{{order.order_id}}</div>
+              </div>
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
+                <div class="col-70">{{order.user.buyer_name}}</div>
+              </div>
+              <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Created:</div>
+                <div class="col-70">{{order.created_date | dateFormat}}</div>
+              </div>
+              <div v-if="order.img_path && order.img_path.length" style="width:100%;">
+                <span
+                  v-for="(image, index) in order.img_path.split(';').slice(0,order.img_path.split(';').length-1) "
+                  :key="index"
+                  @click="openPhotoBrowser(order.img_path, order.img_title, index)"
+                  class="button pz-bg-gray-lightest image pz-flex-sa-c pz-margin-r16"
+                  style="float: left; margin-bottom: 10px;"
+                >
+                  <icon name="image"></icon>
+                  #{{index+1}}
+                </span>
+              </div>
             </div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq">Thats all folks!</div>
-            <div class="color-gray" style="text-align: center; font-style: italic;" v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq">No results found</div>
-        </f7-list>
-    </f7-page>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="color-gray"
+        style="text-align: center; font-style: italic;"
+        v-if="allOrders.length && hasReachedEnd && !$pzGlobalReactiveData.pendingReq"
+      >Thats all folks!</div>
+      <div
+        class="color-gray"
+        style="text-align: center; font-style: italic;"
+        v-if="!allOrders.length && !$pzGlobalReactiveData.pendingReq"
+      >No results found</div>
+    </f7-list>
+  </f7-page>
 </template>
 
 <script>
@@ -83,7 +96,11 @@ export default {
         });
     },
     onInfiniteScroll() {
-      if (this.offset % this.limit === 0 && !window.vm.$pzGlobalReactiveData.pendingReq) this.getAllOrders();
+      if (
+        this.offset % this.limit === 0 &&
+        !window.vm.$pzGlobalReactiveData.pendingReq
+      )
+        this.getAllOrders();
     },
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
@@ -105,7 +122,8 @@ export default {
       images = images.split(";");
       images.pop();
 
-      imageTitles = (imageTitles && imageTitles.length && imageTitles.split(";")) || [];
+      imageTitles =
+        (imageTitles && imageTitles.length && imageTitles.split(";")) || [];
       imageTitles.pop();
 
       var o = images.map((image, idx) => ({

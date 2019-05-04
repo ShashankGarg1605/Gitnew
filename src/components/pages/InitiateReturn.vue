@@ -134,18 +134,20 @@ export default {
       warehouses: null,
       selectedWarehouse: null,
 
-      methods: [{
-        label: 'Sent by buyer with bilty',
-        value: 1
-      },
-      {
-        label: 'Collected by us',
-        value: 2
-      },
-      {
-        label: 'Books not received yet',
-        value: 3
-      }],
+      methods: [
+        {
+          label: "Sent by buyer with bilty",
+          value: 1
+        },
+        {
+          label: "Collected by us",
+          value: 2
+        },
+        {
+          label: "Books not received yet",
+          value: 3
+        }
+      ],
       selectedMethod: null,
 
       biltyImage: null,
@@ -160,9 +162,13 @@ export default {
   },
   computed: {
     canSubmit() {
-      if (!this.selectedMethod || !this.selectedWarehouse || !this.notes) return false;
-      else if (this.selectedMethod === 1 &&
-        (!this.biltyImage || !this.biltyImage.length || !this.biltyNb)) return false;
+      if (!this.selectedMethod || !this.selectedWarehouse || !this.notes)
+        return false;
+      else if (
+        this.selectedMethod === 1 &&
+        (!this.biltyImage || !this.biltyImage.length || !this.biltyNb)
+      )
+        return false;
       else return true;
     }
   },
@@ -182,13 +188,15 @@ export default {
 
           if (window.vm.$pzGlobalReactiveData.warehouse) {
             const w = window.vm.$pzGlobalReactiveData.warehouse;
-            this.warehouses = [{
-              label: w.code,
-              value: w.id
-            }];
+            this.warehouses = [
+              {
+                label: w.code,
+                value: w.id
+              }
+            ];
           } else {
             this.warehouses = res.body.map(w => ({
-              label: w.code + ' ' + w.address,
+              label: w.code + " " + w.address,
               value: w.id
             }));
           }
@@ -210,7 +218,7 @@ export default {
           id: this.selectedWarehouse
         },
         return_method: this.selectedMethod,
-        start_date: window.vm.moment(this.dates[0]).format('YYYY-MM-DD'),
+        start_date: window.vm.moment(this.dates[0]).format("YYYY-MM-DD"),
         description: this.notes,
         debit_note: this.debitNoteImage[0].data
       };
@@ -219,14 +227,17 @@ export default {
         params.billty_number = this.biltyNb;
         params.billty = this.biltyImage[0].data;
       }
-      console.log('params: ', params);
+      console.log("params: ", params);
 
       window.vm.$http
         .post(window._pz.apiEndPt + "returns", params)
         .then(res => {
           window.vm.$f7.hidePreloader();
           if (res.ok) {
-            window.vm.$f7.addNotification({ message: `Return has been initiated has been placed.`, hold: 5000 });
+            window.vm.$f7.addNotification({
+              message: `Return has been initiated has been placed.`,
+              hold: 5000
+            });
             window.vm.$f7.mainView.router.load({
               url: "Returns",
               reload: true

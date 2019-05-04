@@ -96,7 +96,10 @@ export default {
   },
   computed: {
     maxQtyToVerify() {
-      return parseInt(this.bookData.quantity) - parseInt(this.bookData.verified_quantity);
+      return (
+        parseInt(this.bookData.quantity) -
+        parseInt(this.bookData.verified_quantity)
+      );
     },
     isFormValid() {
       return (
@@ -112,7 +115,9 @@ export default {
       window.vm.$http
         .patch(`${window._pz.apiEndPt}order_product?updateType=verification`, {
           id: this.bookData.id,
-          verified_quantity: parseInt(this.verificationQty) + parseInt(this.bookData.verified_quantity)
+          verified_quantity:
+            parseInt(this.verificationQty) +
+            parseInt(this.bookData.verified_quantity)
         })
         .then(res => {
           if (res.ok) {
@@ -133,7 +138,7 @@ export default {
     )
       this.bookData = this.$route.options.context.bookData;
     this.bookData.product = this.bookData.product || this.bookData.otherProduct;
-    this.itemType = this.bookData.otherProduct ? 'statn' : 'book';
+    this.itemType = this.bookData.otherProduct ? "statn" : "book";
 
     if (window._pz.checkNested(this, "$route", "options", "context", "orderId"))
       this.orderId = this.$route.options.context.orderId;

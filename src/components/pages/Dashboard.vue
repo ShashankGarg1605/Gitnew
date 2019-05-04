@@ -160,32 +160,45 @@ export default {
       this.getNbUsers();
     },
     getNbOpenOrders() {
-      window.vm.$http.get(window._pz.apiEndPt + "orders?status=113&limit=1&offset=0").then(res => {
-        if (res.ok && window._pz.checkNested(res, "headers", "map", "count")) this.nbOpenOrders = res.headers.map.count[0];
-      });
+      window.vm.$http
+        .get(window._pz.apiEndPt + "orders?status=113&limit=1&offset=0")
+        .then(res => {
+          if (res.ok && window._pz.checkNested(res, "headers", "map", "count"))
+            this.nbOpenOrders = res.headers.map.count[0];
+        });
     },
     getTotalInventoryValue() {
-      window.vm.$http.get(window._pz.apiEndPt + "dashboard/inventory").then(res => {
-        if (res.ok && res.body.inventoryValue !== undefined) this.totalInventoryValue = res.body.inventoryValue;
-      });
+      window.vm.$http
+        .get(window._pz.apiEndPt + "dashboard/inventory")
+        .then(res => {
+          if (res.ok && res.body.inventoryValue !== undefined)
+            this.totalInventoryValue = res.body.inventoryValue;
+        });
     },
     getTotalReceivables() {
-      window.vm.$http.get(window._pz.apiEndPt + "dashboard/collections").then(res => {
-        if (res.ok && res.body.collectionDue !== undefined) this.totalReceivables = res.body.collectionDue;
-      });
+      window.vm.$http
+        .get(window._pz.apiEndPt + "dashboard/collections")
+        .then(res => {
+          if (res.ok && res.body.collectionDue !== undefined)
+            this.totalReceivables = res.body.collectionDue;
+        });
     },
     getOpenReturns() {
-      window.vm.$http.get(window._pz.apiEndPt + "dashboard/returns").then(res => {
-        if (res.ok && res.body.openReturns !== undefined) {
-          this.nbOpenReturns = res.body.openReturns;
-          this.openReturnsValue = res.body.openReturnsValue;
-        }
-      });
+      window.vm.$http
+        .get(window._pz.apiEndPt + "dashboard/returns")
+        .then(res => {
+          if (res.ok && res.body.openReturns !== undefined) {
+            this.nbOpenReturns = res.body.openReturns;
+            this.openReturnsValue = res.body.openReturnsValue;
+          }
+        });
     },
     getNbImageOrdersNotConv() {
-      window.vm.$http.get(window._pz.apiEndPt + "orders/image?view=daily").then(res => {
-        if (res.ok) this.nbImageOrdersNotConv = res.body.length;
-      });
+      window.vm.$http
+        .get(window._pz.apiEndPt + "orders/image?view=daily")
+        .then(res => {
+          if (res.ok) this.nbImageOrdersNotConv = res.body.length;
+        });
     },
     getNbBuyerConvosToday() {
       const endDate = window.vm
@@ -193,9 +206,15 @@ export default {
         .add(1, "d")
         .format("YYYY-MM-DD");
       const startDate = window.vm.moment().format("YYYY-MM-DD");
-      window.vm.$http.get(`${window._pz.apiEndPt}communication?startDate=${startDate}&endDate=${endDate}`).then(res => {
-        if (res.ok) this.nbBuyerConvosToday = res.body.length;
-      });
+      window.vm.$http
+        .get(
+          `${
+            window._pz.apiEndPt
+          }communication?startDate=${startDate}&endDate=${endDate}`
+        )
+        .then(res => {
+          if (res.ok) this.nbBuyerConvosToday = res.body.length;
+        });
     },
     getNbUsers() {
       window.vm.$http.get(window._pz.apiEndPt + "dashboard/users").then(res => {

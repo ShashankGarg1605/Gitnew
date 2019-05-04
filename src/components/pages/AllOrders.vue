@@ -63,6 +63,7 @@
               </div>
               <i class="f7-icons pz-popover" @click="openPopover(order, $event)">more_horiz</i>
             </div>
+            <div v-if="order.badgeText" class="mybadge">{{order.badgeText}}</div>
           </li>
         </ul>
       </div>
@@ -84,13 +85,13 @@
           <a
             @click="releaseOrder()"
             class="list-button item-link close-popover"
-            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.credit_released"
+            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && (clickedOrder.isOverdueCase || clickedOrder.isCreditLimitCase)"
           >Release Order</a>
           <a
             @click="reqOrderRelease()"
             class="list-button item-link close-popover"
             style="white-space: pre;"
-            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && clickedOrder.order_status < 5 && !clickedOrder.credit_released"
+            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && (clickedOrder.isOverdueCase || clickedOrder.isCreditLimitCase)"
           >Request Order Release</a>
           <a
             @click="openAssignOrderPage()"
@@ -110,8 +111,23 @@
 </template>
 
 <style scoped>
+li {
+  position: relative;
+}
 li.needs-release {
   background: #ffebee;
+}
+.mybadge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: #ffeb3b;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 10px;
+  padding: 1px 7px;
+  border: 1px solid #c9b92d;
+  border-radius: 5px;
 }
 </style>
 
@@ -221,6 +237,26 @@ export default {
               );
               if (dispatchStatusObject && dispatchStatusObject.dispatch_date)
                 order.dispatchDate = dispatchStatusObject.dispatch_date;
+            }
+
+            if (
+              order.order_status < 5 &&
+              order.credit_released !== undefined &&
+              order.credit_released !== null &&
+              order.credit_released !== 1
+            ) {
+              const paymentDue = order.user.payment_due || 0;
+              order.isOverdueCase = paymentDue > 0;
+
+              const collectionDue = order.user.collection_due || 0;
+              const finalOrderValue = order.finalOrderValue || 0;
+              const userCreditLimit = order.user.credit_limit || 0;
+              order.isCreditLimitCase =
+                collectionDue + finalOrderValue > userCreditLimit;
+
+              if (order.isOverdueCase) order.badgeText = "Overdue";
+              else if (order.isCreditLimitCase)
+                order.badgeText = "Credit Limit";
             }
 
             return order;

@@ -27,7 +27,7 @@
       <div v-if="allOrders.length" class="list-block">
         <ul>
           <li
-            :class="'item-content ' + (order.order_status < 5 && !order.credit_released? 'needs-release' : '')"
+            :class="'item-content ' + (order.needsRelease ? 'needs-release' : '')"
             v-for="order in allOrders"
             :key="order.id"
           >
@@ -85,13 +85,13 @@
           <a
             @click="releaseOrder()"
             class="list-button item-link close-popover"
-            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && (clickedOrder.isOverdueCase || clickedOrder.isCreditLimitCase)"
+            v-if="$pzGlobalReactiveData.roleAccess('releaseoverdue', 'update') && clickedOrder && clickedOrder.needsRelease"
           >Release Order</a>
           <a
             @click="reqOrderRelease()"
             class="list-button item-link close-popover"
             style="white-space: pre;"
-            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && (clickedOrder.isOverdueCase || clickedOrder.isCreditLimitCase)"
+            v-if="$pzGlobalReactiveData.roleAccess('order', 'read') && clickedOrder && clickedOrder.needsRelease"
           >Request Order Release</a>
           <a
             @click="openAssignOrderPage()"
@@ -239,25 +239,7 @@ export default {
                 order.dispatchDate = dispatchStatusObject.dispatch_date;
             }
 
-            if (
-              order.order_status < 5 &&
-              order.credit_released !== undefined &&
-              order.credit_released !== null &&
-              order.credit_released !== 1
-            ) {
-              const paymentDue = order.user.payment_due || 0;
-              order.isOverdueCase = paymentDue > 0;
-
-              const collectionDue = order.user.collection_due || 0;
-              const finalOrderValue = order.finalOrderValue || 0;
-              const userCreditLimit = order.user.credit_limit || 0;
-              order.isCreditLimitCase =
-                collectionDue + finalOrderValue > userCreditLimit;
-
-              if (order.isOverdueCase) order.badgeText = "Overdue";
-              else if (order.isCreditLimitCase)
-                order.badgeText = "Credit Limit";
-            }
+            this.calcOrderCases(order);
 
             return order;
           });
@@ -272,6 +254,35 @@ export default {
           this.removeInfiniteScroll();
           window._pz.errFunc2.call(this, err);
         });
+    },
+    calcOrderCases(order) {
+      if (
+        order.order_status < 5 &&
+        order.credit_released !== undefined &&
+        order.credit_released !== null &&
+        order.credit_released !== 1
+      ) {
+        const paymentDue = order.user.payment_due || 0;
+        order.isOverdueCase = paymentDue > 0;
+
+        const collectionDue = order.user.collection_due || 0;
+        const finalOrderValue = order.finalOrderValue || 0;
+        const userCreditLimit = order.user.credit_limit || 0;
+        order.isCreditLimitCase =
+          collectionDue + finalOrderValue > userCreditLimit;
+      } else {
+        order.isOverdueCase = false;
+        order.isCreditLimitCase = false;
+      }
+
+      if (order.isOverdueCase) order.badgeText = "Overdue";
+      else if (order.isCreditLimitCase) order.badgeText = "Credit Limit";
+      else order.badgeText = null;
+
+      order.needsRelease =
+        order.order_status < 5 &&
+        !order.credit_released &&
+        (order.isOverdueCase || order.isCreditLimitCase);
     },
     onInfiniteScroll() {
       if (
@@ -347,6 +358,7 @@ export default {
             hold: 2000
           });
           this.clickedOrder.credit_released = 1;
+          this.calcOrderCases(this.clickedOrder);
         })
         .catch(window._pz.errFunc2.bind(this));
     },

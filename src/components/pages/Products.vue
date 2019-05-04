@@ -36,8 +36,8 @@
             <img v-if="p.image_url" :src="p.image_url">
             <img v-if="!p.image_url" src="../../assets/cover.jpg">
             <button
+              v-if="$pzGlobalReactiveData.roleAccess('inventory', 'read') && p.stockPerWH === undefined"
               class="inStockBadge"
-              v-if="p.stockPerWH === undefined"
               @click="fetchStockData(p)"
             >Check Stock</button>
             <div class="inStockValue" v-if="p.stockPerWH">

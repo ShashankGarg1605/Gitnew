@@ -69,7 +69,12 @@
               :label="'Procurement Discounts'"
               v-if="tenantId===3 && $pzGlobalReactiveData.roleAccess('categories', 'read')"
             ></menu-item>
-            <menu-item :icon="'asterisk'" :url="'/Products'" :label="'Live Stock'"></menu-item>
+            <menu-item
+              v-if="$pzGlobalReactiveData.roleAccess('products', 'read')"
+              :icon="'asterisk'"
+              :url="'/Products'"
+              :label="'Live Stock'"
+            ></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">

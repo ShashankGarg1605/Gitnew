@@ -53,7 +53,12 @@
         :url="'/OrderSearch'"
         :label="'Order Verification'"
       ></menu-item>
-      <menu-item :icon="'asterisk'" :url="'/Products'" :label="'Live Stock'"></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('products', 'read')"
+        :icon="'asterisk'"
+        :url="'/Products'"
+        :label="'Live Stock'"
+      ></menu-item>
     </ul>
   </f7-page>
 </template>

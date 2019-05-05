@@ -70,7 +70,7 @@
             </div>
             <div class="info">
               <span class="key col-35">Price:</span>
-              <span class="value col-65">{{p.mrp | moneyFormat}}</span>
+              <span class="value col-65">{{p.selling_price | moneyFormat}}</span>
             </div>
             <div class="info">
               <span class="key col-35">Discount:</span>

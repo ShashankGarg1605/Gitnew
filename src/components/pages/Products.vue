@@ -31,7 +31,7 @@
 
     <f7-list>
       <div v-if="allProducts.length" class="list-block">
-        <li class="item-content" v-for="p in allProducts" :key="p.objectID">
+        <li v-if="p.mrp && p.title" class="item-content" v-for="p in allProducts" :key="p.objectID">
           <div class="left">
             <img v-if="p.image_url" :src="p.image_url">
             <img v-if="!p.image_url" src="../../assets/cover.jpg">

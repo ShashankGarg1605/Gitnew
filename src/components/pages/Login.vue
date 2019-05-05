@@ -230,7 +230,7 @@ export default {
           } else return Promise.reject("You are not an admin.");
         })
 
-        .catch(function(err) {
+        .catch(function (err) {
           console.log("err: ", err);
           var msg;
           if (typeof err === "string") msg = window._pz.err[err] || err;
@@ -301,9 +301,9 @@ function setGlobals(
 
   window._pz.uploadsEndPt = `${window._pz.domain}/backend/web/uploads/tenant_${
     tenantData.id
-  }/`;
+    }/`;
   window._pz.algoliaBooksIndex = window._pz.algoliaBooksIndex.replace(
-    "tenant_ID",
+    "ID",
     tenantData.id
   );
 }

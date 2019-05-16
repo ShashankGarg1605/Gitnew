@@ -103,36 +103,20 @@ export default {
       filters: {
         search: [
           {
-            placeholder: "Document number"
+            placeholder: "Doc ID"
           }
-        ],
-        userSelect: null
+        ]
       }
     };
   },
   computed: {
     filterQuery() {
-      return "";
-      // let filterQuery = "";
+      let filterQuery = "";
 
-      // let { value: status = null } = this.filters.singleselect[0];
-      // if (status !== null) filterQuery += `&status=${status}`;
+      let { value: debitNoteNumber = null } = this.filters.search[0];
+      if (debitNoteNumber !== null) filterQuery += `&number=${debitNoteNumber}`;
 
-      // let { value: dateRange = null } = this.filters.date[0];
-      // if (dateRange !== null)
-      //   filterQuery +=
-      //     "&startDate=" + window.vm.moment(dateRange[0]).format("YYYY-MM-DD");
-      // if (dateRange !== null && dateRange.length)
-      //   filterQuery +=
-      //     "&endDate=" + window.vm.moment(dateRange[1]).format("YYYY-MM-DD");
-
-      // let { value: orderID = null } = this.filters.search[0];
-      // if (orderID !== null) filterQuery += `&order_id=${orderID}`;
-
-      // if (this.filters.userSelect)
-      //   filterQuery += `&userId=${this.filters.userSelect}`;
-
-      // return filterQuery;
+      return filterQuery;
     }
   },
   methods: {
@@ -207,21 +191,13 @@ export default {
   },
   created() {
     console.debug(this.$options.name + " created");
-    // if (window._pz.checkNested(this, "$route", "options", "context", "comps")) {
-    //   console.log(
-    //     "this.$route.options.context.comps: ",
-    //     JSON.stringify(this.$route.options.context.comps)
-    //   );
-    //   if (this.$route.options.context.comps instanceof Array) {
-    //     // if selected filters are passed, like linking from dashboard page to only show the "open orders"
-    //     const filter = this.$route.options.context.comps[0];
-    //     const value = this.$route.options.context.comps[1];
-    //     this.filters[filter] = value;
-    //   } else {
-    //     // if all filters are passed, like when coming from filters page
-    //     this.filters = this.$route.options.context.comps;
-    //   }
-    // }
+    if (window._pz.checkNested(this, "$route", "options", "context", "comps")) {
+      console.log(
+        "this.$route.options.context.comps: ",
+        JSON.stringify(this.$route.options.context.comps)
+      );
+      this.filters = this.$route.options.context.comps;
+    }
     this.getAllMemos();
   },
   beforeMount() {

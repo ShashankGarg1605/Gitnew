@@ -160,7 +160,7 @@ span.value {
 }
 
 .list-block {
-  margin-top: 0;
+  margin: 0;
 }
 
 form {

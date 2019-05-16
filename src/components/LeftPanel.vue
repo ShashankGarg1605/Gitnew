@@ -75,6 +75,12 @@
               :url="'/Products'"
               :label="'Live Stock'"
             ></menu-item>
+            <menu-item
+              v-if="$pzGlobalReactiveData.roleAccess('samplestock', 'read')"
+              :icon="'file-text-o'"
+              :url="'/SampleStockMemo'"
+              :label="'Sample Stock Memo'"
+            ></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">

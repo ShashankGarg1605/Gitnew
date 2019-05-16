@@ -19,6 +19,7 @@ import PlaceServiceRequest from "./components/pages/PlaceServiceRequest";
 import Returns from "./components/pages/Returns";
 import InitiateReturn from "./components/pages/InitiateReturn";
 import LandingPage from "./components/pages/LandingPage";
+
 import OrderSearch from "./components/pages/OrderVerification/OrderSearch";
 import OrderSelect from "./components/pages/OrderVerification/OrderSelect";
 import OrderDetailVerify from "./components/pages/OrderVerification/OrderDetailVerify";
@@ -26,8 +27,11 @@ import VerifyProduct from "./components/pages/OrderVerification/VerifyProduct";
 import VerifiedTitles from "./components/pages/OrderVerification/VerifiedTitles";
 import TitleSearch from "./components/pages/OrderVerification/TitleSearch";
 import AssignOrder from "./components/pages/OrderVerification/AssignOrder";
+
 import Procurement from "./components/pages/Procurement";
 import Products from "./components/pages/Products";
+
+import SampleStockMemo from "./components/pages/SampleStockMemo/SampleStockMemo";
 
 export default [
   {
@@ -149,5 +153,9 @@ export default [
   {
     path: "/Products/",
     component: Products
+  },
+  {
+    path: "/SampleStockMemo/",
+    component: SampleStockMemo
   }
 ];

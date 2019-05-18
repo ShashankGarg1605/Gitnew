@@ -32,6 +32,8 @@ import Procurement from "./components/pages/Procurement";
 import Products from "./components/pages/Products";
 
 import SampleStockMemo from "./components/pages/SampleStockMemo/SampleStockMemo";
+import ViewDispatchInfo from "./components/pages/SampleStockMemo/ViewDispatchInfo";
+import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
 
 export default [
   {
@@ -157,5 +159,13 @@ export default [
   {
     path: "/SampleStockMemo/",
     component: SampleStockMemo
+  },
+  {
+    path: "/SampleStockMemo/ViewDispatchInfo",
+    component: ViewDispatchInfo
+  },
+  {
+    path: "/SampleStockMemo/AddDispatchInfo",
+    component: AddDispatchInfo
   }
 ];

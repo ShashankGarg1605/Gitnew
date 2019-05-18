@@ -50,7 +50,7 @@
               </div>
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Status:</div>
-                <div class="col-70">{{memo.status}}</div>
+                <div class="col-70">{{$pzGlobalReactiveData.memoStatusMap[memo.status]}}</div>
               </div>
               <i class="f7-icons pz-popover" @click="openPopover(memo, $event)">more_horiz</i>
             </div>
@@ -73,9 +73,9 @@
       <div class="popover-inner">
         <div class="list-block">
           <a
-            @click="uploadDispatchDetails()"
+            @click="viewDispatchInfo()"
             class="list-button item-link close-popover"
-          >Upload Dispatch Data</a>
+          >View/Add Dispatch Info</a>
         </div>
       </div>
     </f7-popover>
@@ -96,7 +96,7 @@ export default {
       offset: 0,
       hasReachedEnd: false,
       totalCount: null,
-      clickedOrder: null,
+      clickedMemo: null,
       randomID: Math.random()
         .toString(36)
         .substr(2, 10),
@@ -141,6 +141,14 @@ export default {
           window._pz.errFunc2.call(this, err);
         });
     },
+    viewDispatchInfo() {
+      const id = this.clickedMemo.id;
+      const url = `SampleStockMemo/ViewDispatchInfo?id=${id}`;
+      window.vm.$f7.mainView.router.load({
+        url: url,
+        context: { comps: JSON.parse(JSON.stringify(this.clickedMemo)) }
+      });
+    },
     onInfiniteScroll() {
       if (
         this.offset % this.limit === 0 &&
@@ -151,15 +159,8 @@ export default {
     onPullToRefresh() {
       window.vm.$f7.mainView.router.refreshPage();
     },
-    openAssignOrderPage() {
-      const id = this.clickedOrder.id;
-      const url = `AssignOrder?id=${id}`;
-      window.vm.$f7.mainView.router.load({
-        url: url
-      });
-    },
     openPopover(memo, e) {
-      this.clickedOrder = memo;
+      this.clickedMemo = memo;
       const popupID = "#" + this.randomID;
       window.vm.$pzGlobalReactiveData.openPopoverMenu(
         window.Dom7(popupID),

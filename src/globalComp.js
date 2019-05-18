@@ -6,7 +6,10 @@ export default new Vue({
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
     roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
-    warehouse: window.localStorage.warehouse && window.localStorage.warehouse !== 'undefined' && JSON.parse(window.localStorage.warehouse),
+    warehouse:
+      window.localStorage.warehouse &&
+      window.localStorage.warehouse !== "undefined" &&
+      JSON.parse(window.localStorage.warehouse),
     nbPendingReq: 0,
     loaderOnAllReqs: true,
     userTypeMap: {
@@ -65,6 +68,17 @@ export default new Vue({
       2: "Under process",
       3: "Complete"
     },
+    dispatchModeMap: {
+      1: "Courier",
+      2: "Transporter",
+      3: "Delivered Locally",
+      4: "Picked by Hand"
+    },
+    memoStatusMap: {
+      0: "Open",
+      1: "Closed"
+    },
+
     navHistory: window.f7 && window.f7.mainView && window.f7.mainView.history
   },
   computed: {
@@ -169,7 +183,8 @@ export default new Vue({
       a.open();
     },
     phone(mob) {
-      if (window.plugins && window.plugins.CallNumber) window.plugins.CallNumber.callNumber(() => {}, () => {}, mob, true);
+      if (window.plugins && window.plugins.CallNumber)
+        window.plugins.CallNumber.callNumber(() => {}, () => {}, mob, true);
       else document.location.href = "tel:" + mob;
     },
     email(email, subject) {
@@ -206,7 +221,7 @@ export default new Vue({
             prompt: "Place a barcode inside the scan area", // Android
             resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
             // formats: "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-            // orientation: "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+            // orientation: "landscape", // Android only (poruit|landscape), default unset so it rotates with the device
             disableAnimations: true // iOS
           };
 

@@ -4,11 +4,14 @@
       <icon name="dot-circle-o"></icon>
     </div>
     <div class="item-inner pz-margin-l0">
+      <!-- <input type="text" v-model="filter"> -->
       <a
         href="#"
         class="item-link smart-select pz-width100"
         data-back-on-select="true"
         :id="randomID"
+        :data-searchbar="this.enableSearch"
+        :data-searchbar-placeholder="this.enableSearch ? this.searchPlaceholder : null"
       >
         <select v-model="compvalue">
           <option
@@ -59,16 +62,25 @@ export default {
       compvalue: this.value,
       randomID: Math.random()
         .toString(36)
-        .substr(2, 10)
+        .substr(2, 10),
+      filter: null
     };
   },
   computed: {
     compvalueReadable() {
       let selectedOption = this.opts.find(o => o.value === this.compvalue);
       return selectedOption && selectedOption.label;
+    },
+    filteredOpts() {
+      return this.opts.filter(o =>
+        o.label
+          .replace(/ /g, "")
+          .toLowerCase()
+          .includes(this.filter)
+      );
     }
   },
-  props: ["placeholder", "opts", "value"],
+  props: ["placeholder", "opts", "value", "enableSearch", "searchPlaceholder"],
   watch: {
     compvalue() {
       this.$emit("update:value", this.compvalue);

@@ -6,15 +6,17 @@
     <f7-fab color="pink" @click="addDispatchInfo()">
       <f7-icon icon="icon-plus"></f7-icon>
     </f7-fab>
-    <list-item :label="'Doc no.'" :value="dispatchDetails.id"/>
-    <list-item :label="'Value'" :value="dispatchDetails.value | moneyFormat"/>
-    <list-item :label="'Total qty'" :value="dispatchDetails.total_quantity"/>
-    <list-item :label="'Party'" :value="dispatchDetails.party.buyer_name"/>
-    <list-item :label="'Warehouse'" :value="dispatchDetails.warehouse.code"/>
-    <list-item
-      :label="'Status'"
-      :value="$pzGlobalReactiveData.memoStatusMap[dispatchDetails.status]"
-    />
+    <div v-if="dispatchDetails ">
+      <list-item :label="'Doc no.'" :value="dispatchDetails.id"/>
+      <list-item :label="'Value'" :value="dispatchDetails.value | moneyFormat"/>
+      <list-item :label="'Total qty'" :value="dispatchDetails.total_quantity"/>
+      <list-item :label="'Party'" :value="dispatchDetails.party.buyer_name"/>
+      <list-item :label="'Warehouse'" :value="dispatchDetails.warehouse.code"/>
+      <list-item
+        :label="'Status'"
+        :value="$pzGlobalReactiveData.memoStatusMap[dispatchDetails.status]"
+      />
+    </div>
 
     <div
       v-if="dispatchDetails && dispatchDetails.debitNoteDispatch && dispatchDetails.debitNoteDispatch.length "
@@ -97,7 +99,7 @@ export default {
           theme: "dark",
           photos: [
             {
-              url: `${window._pz.uploadsEndPt}samplememo/${image}`
+              url: `${window._pz.uploadsEndPt}debitnotes/${image}`
             }
           ]
         })

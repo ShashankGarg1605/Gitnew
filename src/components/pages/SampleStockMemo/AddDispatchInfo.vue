@@ -40,6 +40,8 @@
               :value.sync="selectedCarrier"
               :placeholder="'Select carrier *'"
               :opts="carrierOptions"
+              :enableSearch="true"
+              :searchPlaceholder="'Search carrier'"
             />
             <li class="item-content pz-colr-inherit pz-cap">
               <div class="item-media">

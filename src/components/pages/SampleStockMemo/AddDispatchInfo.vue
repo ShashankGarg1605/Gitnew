@@ -111,7 +111,7 @@
               </div>
             </li>
           </ul>
-          <div class="bottom">
+          <div class="bottom pz-float-r pz-padding-16">
             <button
               type="button"
               @click="submit()"

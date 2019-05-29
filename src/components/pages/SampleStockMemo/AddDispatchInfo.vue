@@ -168,7 +168,6 @@ export default {
         this.podlrImage &&
         this.podlrImage.length &&
         this.selectedMode &&
-        this.freightCharges > 0 &&
         (this.cartonCount > 0 || this.strappedBooksCount > 0)
       );
     }

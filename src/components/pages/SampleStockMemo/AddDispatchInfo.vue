@@ -282,6 +282,7 @@ export default {
   },
   mounted() {
     console.debug(this.$options.name + " mounted");
+    window.f7.params.hideNavbarOnPageScroll = false;
   },
   beforeUpdate() {
     console.debug(this.$options.name + " beforeUpdate");
@@ -291,6 +292,7 @@ export default {
   },
   beforeDestroy() {
     console.debug(this.$options.name + " beforeDestroy");
+    window.f7.params.hideNavbarOnPageScroll = true;
   },
   destroyed() {
     console.debug(this.$options.name + " destroyed");

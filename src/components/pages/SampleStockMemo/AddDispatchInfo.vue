@@ -213,12 +213,12 @@ export default {
     },
     getCarriers() {
       window.vm.$http
-        .get(window._pz.apiEndPt + "city/carriers")
+        .get(window._pz.apiEndPt + "carriers")
         .then(res => {
           if (!res.ok) return;
           this.carrierOptions = res.body.map(carrier => ({
-            label: `${carrier.carrier.name} (${carrier.city.name})`,
-            value: carrier.carrier.id
+            label: `${carrier.name}`,
+            value: carrier.id
           }));
         })
         .catch(window._pz.errFunc2.bind(this));

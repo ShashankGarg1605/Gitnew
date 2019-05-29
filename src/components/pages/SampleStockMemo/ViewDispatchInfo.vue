@@ -43,8 +43,14 @@
               <div class="col-65">{{d.books}}</div>
             </div>
             <div class="row pz-width100">
-              <div class="col-35 color-gray pz-weight-thin">Delvry charge</div>
+              <div class="col-35 color-gray pz-weight-thin">Door delivery charge</div>
               <div class="col-65">{{d.door_delivery_charges | moneyFormat}}</div>
+            </div>
+            <div class="row pz-width100">
+              <div class="col-35 color-gray pz-weight-thin">Total charge</div>
+              <div
+                class="col-65"
+              >{{(d.door_delivery_charges+d.freight_charges + d.labour_charges + d.local_delivery_charges) | moneyFormat}}</div>
             </div>
             <div style="width: 100%">
               <span

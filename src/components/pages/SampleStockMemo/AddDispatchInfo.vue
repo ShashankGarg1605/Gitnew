@@ -38,7 +38,7 @@
             />
             <single-select
               :value.sync="selectedCarrier"
-              :placeholder="'Select carrier *'"
+              :placeholder="'Select carrier'"
               :opts="carrierOptions"
               :enableSearch="true"
               :searchPlaceholder="'Search carrier'"
@@ -66,7 +66,7 @@
                 <icon name="pencil"></icon>
               </div>
               <div class="item-inner pz-margin-l0 input-field">
-                <span class="pz-size-normal">Freight Charges *</span>
+                <span class="pz-size-normal">Freight Charges</span>
                 <input type="number" placeholder="Enter a number" v-model="freightCharges">
               </div>
             </li>

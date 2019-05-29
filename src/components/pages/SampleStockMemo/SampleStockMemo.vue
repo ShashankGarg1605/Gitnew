@@ -26,7 +26,11 @@
     <f7-list>
       <div v-if="allMemos.length" class="list-block">
         <ul>
-          <li class="item-content" v-for="memo in allMemos" :key="memo.id">
+          <li
+            :class="`item-content ${memo.debitNoteDispatch && memo.debitNoteDispatch.length ? 'highlight' : ''}`"
+            v-for="memo in allMemos"
+            :key="memo.id"
+          >
             <div class="item-inner" style="flex-direction: column;">
               <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Doc no.:</div>
@@ -83,6 +87,9 @@
 </template>
 
 <style scoped>
+.highlight {
+  background: #e8f5e9;
+}
 </style>
 
 

@@ -137,7 +137,7 @@ export default {
         .get(url)
         .then(res => {
           this.totalCount = res.headers.map.count && res.headers.map.count[0];
-          this.allMemos = res.body;
+          this.allMemos.push(...res.body);
           this.offset += res.body.length;
 
           if (this.offset % this.limit !== 0) {

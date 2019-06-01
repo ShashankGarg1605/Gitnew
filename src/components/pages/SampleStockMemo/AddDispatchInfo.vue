@@ -231,7 +231,6 @@ export default {
           id: this.dispatchDetails.id
         },
         dispatch_mode: this.selectedMode,
-        carrier: { id: this.selectedCarrier },
         cartons: this.cartonCount,
         books: this.strappedBooksCount,
         freight_charges: this.freightCharges,
@@ -241,6 +240,8 @@ export default {
         remarks: this.remarks,
         file: this.podlrImage[0].data
       };
+
+      if (this.selectedCarrier) params.carrier = { id: this.selectedCarrier };
 
       console.log("params: ", params);
 

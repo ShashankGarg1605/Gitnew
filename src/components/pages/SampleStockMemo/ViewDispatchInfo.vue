@@ -30,7 +30,7 @@
               <div class="col-35 color-gray pz-weight-thin">Mode</div>
               <div class="col-65">{{$pzGlobalReactiveData.dispatchModeMap[d.dispatch_mode]}}</div>
             </div>
-            <div class="row pz-width100">
+            <div class="row pz-width100" v-if="d.carrier">
               <div class="col-35 color-gray pz-weight-thin">Carrier</div>
               <div class="col-65">{{d.carrier.name}}</div>
             </div>

@@ -79,6 +79,7 @@
           <a
             @click="viewDispatchInfo()"
             class="list-button item-link close-popover"
+            v-if="clickedMemo && clickedMemo.status !== 0"
           >View/Add Dispatch Info</a>
         </div>
       </div>

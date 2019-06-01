@@ -27,7 +27,7 @@
       <div v-if="allMemos.length" class="list-block">
         <ul>
           <li
-            :class="`item-content ${memo.debitNoteDispatch && memo.debitNoteDispatch.length ? 'highlight' : ''}`"
+            :class="`item-content ${!memo.debitNoteDispatch || !memo.debitNoteDispatch.length ? 'highlight' : ''}`"
             v-for="memo in allMemos"
             :key="memo.id"
           >
@@ -89,7 +89,7 @@
 
 <style scoped>
 .highlight {
-  background: #e8f5e9;
+  background: #ffebee;
 }
 </style>
 

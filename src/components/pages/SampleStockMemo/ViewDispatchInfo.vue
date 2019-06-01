@@ -48,9 +48,7 @@
             </div>
             <div class="row pz-width100">
               <div class="col-35 color-gray pz-weight-thin">Total charge</div>
-              <div
-                class="col-65"
-              >{{(d.door_delivery_charges+d.freight_charges + d.labour_charges + d.local_delivery_charges) | moneyFormat}}</div>
+              <div class="col-65">{{(getTotal(d)) | moneyFormat}}</div>
             </div>
             <div style="width: 100%">
               <span
@@ -88,6 +86,14 @@ export default {
     };
   },
   methods: {
+    getTotal(d) {
+      return (
+        parseFloat(d.door_delivery_charges || 0) +
+        parseFloat(d.freight_charges || 0) +
+        parseFloat(d.labour_charges || 0) +
+        parseFloat(d.local_delivery_charges || 0)
+      );
+    },
     getDispatchDetails(memoId) {
       window.vm.$http
         .get(`${window._pz.apiEndPt}debit_notes/${memoId}`)

@@ -37,6 +37,10 @@
                 <div class="col-70">{{order.order_id}}</div>
               </div>
               <div class="row pz-width100">
+                <div class="col-30 color-gray pz-weight-thin">Warehouse:</div>
+                <div class="col-70">{{order.warehouse.code}}</div>
+              </div>
+              <div class="row pz-width100">
                 <div class="col-30 color-gray pz-weight-thin">Buyer:</div>
                 <div class="col-70">
                   {{order.user.buyer_name}}

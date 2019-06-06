@@ -44,19 +44,19 @@
                 <div class="col-65">{{ret.id}}</div>
               </div>
               <div class="row pz-width100">
+                <div class="col-35 color-gray pz-weight-thin">Warehouse:</div>
+                <div class="col-65">{{ret.warehouse.code}}</div>
+              </div>
+              <div class="row pz-width100">
                 <div class="col-35 color-gray pz-weight-thin">Date:</div>
                 <div class="col-65">{{ret.created_date}}</div>
               </div>
               <div class="row pz-width100">
-                <div class="col-35 color-gray pz-weight-thin">Return value:</div>
+                <div class="col-35 color-gray pz-weight-thin">Value:</div>
                 <div class="col-65">{{ret.return_value}}</div>
               </div>
               <div class="row pz-width100">
-                <div class="col-35 color-gray pz-weight-thin">Approved value:</div>
-                <div class="col-65">{{ret.approved_value}}</div>
-              </div>
-              <div class="row pz-width100">
-                <div class="col-35 color-gray pz-weight-thin">Total books:</div>
+                <div class="col-35 color-gray pz-weight-thin">Total units:</div>
                 <div class="col-65">{{ret.returned_books}}</div>
               </div>
               <div class="row pz-width100">

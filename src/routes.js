@@ -31,6 +31,9 @@ import AssignOrder from "./components/pages/OrderVerification/AssignOrder";
 import Procurement from "./components/pages/Procurement";
 import Products from "./components/pages/Products";
 
+import DebitNotes from "./components/pages/DebitNotes/DebitNotes";
+import ViewDnDetails from "./components/pages/DebitNotes/ViewDnDetails";
+
 import SampleStockMemo from "./components/pages/SampleStockMemo/SampleStockMemo";
 import ViewDispatchInfo from "./components/pages/SampleStockMemo/ViewDispatchInfo";
 import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
@@ -155,6 +158,14 @@ export default [
   {
     path: "/Products/",
     component: Products
+  },
+  {
+    path: "/DebitNotes/",
+    component: DebitNotes
+  },
+  {
+    path: "/DebitNotes/ViewDnDetails",
+    component: ViewDnDetails
   },
   {
     path: "/SampleStockMemo/",

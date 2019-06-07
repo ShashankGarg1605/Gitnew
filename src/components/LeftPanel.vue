@@ -58,6 +58,12 @@
               v-if="$pzGlobalReactiveData.roleAccess('returns', 'read')"
             ></menu-item>
             <menu-item
+              :icon="'forward'"
+              :url="'/DebitNotes'"
+              :label="'Debit Notes'"
+              v-if="$pzGlobalReactiveData.roleAccess('returns', 'read')"
+            ></menu-item>
+            <menu-item
               :icon="'check'"
               :url="'/OrderSearch'"
               :label="'Order Verification'"

@@ -78,6 +78,10 @@ export default new Vue({
       0: "Open",
       1: "Closed"
     },
+    dnStatusMap: {
+      0: "Open",
+      1: "Completed"
+    },
 
     navHistory: window.f7 && window.f7.mainView && window.f7.mainView.history
   },

@@ -45,7 +45,8 @@
         <table class="equalDivide">
           <thead class="pz-bg-gray-lightest">
             <tr>
-              <th style="width:1px;" class="numeric-cell">#</th>
+              <th style="width:5px;" class="numeric-cell">!</th>
+              <th class="numeric-cell">#</th>
               <th style="width:60px;" class="label-cell">Isbn</th>
               <th style="width:200px;" class="label-cell">Title</th>
               <th style="width:100px;" class="label-cell">Brand</th>
@@ -58,6 +59,9 @@
           </thead>
           <tbody>
             <tr v-for="(p, index) in data.debitNotesProducts" :key="p.id">
+              <td class="numeric-cell" @click="removeItem(p.id)">
+                <icon name="trash"></icon>
+              </td>
               <td class="numeric-cell">{{index+1}}</td>
               <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].isbn}}</td>
               <td class="label-cell">{{p[p.product? 'product' : 'otherProduct'].title}}</td>
@@ -66,35 +70,113 @@
               <td class="numeric-cell">{{p.quantity}}</td>
               <!-- <td class="numeric-cell">{{p.quantity}}</td> -->
               <td class="numeric-cell">{{p.discount_percent}}%</td>
-              <td
-                class="numeric-cell"
-              >{{p.amount | moneyFormat}}</td>
+              <td class="numeric-cell">{{p.amount | moneyFormat}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
+    <div class="add-section" v-if="allowAddItems">
+      <button
+        type="button"
+        @click="addItem()"
+        class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+        v-if="!scannedItem"
+      >Add item</button>
+      <button
+        type="button"
+        @click="addItem()"
+        class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+        v-if="scannedItem"
+      >Select another</button>
+
+      <li class="product" v-if="scannedItem">
+        <div class="left">
+          <img v-if="scannedItem.image_url" :src="scannedItem.image_url">
+          <img v-if="!scannedItem.image_url" src="../../../assets/cover.jpg">
+        </div>
+        <div class="right">
+          <div class="title">{{scannedItem.title}}</div>
+          <div class="info">
+            <span class="key col-35">ISBN:</span>
+            <span class="value col-65">{{scannedItem.isbn}}</span>
+          </div>
+
+          <div class="info">
+            <span class="key col-35">Enter Qty:</span>
+            <span class="value col-65">
+              <input type="number" min="1" v-model="enteredQty">
+            </span>
+          </div>
+
+          <button
+            type="button"
+            @click="doAddItem()"
+            class="button button-raised"
+            v-if="enteredQty>0"
+          >Add it!</button>
+        </div>
+      </li>
+    </div>
+
     <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
   </f7-page>
 </template>
 
 <style scoped>
-.status {
-  text-transform: uppercase;
-  border: 1px solid green;
-  border-radius: 5px;
-  width: auto;
-  color: #419688;
-}
-
 .equalDivide {
   table-layout: fixed !important;
   width: 1000px;
 }
+
+li.product {
+  border-bottom: 1px solid #dddddd;
+  margin: 0;
+  font-size: 14px;
+  display: flex !important;
+  align-items: end !important;
+  padding: 10px;
+}
+
+.left {
+  max-width: 30%;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 30%;
+}
+
+.right {
+  max-width: 70%;
+  flex-grow: 1;
+}
+
+li img {
+  width: 100% !important;
+}
+
+div.title {
+  font-weight: bold;
+  line-height: normal;
+  color: #424242;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 10px !important;
+  border: 1px dashed lightgrey !important;
+  border-radius: 10px !important;
+  background: #fafafa !important;
+  width: 50px;
+  font-size: initial;
+  font-weight: lighter;
+}
 </style>
 
 <script>
+// import Algolia from "../../../utils/algolia";
 
 export default {
   name: "DebitNoteDetails",
@@ -102,7 +184,10 @@ export default {
     return {
       data: null,
       id: null,
-      errMsg: null
+      errMsg: null,
+      allowAddItems: null,
+      scannedItem: null,
+      enteredQty: null
     };
   },
 
@@ -114,6 +199,101 @@ export default {
           if (res.ok) this.data = res.body;
         })
         .catch(window._pz.errFunc2.bind(this));
+    },
+    addItem() {
+      this.scannedItem = null;
+      window.vm.$pzGlobalReactiveData
+        .scanCode()
+        .then(res => {
+          const scannedProductIsbn = res.text;
+          if (scannedProductIsbn) {
+            // new Algolia()
+            //   .fetch(scannedProductIsbn)
+
+            window.vm.$http
+              .get(`${window._pz.apiEndPt}products?isbn=${scannedProductIsbn}`)
+              .then(res => {
+                console.log("res: ", res);
+                if (!res.ok || !res.body.length)
+                  return window.vm.$f7.addNotification({
+                    message: "No product found with ISBN " + scannedProductIsbn,
+                    hold: 2000
+                  });
+
+                this.scannedItem = res.body[0];
+              })
+              .catch(err => {
+                console.log("err: ", err);
+                return window.vm.$f7.addNotification({
+                  message: "No product found with ISBN " + scannedProductIsbn,
+                  hold: 2000
+                });
+              });
+          } else
+            window.vm.$f7.addNotification({
+              message: "Could not scan the code",
+              hold: 2000
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    doAddItem() {
+      const param = {
+        debitNotes: {
+          id: this.data.id,
+          warehouse: {
+            id: this.data.warehouse.id
+          }
+        },
+        product: {
+          id: this.scannedItem.id
+        },
+        mrp: this.scannedItem.mrp,
+        discount_percent: 0,
+        quantity: parseInt(this.enteredQty),
+        status: 0
+      };
+
+      window.vm.$http
+        .post(`${window._pz.apiEndPt}debit_notes`, param)
+        .then(res => {
+          if (res.ok) this.data = res.body;
+        })
+        .catch(err => {
+          console.log("err: ", err);
+          if (err.status === 409)
+            window.vm.$f7.addNotification({
+              message: JSON.stringify(err),
+              hold: 2000
+            });
+          else window._pz.errFunc2.call(this, err);
+        });
+    },
+    removeItem(productId) {
+      window.vm.$f7.confirm(
+        `Sure you want to delete this item?`,
+        "Confirm",
+        this.doRemoveItem(productId)
+      );
+    },
+    doRemoveItem(productId) {
+      // http://localhost/prozob2b/backend/web/debit-note/delete-product?id=13889&debitNoteId=925
+      // window.vm.$http
+      //   .post(`${window._pz.apiEndPt}debit_notes/${this.id}`, param)
+      //   .then(res => {
+      //     if (res.ok) this.data = res.body;
+      //   })
+      //   .catch(err => {
+      //     console.log("err: ", err);
+      //     if (err.status === 409)
+      //       window.vm.$f7.addNotification({
+      //         message: JSON.stringify(err),
+      //         hold: 2000
+      //       });
+      //     else window._pz.errFunc2.call(this, err);
+      //   });
     }
   },
 
@@ -123,6 +303,8 @@ export default {
   created() {
     console.debug(this.$options.name + " created");
     this.id = this.$route.query && this.$route.query.id;
+    this.allowAddItems =
+      this.$route.query && parseInt(this.$route.query.allowAddItems);
     this.getDetails();
   },
   beforeMount() {

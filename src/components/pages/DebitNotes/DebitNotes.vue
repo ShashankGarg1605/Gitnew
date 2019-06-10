@@ -10,7 +10,7 @@
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
-      <f7-nav-center>DebitNotes</f7-nav-center>
+      <f7-nav-center>Debit Notes</f7-nav-center>
     </f7-navbar>
     <div class="pz-padding-16 pz-float-l color-gray" v-if="totalCount">Found {{totalCount}} results</div>
     <div style="overflow: hidden; margin: 16px 16px 16px;">
@@ -79,14 +79,11 @@
       <div class="popover-inner">
         <div class="list-block">
           <a
-            @click="addDnItems()"
+            @click="viewDnDetails(1)"
             class="list-button item-link close-popover"
-            v-if="clickedMemo && clickedMemo.status == 0"
+            v-if="clickedMemo && clickedMemo.status === 0 && $pzGlobalReactiveData.roleAccess('returns', 'update')"
           >Add Items</a>
-          <a
-            @click="viewDnDetails()"
-            class="list-button item-link close-popover"
-          >View Details</a>
+          <a @click="viewDnDetails(0)" class="list-button item-link close-popover">View Details</a>
         </div>
       </div>
     </f7-popover>
@@ -155,14 +152,14 @@ export default {
           window._pz.errFunc2.call(this, err);
         });
     },
-    viewDnDetails() {
+    viewDnDetails(allowAddItems) {
       const id = this.clickedMemo.id;
-      const url = `DebitNotes/ViewDnDetails?id=${id}`;
+      const url = `DebitNotes/ViewDnDetails?id=${id}&allowAddItems=${allowAddItems}`;
       window.vm.$f7.mainView.router.load({
-        url: url,
-        context: { comps: JSON.parse(JSON.stringify(this.clickedMemo)) }
+        url: url
       });
     },
+    addDnItems() {},
     onInfiniteScroll() {
       if (
         this.offset % this.limit === 0 &&

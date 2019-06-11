@@ -45,7 +45,7 @@
         <table class="equalDivide">
           <thead class="pz-bg-gray-lightest">
             <tr>
-              <th style="width:5px;" class="numeric-cell">!</th>
+              <th v-if="allowAddItems" style="width:5px;" class="numeric-cell">!</th>
               <th class="numeric-cell">#</th>
               <th style="width:60px;" class="label-cell">Isbn</th>
               <th style="width:200px;" class="label-cell">Title</th>
@@ -59,7 +59,7 @@
           </thead>
           <tbody>
             <tr v-for="(p, index) in data.debitNotesProducts" :key="p.id">
-              <td class="numeric-cell" @click="removeItem(p.id)">
+              <td v-if="allowAddItems" class="numeric-cell" @click="removeItem(p.id)">
                 <icon name="trash"></icon>
               </td>
               <td class="numeric-cell">{{index+1}}</td>

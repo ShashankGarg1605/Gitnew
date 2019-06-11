@@ -281,7 +281,7 @@ export default {
           console.log("err: ", err);
           if (err.status === 409)
             window.vm.$f7.addNotification({
-              message: JSON.stringify(err),
+              message: err.body.message,
               hold: 2000
             });
           else window._pz.errFunc2.call(this, err);

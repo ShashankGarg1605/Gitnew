@@ -190,7 +190,11 @@ export default {
       enteredQty: null
     };
   },
-
+  computed: {
+    isForPublisher() {
+      return this.data && this.data.publisher && this.data.publisher.id;
+    }
+  },
   methods: {
     getDetails() {
       window.vm.$http
@@ -220,7 +224,19 @@ export default {
                     hold: 2000
                   });
 
-                this.scannedItem = res.body[0];
+                const scannedItem = res.body[0];
+                if (
+                  this.isForPublisher &&
+                  (!scannedItem.publisher ||
+                    !scannedItem.publisher.id ||
+                    this.data.publisher.id !== scannedItem.publisher.id)
+                )
+                  return window.vm.$f7.addNotification({
+                    message: "This product cannot be added",
+                    hold: 2000
+                  });
+
+                this.scannedItem = scannedItem;
               })
               .catch(err => {
                 console.log("err: ", err);

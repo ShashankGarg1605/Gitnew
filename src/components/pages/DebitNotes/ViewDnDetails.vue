@@ -176,8 +176,6 @@ input {
 </style>
 
 <script>
-// import Algolia from "../../../utils/algolia";
-
 export default {
   name: "DebitNoteDetails",
   data() {
@@ -211,13 +209,9 @@ export default {
         .then(res => {
           const scannedProductIsbn = res.text;
           if (scannedProductIsbn) {
-            // new Algolia()
-            //   .fetch(scannedProductIsbn)
-
             window.vm.$http
               .get(`${window._pz.apiEndPt}products?isbn=${scannedProductIsbn}`)
               .then(res => {
-                console.log("res: ", res);
                 if (!res.ok || !res.body.length)
                   return window.vm.$f7.addNotification({
                     message: "No product found with ISBN " + scannedProductIsbn,
@@ -291,24 +285,16 @@ export default {
       window.vm.$f7.confirm(
         `Sure you want to delete this item?`,
         "Confirm",
-        this.doRemoveItem(productId)
+        this.doRemoveItem.bind(this, productId)
       );
     },
     doRemoveItem(productId) {
-       window.vm.$http
-         .delete(`${window._pz.apiEndPt}debit_notes_product/${this.id}`)
-         .then(res => {
-           if (res.ok) this.data = res.body;
-         })
-         .catch(err => {
-           console.log("err: ", err);
-           if (err.status === 409)
-             window.vm.$f7.addNotification({
-               message: JSON.stringify(err),
-               hold: 2000
-             });
-           else window._pz.errFunc2.call(this, err);
-         });
+      window.vm.$http
+        .delete(`${window._pz.apiEndPt}debit_notes_product/${productId}`)
+        .then(res => {
+          if (res.ok) window.vm.$f7.mainView.router.refreshPage();
+        })
+        .catch(window._pz.errFunc2.bind(this));
     }
   },
 

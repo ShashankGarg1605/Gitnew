@@ -259,7 +259,7 @@ export default {
       window.vm.$http
         .post(`${window._pz.apiEndPt}debit_notes_product`, param)
         .then(res => {
-          if (res.ok) this.data = res.body;
+          if (res.ok) window.vm.$f7.mainView.router.refreshPage();
         })
         .catch(err => {
           console.log("err: ", err);

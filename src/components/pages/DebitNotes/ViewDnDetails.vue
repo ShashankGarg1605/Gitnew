@@ -257,7 +257,7 @@ export default {
       };
 
       window.vm.$http
-        .post(`${window._pz.apiEndPt}debit_notes`, param)
+        .post(`${window._pz.apiEndPt}debit_notes_product`, param)
         .then(res => {
           if (res.ok) this.data = res.body;
         })
@@ -279,21 +279,20 @@ export default {
       );
     },
     doRemoveItem(productId) {
-      // http://localhost/prozob2b/backend/web/debit-note/delete-product?id=13889&debitNoteId=925
-      // window.vm.$http
-      //   .post(`${window._pz.apiEndPt}debit_notes/${this.id}`, param)
-      //   .then(res => {
-      //     if (res.ok) this.data = res.body;
-      //   })
-      //   .catch(err => {
-      //     console.log("err: ", err);
-      //     if (err.status === 409)
-      //       window.vm.$f7.addNotification({
-      //         message: JSON.stringify(err),
-      //         hold: 2000
-      //       });
-      //     else window._pz.errFunc2.call(this, err);
-      //   });
+       window.vm.$http
+         .delete(`${window._pz.apiEndPt}debit_notes_product/${this.id}`)
+         .then(res => {
+           if (res.ok) this.data = res.body;
+         })
+         .catch(err => {
+           console.log("err: ", err);
+           if (err.status === 409)
+             window.vm.$f7.addNotification({
+               message: JSON.stringify(err),
+               hold: 2000
+             });
+           else window._pz.errFunc2.call(this, err);
+         });
     }
   },
 

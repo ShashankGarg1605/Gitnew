@@ -89,7 +89,7 @@
             ></menu-item>
             <menu-item
               v-if="$pzGlobalReactiveData.roleAccess('whlocation', 'read')"
-              :icon="'file-text-o'"
+              :icon="'ticket'"
               :url="'/LocateStock'"
               :label="'Locate Stock'"
             ></menu-item>

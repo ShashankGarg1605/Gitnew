@@ -83,6 +83,9 @@ export default {
         search: [
           {
             placeholder: "Title"
+          },
+          {
+            placeholder: "Location"
           }
         ]
       }
@@ -94,6 +97,9 @@ export default {
 
       let { value: title = null } = this.filters.search[0];
       if (title !== null) filterQuery += `&title=${title}`;
+
+      let { value: location = null } = this.filters.search[1];
+      if (location !== null) filterQuery += `&code=${location}`;
 
       return filterQuery;
     }
@@ -116,8 +122,8 @@ export default {
         this.offset
       }`;
 
-      const adminWH = window.vm.$pzGlobalReactiveData.warehouse;
-      if (adminWH && adminWH.id) url += `&warehouse=${adminWH.id}`;
+      // const adminWH = window.vm.$pzGlobalReactiveData.warehouse;
+      // if (adminWH && adminWH.id) url += `&warehouse=${adminWH.id}`;
 
       url += this.filterQuery;
 

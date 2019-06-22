@@ -38,6 +38,9 @@ import SampleStockMemo from "./components/pages/SampleStockMemo/SampleStockMemo"
 import ViewDispatchInfo from "./components/pages/SampleStockMemo/ViewDispatchInfo";
 import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
 
+import LocateStock from "./components/pages/LocateStock/LocateStock";
+// import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
+
 export default [
   {
     path: "/",
@@ -178,5 +181,9 @@ export default [
   {
     path: "/SampleStockMemo/AddDispatchInfo",
     component: AddDispatchInfo
+  },
+  {
+    path: "/LocateStock",
+    component: LocateStock
   }
 ];

@@ -87,6 +87,12 @@
               :url="'/SampleStockMemo'"
               :label="'Sample Stock Memo'"
             ></menu-item>
+            <menu-item
+              v-if="$pzGlobalReactiveData.roleAccess('whlocation', 'read')"
+              :icon="'file-text-o'"
+              :url="'/LocateStock'"
+              :label="'Locate Stock'"
+            ></menu-item>
           </ul>
         </div>
         <div class="sign-out pz-height100 pz-flex-c-e">

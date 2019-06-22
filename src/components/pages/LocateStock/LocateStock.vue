@@ -15,7 +15,7 @@
     <f7-fab
       color="pink"
       href="/AddStockLocation"
-      v-if="$pzGlobalReactiveData.roleAccess('whlocation', 'read')"
+      v-if="$pzGlobalReactiveData.roleAccess('whlocation', 'create')"
     >
       <f7-icon icon="icon-plus"></f7-icon>
     </f7-fab>
@@ -33,22 +33,23 @@
     <f7-list>
       <div v-if="allProducts.length" class="list-block">
         <li class="item-content" v-for="p in allProducts" :key="p.id">
-          <div class="item-inner" style="flex-direction: column;">
-            <div class="row pz-width100">
-              <div class="col-30 color-gray pz-weight-thin">Title:</div>
-              <div class="col-70">{{p.product.title}}</div>
+          <div class="left">
+            <img v-if="p.product.image_url" :src="p.product.image_url">
+            <img v-if="!p.product.image_url" src="../../../assets/cover.jpg">
+          </div>
+          <div class="right">
+            <div class="title">{{p.product.title}}</div>
+            <div class="info">
+              <span class="key col-35">Author:</span>
+              <span class="value col-65">{{p.product.author}}</span>
             </div>
-            <div class="row pz-width100">
-              <div class="col-30 color-gray pz-weight-thin">Author:</div>
-              <div class="col-70">{{p.product.author}}</div>
+            <div class="info">
+              <span class="key col-35">Publisher:</span>
+              <span class="value col-65">{{p.product.publisher.name}}</span>
             </div>
-            <div class="row pz-width100">
-              <div class="col-30 color-gray pz-weight-thin">Publisher:</div>
-              <div class="col-70">{{p.product.publisher.name}}</div>
-            </div>
-            <div class="row pz-width100">
-              <div class="col-30 color-gray pz-weight-thin">Quantity:</div>
-              <div class="col-70">{{p.quantity}}</div>
+            <div class="info">
+              <span class="key col-35">Quantity:</span>
+              <span class="value col-65">{{p.quantity }}</span>
             </div>
           </div>
         </li>
@@ -66,6 +67,81 @@
     </f7-list>
   </f7-page>
 </template>
+
+<style scoped>
+li {
+  border-bottom: 1px solid #dddddd;
+  margin: 0;
+  font-size: 14px;
+  display: flex !important;
+  align-items: end !important;
+  padding: 10px;
+}
+
+.left {
+  max-width: 30%;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 30%;
+}
+
+.right {
+  max-width: 70%;
+  flex-grow: 1;
+}
+
+li img {
+  width: 100% !important;
+}
+
+div.title {
+  font-weight: bold;
+  line-height: normal;
+  color: #424242;
+  margin-bottom: 5px;
+}
+
+div.info {
+  display: flex;
+}
+
+span.key {
+  color: #9e9e9e;
+  min-width: 80px;
+}
+span.value {
+  color: #616161;
+}
+
+.inStockBadge {
+  border: 1px solid green;
+  border-radius: 20px;
+  font-size: x-small;
+  padding: 7px 9px;
+  color: green;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 5px;
+  background: white;
+}
+
+.inStockValue {
+  text-align: center;
+  font-size: smaller;
+  color: green;
+  font-weight: bold;
+}
+
+.list-block {
+  margin: 0;
+}
+
+form {
+  width: 100%;
+}
+</style>
 
 <script>
 export default {

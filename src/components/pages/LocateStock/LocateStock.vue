@@ -198,8 +198,8 @@ export default {
         this.offset
       }`;
 
-      // const adminWH = window.vm.$pzGlobalReactiveData.warehouse;
-      // if (adminWH && adminWH.id) url += `&warehouse=${adminWH.id}`;
+      const adminWH = window.vm.$pzGlobalReactiveData.warehouse;
+      if (adminWH && adminWH.id) url += `&warehouse=${adminWH.id}`;
 
       url += this.filterQuery;
 

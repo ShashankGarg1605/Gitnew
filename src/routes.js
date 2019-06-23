@@ -39,7 +39,7 @@ import ViewDispatchInfo from "./components/pages/SampleStockMemo/ViewDispatchInf
 import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
 
 import LocateStock from "./components/pages/LocateStock/LocateStock";
-// import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo";
+import AddStockLocation from "./components/pages/LocateStock/AddStockLocation";
 
 export default [
   {
@@ -185,5 +185,9 @@ export default [
   {
     path: "/LocateStock",
     component: LocateStock
+  },
+  {
+    path: "/AddStockLocation",
+    component: AddStockLocation
   }
 ];

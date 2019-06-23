@@ -5,7 +5,9 @@ export default new Vue({
     dataFetchIntervalInstance: null,
     userID: window.localStorage.userID,
     userName: window.localStorage.userName,
-    roleMenus: window.localStorage.roleMenus && JSON.parse(window.localStorage.roleMenus),
+    roleMenus:
+      window.localStorage.roleMenus &&
+      JSON.parse(window.localStorage.roleMenus),
     warehouse:
       window.localStorage.warehouse &&
       window.localStorage.warehouse !== "undefined" &&
@@ -93,7 +95,8 @@ export default new Vue({
   methods: {
     setGlobal(key, value) {
       window.localStorage[key] = JSON.stringify(value);
-      if (window.vm && window.vm.$pzGlobalReactiveData) window.vm.$pzGlobalReactiveData[key] = value;
+      if (window.vm && window.vm.$pzGlobalReactiveData)
+        window.vm.$pzGlobalReactiveData[key] = value;
     },
     createRoleMenus(userRoles) {
       const roleMenus = {};
@@ -147,7 +150,10 @@ export default new Vue({
       const INTERVAL_IN_MIN = 10;
       if (this.userID && !this.dataFetchIntervalInstance) {
         console.log("Setting interval for periodicDataFetch");
-        this.dataFetchIntervalInstance = setInterval(this.periodicDataFetch, INTERVAL_IN_MIN * 60 * 1000);
+        this.dataFetchIntervalInstance = setInterval(
+          this.periodicDataFetch,
+          INTERVAL_IN_MIN * 60 * 1000
+        );
       }
     },
     periodicDataFetch() {
@@ -156,8 +162,10 @@ export default new Vue({
         .get(window._pz.apiEndPt + "users/" + this.userID)
         .then(res => {
           if (!res.body.status || res.body.is_deleted) this.signOut();
-          if (res.body && res.body.is_relationship_manager) this.setGlobal("isRM", res.body.is_relationship_manager);
-          if (res.body && res.body.warehouse) this.setGlobal("warehouse", res.body.warehouse);
+          if (res.body && res.body.is_relationship_manager)
+            this.setGlobal("isRM", res.body.is_relationship_manager);
+          if (res.body && res.body.warehouse)
+            this.setGlobal("warehouse", res.body.warehouse);
         })
         .catch(err => {
           window._pz.errFunc2.call(this, err);
@@ -175,7 +183,8 @@ export default new Vue({
     },
     stopPeriodicDataFetch() {
       console.log("clearing interval for periodicDataFetch");
-      if (this.dataFetchIntervalInstance) clearInterval(this.dataFetchIntervalInstance);
+      if (this.dataFetchIntervalInstance)
+        clearInterval(this.dataFetchIntervalInstance);
     },
     openZoomView(imgURL) {
       var a = window.f7.photoBrowser({
@@ -205,11 +214,17 @@ export default new Vue({
       if (!this.roleMenus) return false;
       if (this.roleMenus._isAdmin) return true;
 
-      return window._pz.checkNested(this.roleMenus, menu, permission) ? this.roleMenus[menu][permission] : false;
+      return window._pz.checkNested(this.roleMenus, menu, permission)
+        ? this.roleMenus[menu][permission]
+        : false;
     },
     scanCode() {
       return new Promise((resolve, reject) => {
-        if (typeof window.cordova !== "undefined" && window.cordova && window.cordova.plugins.barcodeScanner) {
+        if (
+          typeof window.cordova !== "undefined" &&
+          window.cordova &&
+          window.cordova.plugins.barcodeScanner
+        ) {
           var success = function(result) {
             if (result.cancelled) reject("User rejected");
             else resolve(result);
@@ -231,9 +246,16 @@ export default new Vue({
 
           window.cordova.plugins.barcodeScanner.scan(success, failure, config);
         } else {
-          // if (location.hostname === "localhost") resolve({ text: "9789383182497" });
-          if (location.hostname === "localhost") resolve({ text: "9789387504929" });
-          else reject("Plugin or Cordova not available");
+          if (location.hostname === "localhost") {
+            const r = Math.floor(Math.random() * 3);
+            const options = ["L1", "9789389067255", "9789351296270"];
+            resolve({
+              text: options[r]
+            });
+            // resolve({ text: "L2" });
+            // resolve({ text: "9789389067255" });
+            // resolve({ text: "9789388696418" });
+          } else reject("Plugin or Cordova not available");
         }
       });
     },

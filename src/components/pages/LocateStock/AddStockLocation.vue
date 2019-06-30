@@ -11,6 +11,11 @@
           @click="scanBook()"
           class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
         >Scan book</button>
+        <button
+          type="button"
+          @click="searchBook()"
+          class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+        >Search book</button>
       </div>
 
       <div class="list-block">
@@ -87,7 +92,7 @@
       </div>
     </div>
 
-    <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
+    <div class="color-gray pz-page-err" v-if="!$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
   </f7-page>
 </template>
 
@@ -142,8 +147,6 @@ export default {
   },
   data() {
     return {
-      data: null,
-      id: null,
       errMsg: null,
       scannedItem: null,
       enteredQty: null,
@@ -168,34 +171,34 @@ export default {
     }
   },
   methods: {
-    scanBook() {
+    resetData() {
       this.scannedItem = null;
+      this.enteredQty = null;
+      this.scannedLocationCode = null;
+      this.selectedWH = null;
+    },
+    searchBook() {
+      this.resetData();
+
+      window.vm.$f7.mainView.router.load({
+        url: "book-selector"
+      });
+    },
+    onBookSelected(event) {
+      console.log("event.detail.selectedBook: ", event.detail.selectedBook);
+      const book = event.detail.selectedBook;
+      const isbn = book.isbn;
+      this.fetchBookDetails(isbn);
+    },
+    scanBook() {
+      this.resetData();
+
       window.vm.$pzGlobalReactiveData
         .scanCode()
         .then(res => {
           const scannedProductIsbn = res.text;
           if (scannedProductIsbn) {
-            window.vm.$http
-              .get(`${window._pz.apiEndPt}products?isbn=${scannedProductIsbn}`)
-              .then(res => {
-                if (!res.ok || !res.body.length)
-                  return window.vm.$f7.addNotification({
-                    message: "No product found with ISBN " + scannedProductIsbn,
-                    hold: 2000
-                  });
-
-                this.scannedItem = res.body[0];
-                this.scannedItem.image_name = this.scannedItem.image_name
-                  ? window._pz.imageEndPt + this.scannedItem.image_name
-                  : null;
-              })
-              .catch(err => {
-                console.log("err: ", err);
-                return window.vm.$f7.addNotification({
-                  message: "No product found with ISBN " + scannedProductIsbn,
-                  hold: 2000
-                });
-              });
+            this.fetchBookDetails(scannedProductIsbn);
           } else
             window.vm.$f7.addNotification({
               message: "Could not scan the code",
@@ -204,6 +207,29 @@ export default {
         })
         .catch(err => {
           console.log(err);
+        });
+    },
+    fetchBookDetails(isbn) {
+      window.vm.$http
+        .get(`${window._pz.apiEndPt}products?isbn=${isbn}`)
+        .then(res => {
+          if (!res.ok || !res.body.length)
+            return window.vm.$f7.addNotification({
+              message: "No product found with ISBN " + isbn,
+              hold: 2000
+            });
+
+          this.scannedItem = res.body[0];
+          this.scannedItem.image_name = this.scannedItem.image_name
+            ? window._pz.imageEndPt + this.scannedItem.image_name
+            : null;
+        })
+        .catch(err => {
+          console.log("err: ", err);
+          return window.vm.$f7.addNotification({
+            message: "No product found with ISBN " + isbn,
+            hold: 2000
+          });
         });
     },
     getWH() {
@@ -218,7 +244,6 @@ export default {
             }))
             .filter(wh => wh.label !== "All");
 
-          console.log("allWH: ", allWH);
           this.allWH = allWH;
         })
         .catch(window._pz.errFunc2.bind(this));
@@ -297,6 +322,8 @@ export default {
   created() {
     console.debug(this.$options.name + " created");
     this.getWH();
+
+    document.addEventListener("bookSelected", this.onBookSelected, false);
   },
   beforeMount() {
     console.debug(this.$options.name + " beforeMount");
@@ -312,6 +339,7 @@ export default {
   },
   beforeDestroy() {
     console.debug(this.$options.name + " beforeDestroy");
+    document.removeEventListener("bookSelected", this.onBookSelected, false);
   },
   destroyed() {
     console.debug(this.$options.name + " destroyed");

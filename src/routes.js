@@ -41,6 +41,8 @@ import AddDispatchInfo from "./components/pages/SampleStockMemo/AddDispatchInfo"
 import LocateStock from "./components/pages/LocateStock/LocateStock";
 import AddStockLocation from "./components/pages/LocateStock/AddStockLocation";
 
+import BookSelector from "./components/shared/BookSelector";
+
 export default [
   {
     path: "/",
@@ -189,5 +191,9 @@ export default [
   {
     path: "/AddStockLocation",
     component: AddStockLocation
+  },
+  {
+    path: "/book-selector",
+    component: BookSelector
   }
 ];

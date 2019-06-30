@@ -232,8 +232,7 @@ export default {
           this.allProducts = this.allProducts.concat(res.body);
 
           this.offset += res.body.length;
-
-          if (this.offset % this.limit !== 0) {
+          if (this.offset % this.limit !== 0 || !this.allProducts.length) {
             this.removeInfiniteScroll();
           }
         })

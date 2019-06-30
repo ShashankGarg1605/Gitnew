@@ -35,8 +35,8 @@
                 <span class="value col-65">{{scannedItem.mrp}}</span>
               </div>
               <div class="info">
-                <span class="key col-35">Publisher</span>
-                <span class="value col-65">{{scannedItem.mrp}}</span>
+                <span class="key col-35">Publisher:</span>
+                <span class="value col-65">{{scannedItem.publisher.name}}</span>
               </div>
             </div>
           </li>

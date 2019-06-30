@@ -34,18 +34,26 @@
       <div v-if="allProducts.length" class="list-block">
         <li class="item-content" v-for="p in allProducts" :key="p.id">
           <div class="left">
-            <img v-if="p.product.image_url" :src="p.product.image_url">
-            <img v-if="!p.product.image_url" src="../../../assets/cover.jpg">
+            <img v-if="p.product.image_name" :src="p.product.image_name">
+            <img v-if="!p.product.image_name" src="../../../assets/cover.jpg">
           </div>
           <div class="right">
             <div class="title">{{p.product.title}}</div>
+            <div class="info">
+              <span class="key col-35">ISBN:</span>
+              <span class="value col-65">{{p.product.isbn}}</span>
+            </div>
+            <div class="info">
+              <span class="key col-35">MRP:</span>
+              <span class="value col-65">{{p.product.mrp}}</span>
+            </div>
             <div class="info">
               <span class="key col-35">Author:</span>
               <span class="value col-65">{{p.product.author}}</span>
             </div>
             <div class="info">
-              <span class="key col-35">Publisher:</span>
-              <span class="value col-65">{{p.product.publisher.name}}</span>
+              <span class="key col-35">Location:</span>
+              <span class="value col-65">{{`${p.location.code} (${p.location.warehouse.code})`}}</span>
             </div>
             <div class="info">
               <span class="key col-35">Quantity:</span>
@@ -208,6 +216,12 @@ export default {
         .then(res => {
           if (!res.ok || !res.body || !res.body.length)
             window._pz.errFunc2.bind(this);
+
+          res.body.forEach(book => {
+            book.product.image_name = book.product.image_name
+              ? window._pz.imageEndPt + book.product.image_name
+              : null;
+          });
 
           this.allProducts = this.allProducts.concat(res.body);
 

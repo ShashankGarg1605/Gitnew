@@ -5,24 +5,38 @@
     </f7-navbar>
 
     <div class="add-section">
-      <button
-        type="button"
-        @click="scanBook()"
-        class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
-      >Scan book</button>
+      <div class="cta pz-flex-c-c pz-margin-tb16">
+        <button
+          type="button"
+          @click="scanBook()"
+          class="button button-fill button-raised color-teal pz-margin-r16 pz-padding-lr32"
+        >Scan book</button>
+      </div>
 
       <div class="list-block">
         <ul>
           <li class="product" v-if="scannedItem">
             <div class="left">
-              <img v-if="scannedItem.image_url" :src="scannedItem.image_url">
-              <img v-if="!scannedItem.image_url" src="../../../assets/cover.jpg">
+              <img v-if="scannedItem.image_name" :src="scannedItem.image_name">
+              <img v-if="!scannedItem.image_name" src="../../../assets/cover.jpg">
             </div>
             <div class="right">
               <div class="title">{{scannedItem.title}}</div>
               <div class="info">
                 <span class="key col-35">ISBN:</span>
                 <span class="value col-65">{{scannedItem.isbn}}</span>
+              </div>
+              <div class="info">
+                <span class="key col-35">Author:</span>
+                <span class="value col-65">{{scannedItem.author}}</span>
+              </div>
+              <div class="info">
+                <span class="key col-35">MRP:</span>
+                <span class="value col-65">{{scannedItem.mrp}}</span>
+              </div>
+              <div class="info">
+                <span class="key col-35">Publisher</span>
+                <span class="value col-65">{{scannedItem.mrp}}</span>
               </div>
             </div>
           </li>
@@ -56,19 +70,21 @@
                 <icon name="pencil"></icon>
               </div>
               <div class="item-inner pz-margin-l0 input-field">
-                <span class="pz-size-normal">Quantity *</span>
+                <span class="pz-size-normal">Put away stock *</span>
                 <input type="number" placeholder="Enter a number" v-model="enteredQty">
               </div>
             </li>
           </div>
         </ul>
+        <div class="item-content pz-cap pz-colr-inherit pz-flex-c-e">
+          <button
+            type="button"
+            @click="addStock()"
+            class="button button-raised"
+            v-if="isFormValid"
+          >Confirm</button>
+        </div>
       </div>
-      <button
-        type="button"
-        @click="addStock()"
-        class="button button-raised"
-        v-if="isFormValid"
-      >Confirm</button>
     </div>
 
     <div class="color-gray pz-page-err" v-if="!data && !$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
@@ -169,6 +185,9 @@ export default {
                   });
 
                 this.scannedItem = res.body[0];
+                this.scannedItem.image_name = this.scannedItem.image_name
+                  ? window._pz.imageEndPt + this.scannedItem.image_name
+                  : null;
               })
               .catch(err => {
                 console.log("err: ", err);

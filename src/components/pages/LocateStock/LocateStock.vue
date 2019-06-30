@@ -170,6 +170,9 @@ export default {
           },
           {
             placeholder: "Location"
+          },
+          {
+            placeholder: "ISBN"
           }
         ]
       }
@@ -184,6 +187,9 @@ export default {
 
       let { value: location = null } = this.filters.search[1];
       if (location !== null) filterQuery += `&code=${location}`;
+
+      let { value: isbn = null } = this.filters.search[2];
+      if (isbn !== null) filterQuery += `&isbn=${isbn}`;
 
       return filterQuery;
     }

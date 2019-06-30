@@ -244,7 +244,7 @@ export default {
         item.selling_price = mrp - (mrp * discount) / 100;
 
         item.image_url = item.image_name
-          ? "http://imgbiz.prozo.com/260x405/" + item.image_name
+          ? window._pz.imageEndPt + item.image_name
           : null;
       });
       return data;

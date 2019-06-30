@@ -185,6 +185,7 @@ switch (window._pz.instance) {
 }
 
 window._pz.apiEndPt = window._pz.domain + "/api/v3/";
+window._pz.imageEndPt = "http://imgbiz.prozo.com/260x405/";
 
 if (localStorage.tenantData) {
   const tenantId = JSON.parse(localStorage.tenantData).id;

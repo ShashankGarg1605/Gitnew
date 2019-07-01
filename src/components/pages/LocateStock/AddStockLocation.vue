@@ -74,7 +74,7 @@
             <span
               v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
               class="tool-tip"
-            >or search for location if cant scan</span>
+            >Or search location instead of scanning</span>
             <li
               class="item-content pz-colr-inherit pz-cap"
               v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"

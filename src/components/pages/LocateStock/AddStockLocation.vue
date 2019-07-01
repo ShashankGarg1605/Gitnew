@@ -22,8 +22,8 @@
         <ul>
           <li class="product" v-if="scannedItem">
             <div class="left">
-              <img v-if="scannedItem.image_name" :src="scannedItem.image_name">
-              <img v-if="!scannedItem.image_name" src="../../../assets/cover.jpg">
+              <img v-if="scannedItem.image_name" :src="scannedItem.image_name" />
+              <img v-if="!scannedItem.image_name" src="../../../assets/cover.jpg" />
             </div>
             <div class="right">
               <div class="title">{{scannedItem.title}}</div>
@@ -67,7 +67,45 @@
                   :value="scannedLocationCode && scannedLocationCode.code"
                   disabled
                   placeholder="Click here to open scanner"
-                >
+                />
+              </div>
+            </li>
+
+            <span
+              v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
+              class="tool-tip"
+            >or search for location if cant scan</span>
+            <li
+              class="item-content pz-colr-inherit pz-cap"
+              v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
+            >
+              <div class="item-media">
+                <icon name="pencil"></icon>
+              </div>
+              <div class="item-inner pz-margin-l0 input-field">
+                <span class="pz-size-normal">Search location *</span>
+                <div style="display: flex; width: 100%;">
+                  <input
+                    type="text"
+                    v-model="locationSearchKeyword"
+                    placeholder="Enter search keyword"
+                    @input="onLocationSearchKeywordChange()"
+                  />
+                  <button
+                    class="button"
+                    :disabled="!locationSearchKeyword"
+                    @click="clearSearchedLocation()"
+                    v-if="locationSearchKeyword && scannedLocationCode"
+                  >
+                    <icon name="remove"></icon>
+                  </button>
+                  <button
+                    class="button button-raised buttons-row"
+                    v-if="locationSearchKeyword && !scannedLocationCode"
+                    :disabled="!locationSearchKeyword"
+                    @click="searchLocation()"
+                  >Search</button>
+                </div>
               </div>
             </li>
             <li class="item-content pz-colr-inherit pz-cap">
@@ -76,7 +114,7 @@
               </div>
               <div class="item-inner pz-margin-l0 input-field">
                 <span class="pz-size-normal">Put away stock *</span>
-                <input type="number" placeholder="Enter a number" v-model="enteredQty">
+                <input type="number" placeholder="Enter a number" v-model="enteredQty" />
               </div>
             </li>
           </div>
@@ -91,8 +129,6 @@
         </div>
       </div>
     </div>
-
-    <div class="color-gray pz-page-err" v-if="!$pzGlobalReactiveData.pendingReq">{{errMsg}}</div>
   </f7-page>
 </template>
 
@@ -136,6 +172,15 @@ div.title {
   color: #424242;
   margin-bottom: 5px;
 }
+
+.tool-tip {
+  text-align: center;
+  display: block;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #009588;
+}
 </style>
 
 <script>
@@ -147,12 +192,12 @@ export default {
   },
   data() {
     return {
-      errMsg: null,
       scannedItem: null,
       enteredQty: null,
       scannedLocationCode: null,
       selectedWH: null,
-      allWH: null
+      allWH: null,
+      locationSearchKeyword: null
     };
   },
   computed: {
@@ -250,6 +295,7 @@ export default {
     },
     scanLocationCode() {
       this.scannedLocationCode = null;
+      this.locationSearchKeyword = null;
       window.vm.$pzGlobalReactiveData
         .scanCode()
         .then(res => {
@@ -259,11 +305,7 @@ export default {
 
           window.vm.$http
             .get(
-              `${
-                window._pz.apiEndPt
-              }inventory/warehouses/locations?warehouse=${adminWH}&code=${
-                res.text
-              }`
+              `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${adminWH}&code=${res.text}`
             )
             .then(res => {
               console.log("res: ", res);
@@ -313,6 +355,34 @@ export default {
             });
           else window._pz.errFunc2.call(this);
         });
+    },
+    searchLocation() {
+      const keyword = this.locationSearchKeyword;
+      const wh =
+        this.selectedWH ||
+        (window.$pzGlobalReactiveData.warehouse &&
+          window.$pzGlobalReactiveData.warehouse.id);
+      window.vm.$http
+        .get(
+          `${window._pz.apiEndPt}inventory/warehouses/locations?code=${keyword}&warehouse=${wh}`
+        )
+        .then(res => {
+          if (!res.ok || res.body.length !== 1)
+            return window.vm.$f7.addNotification({
+              message: "No such location found",
+              hold: 2000
+            });
+
+          this.scannedLocationCode = res.body[0];
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    onLocationSearchKeywordChange() {
+      this.scannedLocationCode = null;
+    },
+    clearSearchedLocation() {
+      this.scannedLocationCode = null;
+      this.locationSearchKeyword = null;
     }
   },
 

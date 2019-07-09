@@ -54,61 +54,26 @@
             />
             <li
               class="item-content pz-colr-inherit pz-cap"
-              @click="scanLocationCode()"
-              v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
+              v-show="selectedWH && allLocationsForWh"
             >
               <div class="item-media">
                 <icon name="pencil"></icon>
               </div>
               <div class="item-inner pz-margin-l0 input-field">
-                <span class="pz-size-normal">Scan location *</span>
-                <input
-                  type="text"
-                  :value="scannedLocationCode && scannedLocationCode.code"
-                  disabled
-                  placeholder="Click here to open scanner"
-                />
-              </div>
-            </li>
-
-            <span
-              v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
-              class="tool-tip"
-            >Or search location instead of scanning</span>
-            <li
-              class="item-content pz-colr-inherit pz-cap"
-              v-if="selectedWH || ($pzGlobalReactiveData.warehouse && $pzGlobalReactiveData.warehouse.id)"
-            >
-              <div class="item-media">
-                <icon name="pencil"></icon>
-              </div>
-              <div class="item-inner pz-margin-l0 input-field">
-                <span class="pz-size-normal">Search location *</span>
-                <div style="display: flex; width: 100%;">
+                <span class="pz-size-normal">Select location *</span>
+                <span class="selected-location">{{scannedLocationCode && scannedLocationCode.code}}</span>
+                <div class="btns-container">
+                  <button @click="scanLocationCode()" class="button button-fill">Scan</button>
                   <input
                     type="text"
-                    v-model="locationSearchKeyword"
-                    placeholder="Enter search keyword"
-                    @input="onLocationSearchKeywordChange()"
+                    placeholder="Search"
+                    class="autocomplete-trigger button button-fill"
+                    id="autocomplete-dropdown"
                   />
-                  <button
-                    class="button"
-                    :disabled="!locationSearchKeyword"
-                    @click="clearSearchedLocation()"
-                    v-if="locationSearchKeyword && scannedLocationCode"
-                  >
-                    <icon name="remove"></icon>
-                  </button>
-                  <button
-                    class="button button-raised buttons-row"
-                    v-if="locationSearchKeyword && !scannedLocationCode"
-                    :disabled="!locationSearchKeyword"
-                    @click="searchLocation()"
-                  >Search</button>
                 </div>
               </div>
             </li>
-            <li class="item-content pz-colr-inherit pz-cap">
+            <li class="item-content pz-colr-inherit pz-cap" v-if="scannedLocationCode">
               <div class="item-media">
                 <icon name="pencil"></icon>
               </div>
@@ -181,6 +146,23 @@ div.title {
   font-size: 11px;
   color: #009588;
 }
+
+.btns-container {
+  width: inherit;
+  display: flex;
+  justify-content: space-evenly;
+}
+.autocomplete-trigger {
+  width: 100px !important;
+}
+.autocomplete-trigger::placeholder {
+  color: white !important;
+}
+
+.selected-location {
+  color: #419688 !important;
+  font-size: x-small !important;
+}
 </style>
 
 <script>
@@ -197,8 +179,15 @@ export default {
       scannedLocationCode: null,
       selectedWH: null,
       allWH: null,
-      locationSearchKeyword: null
+      allLocationsForWh: null,
+      autoCompleteRef: null
     };
+  },
+  watch: {
+    selectedWH: function() {
+      this.scannedLocationCode = null;
+      this.fetchAllLocationsForWH();
+    }
   },
   computed: {
     isFormValid() {
@@ -295,13 +284,14 @@ export default {
     },
     scanLocationCode() {
       this.scannedLocationCode = null;
-      this.locationSearchKeyword = null;
       window.vm.$pzGlobalReactiveData
         .scanCode()
         .then(res => {
           console.log("res: ", res);
           const adminWH =
-            this.selectedWH || window.vm.$pzGlobalReactiveData.warehouse.id;
+            this.selectedWH ||
+            (window.vm.$pzGlobalReactiveData &&
+              window.vm.$pzGlobalReactiveData.warehouse.id);
 
           window.vm.$http
             .get(
@@ -321,6 +311,60 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    fetchAllLocationsForWH() {
+      this.allLocationsForWh = null;
+      this.scannedLocationCode = null;
+
+      const wh =
+        this.selectedWH ||
+        (window.$pzGlobalReactiveData.warehouse &&
+          window.$pzGlobalReactiveData.warehouse.id);
+
+      window.vm.$http
+        .get(
+          `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${wh}`
+        )
+        .then(res => {
+          if (!res.ok || !res.body.length)
+            return window.vm.$f7.addNotification({
+              message: "No locations found for this warehouse",
+              hold: 2000
+            });
+
+          this.allLocationsForWh = res.body;
+          this.setAutocomplete();
+        })
+        .catch(window._pz.errFunc2.bind(this));
+    },
+    setAutocomplete() {
+      this.autoCompleteRef && this.autoCompleteRef.destroy();
+
+      this.autoCompleteRef = window.vm.$f7.autocomplete({
+        openIn: "popup", //open in popup
+        opener: window.vm.Dom7("#autocomplete-dropdown"), //link that opens autocomplete
+        backOnSelect: true, //go back after we select something
+        textProperty: "code",
+        autoFocus: true,
+        valueProperty: "id",
+        source: (autocomplete, query, render) => {
+          const results = this.allLocationsForWh.filter(({ code }) =>
+            code.toLowerCase().includes(query.toLowerCase())
+          );
+          render(results);
+        },
+        onChange: (autocomplete, value) => {
+          // Add item text value to item-after
+          window.vm
+            .Dom7("#autocomplete-standalone-popup-2")
+            .find(".item-after")
+            .text(value[0].code);
+          this.scannedLocationCode = value[0];
+        },
+        onOpen: () => {
+          this.scannedLocationCode = null;
+        }
+      });
     },
     addStock() {
       const params = {
@@ -355,34 +399,6 @@ export default {
             });
           else window._pz.errFunc2.call(this);
         });
-    },
-    searchLocation() {
-      const keyword = this.locationSearchKeyword;
-      const wh =
-        this.selectedWH ||
-        (window.$pzGlobalReactiveData.warehouse &&
-          window.$pzGlobalReactiveData.warehouse.id);
-      window.vm.$http
-        .get(
-          `${window._pz.apiEndPt}inventory/warehouses/locations?code=${keyword}&warehouse=${wh}`
-        )
-        .then(res => {
-          if (!res.ok || res.body.length !== 1)
-            return window.vm.$f7.addNotification({
-              message: "No such location found",
-              hold: 2000
-            });
-
-          this.scannedLocationCode = res.body[0];
-        })
-        .catch(window._pz.errFunc2.bind(this));
-    },
-    onLocationSearchKeywordChange() {
-      this.scannedLocationCode = null;
-    },
-    clearSearchedLocation() {
-      this.scannedLocationCode = null;
-      this.locationSearchKeyword = null;
     }
   },
 
@@ -392,6 +408,10 @@ export default {
   created() {
     console.debug(this.$options.name + " created");
     this.getWH();
+
+    const isWhAssigned =
+      window.$pzGlobalReactiveData && window.$pzGlobalReactiveData.warehouse.id;
+    if (isWhAssigned) this.fetchAllLocationsForWH();
 
     document.addEventListener("bookSelected", this.onBookSelected, false);
   },

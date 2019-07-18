@@ -45,9 +45,9 @@
               </div>
             </div>
           </li>
-          <div class="form" v-if="allWH && scannedItem">
+          <div class="form" v-if="scannedItem">
             <single-select
-              v-if="!$pzGlobalReactiveData.warehouse || !$pzGlobalReactiveData.warehouse.id"
+              v-if="!isWhAssigned && allWH"
               :value.sync="selectedWH"
               placeholder="Select warehouse *"
               :opts="allWH"
@@ -69,6 +69,7 @@
                     placeholder="Search"
                     class="autocomplete-trigger button button-fill"
                     id="autocomplete-dropdown"
+                    @click="setAutocomplete()"
                   />
                 </div>
               </div>
@@ -180,7 +181,8 @@ export default {
       selectedWH: null,
       allWH: null,
       allLocationsForWh: null,
-      autoCompleteRef: null
+      autoCompleteRef: null,
+      isWhAssigned: null
     };
   },
   watch: {
@@ -192,15 +194,12 @@ export default {
   computed: {
     isFormValid() {
       const adminWH = window.vm.$pzGlobalReactiveData.warehouse;
-      console.log("adminWH: ", adminWH);
       const isWhNonZero = adminWH && adminWH.id !== 0;
-      console.log("isWhNonZero: ", isWhNonZero);
       let isValid;
       if (isWhNonZero) isValid = this.enteredQty && this.scannedLocationCode;
       else
         isValid =
           this.enteredQty && this.scannedLocationCode && this.selectedWH;
-      console.log("isValid: ", isValid);
       return isValid;
     }
   },
@@ -209,7 +208,11 @@ export default {
       this.scannedItem = null;
       this.enteredQty = null;
       this.scannedLocationCode = null;
-      this.selectedWH = null;
+
+      if (this.isWhAssigned) {
+        this.selectedWH = window.vm.$pzGlobalReactiveData.warehouse.id;
+        this.fetchAllLocationsForWH();
+      } else this.selectedWH = null;
     },
     searchBook() {
       this.resetData();
@@ -219,7 +222,6 @@ export default {
       });
     },
     onBookSelected(event) {
-      console.log("event.detail.selectedBook: ", event.detail.selectedBook);
       const book = event.detail.selectedBook;
       const isbn = book.isbn;
       this.fetchBookDetails(isbn);
@@ -287,18 +289,11 @@ export default {
       window.vm.$pzGlobalReactiveData
         .scanCode()
         .then(res => {
-          console.log("res: ", res);
-          const adminWH =
-            this.selectedWH ||
-            (window.vm.$pzGlobalReactiveData &&
-              window.vm.$pzGlobalReactiveData.warehouse.id);
-
           window.vm.$http
             .get(
-              `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${adminWH}&code=${res.text}`
+              `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${this.selectedWH}&code=${res.text}`
             )
             .then(res => {
-              console.log("res: ", res);
               if (!res.ok || !res.body || !res.body.length)
                 return window.vm.$f7.addNotification({
                   message: "Location code not found",
@@ -316,14 +311,9 @@ export default {
       this.allLocationsForWh = null;
       this.scannedLocationCode = null;
 
-      const wh =
-        this.selectedWH ||
-        (window.$pzGlobalReactiveData.warehouse &&
-          window.$pzGlobalReactiveData.warehouse.id);
-
       window.vm.$http
         .get(
-          `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${wh}`
+          `${window._pz.apiEndPt}inventory/warehouses/locations?warehouse=${this.selectedWH}`
         )
         .then(res => {
           if (!res.ok || !res.body.length)
@@ -333,7 +323,6 @@ export default {
             });
 
           this.allLocationsForWh = res.body;
-          this.setAutocomplete();
         })
         .catch(window._pz.errFunc2.bind(this));
     },
@@ -365,6 +354,7 @@ export default {
           this.scannedLocationCode = null;
         }
       });
+      this.autoCompleteRef.open();
     },
     addStock() {
       const params = {
@@ -407,11 +397,16 @@ export default {
   },
   created() {
     console.debug(this.$options.name + " created");
-    this.getWH();
 
-    const isWhAssigned =
-      window.$pzGlobalReactiveData && window.$pzGlobalReactiveData.warehouse.id;
-    if (isWhAssigned) this.fetchAllLocationsForWH();
+    this.isWhAssigned =
+      window.vm.$pzGlobalReactiveData &&
+      window.vm.$pzGlobalReactiveData.warehouse &&
+      !!window.vm.$pzGlobalReactiveData.warehouse.id;
+
+    if (this.isWhAssigned) {
+      this.selectedWH = window.vm.$pzGlobalReactiveData.warehouse.id;
+      this.fetchAllLocationsForWH();
+    } else this.getWH();
 
     document.addEventListener("bookSelected", this.onBookSelected, false);
   },
@@ -433,6 +428,7 @@ export default {
   },
   destroyed() {
     console.debug(this.$options.name + " destroyed");
+    this.autoCompleteRef && this.autoCompleteRef.destroy();
   }
 };
 </script>

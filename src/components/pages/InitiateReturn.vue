@@ -164,11 +164,7 @@ export default {
     canSubmit() {
       if (!this.selectedMethod || !this.selectedWarehouse || !this.notes)
         return false;
-      else if (
-        this.selectedMethod === 1 &&
-        (!this.biltyImage || !this.biltyImage.length || !this.biltyNb)
-      )
-        return false;
+      else if (this.selectedMethod === 1 && !this.biltyNb) return false;
       else return true;
     }
   },
@@ -222,6 +218,9 @@ export default {
         description: this.notes,
         debit_note: this.debitNoteImage[0].data
       };
+
+      if (this.debitNoteImage && this.debitNoteImage.length)
+        params.debit_note = this.debitNoteImage[0].data;
 
       if (this.selectedMethod === 1) {
         params.billty_number = this.biltyNb;

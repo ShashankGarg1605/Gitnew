@@ -170,10 +170,10 @@ export default {
               { label: "Being Packed", value: "103" },
               { label: "Ready to dispatch", value: "104" },
               { label: "Partially Dispatched", value: "105" },
-              { label: "Fully Dispatched", value: "114" }
+              { label: "Fully Dispatched", value: "114" },
               // { label: "Fulfilled", value: "106" },
               // { label: "Cancelled", value: "107" },
-              // { label: "Open", value: "113" }
+              { label: "Open", value: "113" }
             ]
           }
         ],

@@ -216,7 +216,7 @@ export default {
         return_method: this.selectedMethod,
         start_date: window.vm.moment(this.dates[0]).format("YYYY-MM-DD"),
         description: this.notes,
-        debit_note: this.debitNoteImage[0].data
+        status: 1
       };
 
       if (this.debitNoteImage && this.debitNoteImage.length)

@@ -191,10 +191,12 @@ export default {
               }
             ];
           } else {
-            this.warehouses = res.body.map(w => ({
-              label: w.code + " " + w.address,
-              value: w.id
-            }));
+            this.warehouses = res.body
+              .filter(w => w.id !== 0)
+              .map(w => ({
+                label: w.code + " " + w.address,
+                value: w.id
+              }));
           }
         })
         .catch(window._pz.errFunc2.bind(this));

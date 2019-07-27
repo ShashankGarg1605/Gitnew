@@ -66,6 +66,7 @@ export default new Vue({
       2: "Verification complete"
     },
     returnStatusMap: {
+      0: "Unknown",
       1: "Open",
       2: "Under process",
       3: "Complete"

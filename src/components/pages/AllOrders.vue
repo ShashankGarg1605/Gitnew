@@ -100,13 +100,18 @@
           <a
             @click="openAssignOrderPage()"
             class="list-button item-link close-popover"
-            v-if="clickedOrder && clickedOrder.order_status === 3"
+            v-if="clickedOrder && clickedOrder.order_status === 3 && clickedOrder.verification_status!=2"
           >Assign Order</a>
           <a
             @click="viewInvoice()"
             class="list-button item-link close-popover"
             v-if="clickedOrder && clickedOrder.order_status >4"
           >View Invoice</a>
+          <a
+            @click="openAssignOrderPage()"
+            class="list-button item-link close-popover"
+            v-if="clickedOrder && clickedOrder.order_status === 3 && clickedOrder.verification_status===2"
+          >Start Packing</a>
           <!-- <a v-if="clickedOrder && clickedOrder.isPartiallyDispatched" @click="openPage('orderupdate')" class="list-button item-link close-popover">Update</a> -->
         </div>
       </div>

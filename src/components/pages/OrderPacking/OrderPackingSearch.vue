@@ -1,11 +1,11 @@
 <template>
-  <f7-page name="OrderSearch">
+  <f7-page name="OrderPackingSearch">
     <f7-navbar v-bind="$pzGlobalReactiveData.navHistory.length>1?{ 'back-link': 'back' }:''">
       <f7-nav-left v-if="$pzGlobalReactiveData.navHistory.length==1">
         <f7-link icon="icon-bars" open-panel="left"></f7-link>
       </f7-nav-left>
       <f7-nav-center style="display: flex;align-items: center;">
-        <span>OrderVerification</span>
+        <span>Order Packing</span>
       </f7-nav-center>
     </f7-navbar>
     <!-- Scrollable page content-->
@@ -20,8 +20,8 @@
       </form>
       <button
         class="view-verified"
-        @click="openOrdersForVerification()"
-      >View all orders for verification</button>
+        @click="openOrdersForPacking()"
+      >View all orders for packing</button>
     </main>
   </f7-page>
 </template>
@@ -64,28 +64,30 @@ button {
 
 <script>
 export default {
-  name: "OrderSearch",
+  name: "OrderPackingSearch",
   data() {
     return {
-      title: "OrderSearch",
+      title: "OrderPackingSearch",
       orderId: null
     };
   },
   methods: {
-    openOrdersForVerification() {
+    openOrdersForPacking() {
       window.vm.$http
         .get(
           `${
             window._pz.apiEndPt
-          }orders?orderBy=created_date&orderByValue=desc&limit=100&offset=0&status=103`
+          }orders?orderBy=created_date&orderByValue=desc&limit=100&offset=0&status=103&verificationStatus=2`
         )
         .then(res => {
           if (res.ok) {
             console.log("res.body: ", res.body);
             const orders = this.setDefaultVerificationStatus(res.body);
+            orders.view = "packing";
+            //const view = 'packing';
             window.vm.$f7.mainView.router.load({
-              url: "OrderSelect",
-              context: { orders }
+              url: "OrderPackingSelect",
+              context: { orders: orders }
             });
           }
         })
@@ -106,10 +108,9 @@ export default {
         )
         .then(res => {
           if (res.ok) {
-            console.log("res.body: ", res.body);
             const orders = this.setDefaultVerificationStatus(res.body);
             window.vm.$f7.mainView.router.load({
-              url: "OrderSelect",
+              url: "OrderPackingSelect",
               context: { orders }
             });
           }
@@ -119,7 +120,7 @@ export default {
     setDefaultVerificationStatus(orders) {
       if (orders && orders.length)
         orders.forEach(o => {
-          if (!o.verification_status) o.verification_status = 0;
+          if (!o.packing_status) o.packing_status = 0;
         });
       return orders;
     }

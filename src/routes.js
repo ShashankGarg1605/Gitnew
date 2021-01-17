@@ -28,6 +28,9 @@ import VerifiedTitles from "./components/pages/OrderVerification/VerifiedTitles"
 import TitleSearch from "./components/pages/OrderVerification/TitleSearch";
 import AssignOrder from "./components/pages/OrderVerification/AssignOrder";
 
+import OrderPackingSearch from "./components/pages/OrderPacking/OrderPackingSearch";
+import OrderPackingSelect from "./components/pages/OrderPacking/OrderPackingSelect";
+
 import Procurement from "./components/pages/Procurement";
 import Products from "./components/pages/Products";
 
@@ -195,5 +198,13 @@ export default [
   {
     path: "/book-selector",
     component: BookSelector
+  },
+  {
+    path: "/OrderPackingSearch/",
+    component: OrderPackingSearch
+  },
+  {
+    path: "/OrderPackingSelect/",
+    component: OrderPackingSelect
   }
 ];

@@ -168,8 +168,8 @@ document.addEventListener("deviceready", () => {
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-window._pz.instance = "STAGING";
-// window._pz.instance = "PRODUCTION";
+//window._pz.instance = "STAGING";
+ window._pz.instance = "PRODUCTION";
 
 switch (window._pz.instance) {
   case "STAGING": {

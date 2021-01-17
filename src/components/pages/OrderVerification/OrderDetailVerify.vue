@@ -266,7 +266,6 @@ export default {
     console.debug(this.$options.name + " beforeCreate");
   },
   created() {
-    console.debug(this.$options.name + " created");
     this.orderId = this.$route.query && this.$route.query.orderId;
     this.getOrderDetails();
   },

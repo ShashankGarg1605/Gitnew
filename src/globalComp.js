@@ -65,6 +65,11 @@ export default new Vue({
       1: "Partially verified",
       2: "Verification complete"
     },
+    packingStatusMap: {
+      0: "Packing not started",
+      1: "Packing In Process",
+      2: "Packing complete"
+    },
     returnStatusMap: {
       0: "Unknown",
       1: "Open",

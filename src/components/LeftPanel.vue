@@ -70,6 +70,12 @@
               v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
             ></menu-item>
             <menu-item
+              :icon="'cube_box'"
+              :url="'/OrderPackingSearch'"
+              :label="'Order Packing'"
+              v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
+            ></menu-item>
+            <menu-item
               :icon="'cube'"
               :url="'/Procurement'"
               :label="'Procurement Discounts'"

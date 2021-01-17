@@ -59,6 +59,12 @@
         :url="'/Products'"
         :label="'Live Stock'"
       ></menu-item>
+      <menu-item
+        v-if="$pzGlobalReactiveData.roleAccess('orderverification', 'read')"
+        :icon="'check'"
+        :url="'/OrderPackingSearch'"
+        :label="'Order Packing'"
+      ></menu-item>
     </ul>
   </f7-page>
 </template>
